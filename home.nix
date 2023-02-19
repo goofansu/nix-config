@@ -18,5 +18,19 @@
     includes = [{ path = "~/.config/nixpkgs/gitconfig"; }];
   };
 
+  programs.bat = {
+    enable = true;
+  };
+
+  programs.exa = {
+    enable = true;
+  };
+
+  programs.fzf = {
+    enable = true;
+  };
+
+  programs.zoxide = {
+    enable = true;
   };
 }
