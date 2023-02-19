@@ -36,6 +36,11 @@
     pkgs.wget
   ];
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   programs.gh = {
     enable = true;
   };
