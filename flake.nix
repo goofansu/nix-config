@@ -15,7 +15,7 @@
     defaultPackage.${arch} =
       home-manager.defaultPackage.${arch};
 
-    homeConfigurations.james = # REPLACE ME
+    homeConfigurations.james =
       home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${arch};
         modules = [ ./home.nix ];
