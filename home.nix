@@ -9,6 +9,11 @@
   # As a rule of thumb, if it’s supported by home-manager,
   # install the program using programs.<program>.
   # If not, add it to home.packages.
+  programs.gh = {
+    enable = true;
+    # enableGitCredentialHelper= true;
+  };
+
   programs.git = {
     enable = true;
     includes = [{ path = "~/.config/nixpkgs/gitconfig"; }];
