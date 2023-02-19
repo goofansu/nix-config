@@ -18,16 +18,5 @@
     includes = [{ path = "~/.config/nixpkgs/gitconfig"; }];
   };
 
-  programs.fish = {
-    enable = true;
-    plugins = [
-      {
-        name = "done",
-        src = pkgs.fetchFromGitHub {
-          owner = "franciscolourenco";
-          repo = "done";
-        };
-      };
-    ];
   };
 }
