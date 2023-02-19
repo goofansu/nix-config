@@ -5,7 +5,35 @@
   programs.home-manager.enable = true;
 
   home.packages = [
+    pkgs.ansible
+    pkgs.asciinema
+    pkgs.asdf-vm
+    pkgs.cmake
+    pkgs.coreutils
+    pkgs.deno
+    pkgs.exercism
+    pkgs.fd
+    pkgs.ffmpeg_5
+    pkgs.flyctl
+    pkgs.gist
+    pkgs.gnugrep
+    pkgs.graphviz
+    pkgs.htop
+    pkgs.hyperfine
+    pkgs.imagemagick
+    pkgs.inetutils
+    pkgs.jq
+    pkgs.lnav
+    pkgs.pandoc
+    pkgs.pkg-config
     pkgs.ripgrep
+    pkgs.shared-mime-info
+    pkgs.shellcheck
+    pkgs.tealdeer
+    pkgs.tmux
+    pkgs.tokei
+    pkgs.trash-cli
+    pkgs.wget
   ];
 
   programs.gh = {
