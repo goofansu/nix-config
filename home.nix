@@ -36,6 +36,9 @@
       ".elixir_ls"
       "node_modules"
     ];
+    includes = [
+      { path = "~/.gitconfig_local"; }
+    ];
     delta = {
       enable = true;
     };
