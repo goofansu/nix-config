@@ -4,7 +4,9 @@
   home.stateVersion = "22.11";
   programs.home-manager.enable = true;
 
-  home.packages = [];
+  home.packages = [
+    pkgs.ripgrep
+  ];
 
   # As a rule of thumb, if it’s supported by home-manager,
   # install the program using programs.<program>.
