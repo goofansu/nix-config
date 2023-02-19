@@ -11,11 +11,14 @@
   # If not, add it to home.packages.
   programs.gh = {
     enable = true;
-    # enableGitCredentialHelper= true;
   };
 
   programs.git = {
     enable = true;
     includes = [{ path = "~/.config/nixpkgs/gitconfig"; }];
+  };
+
+  programs.fish = {
+    enable = true;
   };
 }
