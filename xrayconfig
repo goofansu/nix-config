@@ -1,0 +1,1 @@
+:editor: "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -s gui -c $file"

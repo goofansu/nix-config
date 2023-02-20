@@ -90,4 +90,8 @@
   programs.zoxide = {
     enable = true;
   };
+
+  home.file.".asdfrc".source = ./asdfrc;
+  home.file.".searchlink".source = ./searchlink;
+  home.file.".xrayconfig".source = ./xrayconfig;
 }
