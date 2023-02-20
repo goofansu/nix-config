@@ -37,6 +37,10 @@
     nix-direnv.enable = true;
   };
 
+  programs.fish = {
+    enable = true;
+  };
+
   programs.gh = {
     enable = true;
   };
@@ -91,7 +95,6 @@
 
   programs.tmux = {
     enable = true;
-    shell = "/opt/homebrew/bin/fish";
     terminal = "xterm-256color";
   };
 
