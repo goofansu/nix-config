@@ -93,6 +93,64 @@
         description = "Emacs in the terminal.";
         body = "emacsclient -s term -nw $argv";
       };
+
+      # macOS
+      reset-launchpad = {
+        description = "Reset macOS Launchpad.";
+        body = ''
+          defaults write com.apple.dock ResetLaunchPad -bool true
+          killall Dock
+        '';
+      };
+
+      # Emacs commands
+      emacs-server = {
+        description = "Start Emacs in terminal.";
+        body = "emacs --daemon=term";
+      };
+      magit = {
+        description = "Manage Git repository in Emacs.";
+        body = ''
+          emacsclient -s term -nw -u -e "(magit-status)"
+        '';
+      };
+      ediff = {
+        description = "Compare files in Emacs.";
+        body = ''
+          emacsclient -s term -nw -u -e "(ediff \"$argv[1]\" \"$argv[2]\")"
+        '';
+      };
+
+      # Fuzzy find everything!
+      fssh = {
+        description = "Fuzzy find and ssh into a host.";
+        body = ''
+          rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ssh "$result"
+        '';
+      };
+      fco = {
+        description = "Fuzzy find and checkout a Git branch.";
+        body = ''
+          git branch --all | grep -v HEAD | string trim | fzf | read -l result; and git checkout "$result"
+        '';
+      };
+
+      # Rails dev
+      load-puma = {
+        body = "launchctl unload ~/Library/LaunchAgents/io.puma.dev.plist";
+      };
+      unload-puma = {
+        body = "launchctl load -w ~/Library/LaunchAgents/io.puma.dev.plist";
+      };
+      kill-spring = {
+        body = "ps -ef | grep spring | grep -v grep | awk '{print $2}' | xargs -I {} kill -9 {}";
+      };
+
+      # Elixir dev
+      hex-package = {
+        description = "Fetch Elixir package config.";
+        body = "mix hex.info $argv | grep 'Config:' | sed 's/Config: //g'";
+      };
     };
   };
 
