@@ -29,7 +29,6 @@
     pkgs.shellcheck
     pkgs.tealdeer
     pkgs.tokei
-    pkgs.trash-cli
     pkgs.wget
   ];
 
