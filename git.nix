@@ -20,8 +20,9 @@
     ignores = [
       ".DS_Store"
       "*.log*"
-      ".elixir_ls"
       "node_modules"
+      ".elixir_ls"
+      ".direnv"
     ];
     includes = [
       { path = "~/.gitconfig_local"; }
