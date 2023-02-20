@@ -77,6 +77,10 @@
 
   programs.bat = {
     enable = true;
+    config = {
+      theme = "Dracula";
+      style = "plain";
+    };
   };
 
   programs.exa = {
