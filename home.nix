@@ -28,7 +28,6 @@
     pkgs.ripgrep
     pkgs.shellcheck
     pkgs.tealdeer
-    pkgs.tmux
     pkgs.tokei
     pkgs.trash-cli
     pkgs.wget
@@ -89,6 +88,12 @@
 
   programs.fzf = {
     enable = true;
+  };
+
+  programs.tmux = {
+    enable = true;
+    shell = "/opt/homebrew/bin/fish";
+    terminal = "xterm-256color";
   };
 
   programs.zoxide = {
