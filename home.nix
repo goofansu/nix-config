@@ -4,36 +4,6 @@
   home.stateVersion = "22.11";
   programs.home-manager.enable = true;
 
-  home.packages = with pkgs; [
-    ansible
-    asciinema
-    asdf-vm
-    cmake
-    coreutils
-    deno
-    exercism
-    fd
-    ffmpeg_5
-    flyctl
-    gist
-    gnugrep
-    graphviz
-    htop
-    hyperfine
-    imagemagick
-    inetutils
-    jq
-    lnav
-    nix-prefetch-github
-    openssl
-    pandoc
-    ripgrep
-    shellcheck
-    tealdeer
-    tokei
-    wget
-  ];
-
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
@@ -68,5 +38,5 @@
   home.file.".gemrc".text = "gem: --no-document";
   home.file.".xrayconfig".text = ":editor: '/opt/homebrew/bin/emacsclient -s gui -c $file'";
 
-  imports = [ ./fish.nix ./git.nix ];
+  imports = [ ./packages.nix ./fish.nix ./git.nix ];
 }
