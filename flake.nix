@@ -9,9 +9,13 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }: let
+  outputs = { nixpkgs, home-manager, ... }:
+
+  let
     arch = "aarch64-darwin";
-  in {
+  in
+
+  {
     defaultPackage.${arch} =
       home-manager.defaultPackage.${arch};
 
@@ -20,5 +24,5 @@
         pkgs = nixpkgs.legacyPackages.${arch};
         modules = [ ./home.nix ];
       };
-    };
+  };
 }
