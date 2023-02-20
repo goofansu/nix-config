@@ -1,7 +1,35 @@
 { pkgs, ... }: {
   programs.fish = {
     enable = true;
-    interactiveShellInit = "fenv source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh";
+    interactiveShellInit = ''
+      if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+          fenv source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+      end
+
+      if test -d $HOME/.asdf
+          source $HOME/.nix-profile/share/asdf-vm/asdf.fish
+      end
+    '';
+    shellInit = ''
+      # LANG
+      set -gx LANG "en_US.UTF-8"
+      set -gx LC_ALL "en_US.UTF-8"
+
+      # EDITOR
+      set -gx EDITOR "emacsclient -s term -t"
+      set -gx VISUAL "emacsclient -s term -t"
+
+      # Emacs server
+      set -gx EMACS_SERVER_NAME "gui"
+
+      # Erlang
+      set -gx KERL_BUILD_DOCS yes
+      set -gx ERL_AFLAGS "-kernel shell_history enabled"
+
+      # PATH
+      set -gx PATH $HOME/.emacs.d/bin $PATH
+      set -gx PATH ./bin $PATH
+    '';
     plugins = [
       { name = "done"; src = pkgs.fishPlugins.done.src; }
       { name = "hydro"; src = pkgs.fishPlugins.hydro.src; }
