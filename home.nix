@@ -72,6 +72,28 @@
         };
       }
     ];
+    functions = {
+      cat = {
+        description = "A cat(1) clone with wings.";
+        body = "if command -sq bat; bat $argv; end";
+      };
+      find = {
+        description = "A simple, fast and user-friendly alternative to `find`.";
+        body = "if command -sq fd; fd $argv; end";
+      };
+      ls = {
+        description = "A modern replacement for ‘ls’.";
+        body = "if command -sq exa; exa $argv; end";
+      };
+      rm = {
+        description = "Ask before removing a file.";
+        body = "command rm -i $argv";
+      };
+      vi = {
+        description = "Emacs in the terminal.";
+        body = "emacsclient -s term -nw $argv";
+      };
+    };
   };
 
   programs.gh = {
