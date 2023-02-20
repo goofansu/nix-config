@@ -40,6 +40,7 @@
 
   programs.fish = {
     enable = true;
+    interactiveShellInit = "fenv source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh";
     plugins = [
       { name = "done"; src = pkgs.fishPlugins.done.src; }
       { name = "hydro"; src = pkgs.fishPlugins.hydro.src; }
@@ -59,6 +60,15 @@
           repo = "z";
           rev = "85f863f20f24faf675827fb00f3a4e15c7838d76";
           sha256 = "+FUBM7CodtZrYKqU542fQD+ZDGrd2438trKM0tIESs0=";
+        };
+      }
+      {
+        name = "foreign-env";
+        src = pkgs.fetchFromGitHub {
+          "owner" = "oh-my-fish";
+          "repo" = "plugin-foreign-env";
+          "rev" = "3ee95536106c11073d6ff466c1681cde31001383";
+          "sha256" = "vyW/X2lLjsieMpP9Wi2bZPjReaZBkqUbkh15zOi8T4Y=";
         };
       }
     ];
