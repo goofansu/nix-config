@@ -27,5 +27,6 @@
     tokei
     tree
     wget
+    zstd
   ];
 }
