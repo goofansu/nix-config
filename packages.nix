@@ -12,6 +12,7 @@
     flyctl
     gist
     gnugrep
+    gnused
     graphviz
     htop
     hyperfine
@@ -26,6 +27,8 @@
     shellcheck
     tealdeer
     tokei
+    tree
     wget
+    wxGTK32
   ];
 }
