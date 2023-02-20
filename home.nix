@@ -39,6 +39,28 @@
 
   programs.fish = {
     enable = true;
+    plugins = [
+      { name = "done"; src = pkgs.fishPlugins.done.src; }
+      { name = "hydro"; src = pkgs.fishPlugins.hydro.src; }
+      {
+        name = "dracula";
+        src = pkgs.fetchFromGitHub {
+          owner = "dracula";
+          repo = "fish";
+          rev = "0e51af5e5346e5d24efabd43fb4631e2a8fd1b70";
+          sha256 = "YXh6pPJ9dJDPpq1kX5xd1edoOaH6jDq8pDOkx3k03/0=";
+        };
+      }
+      {
+        name = "z";
+        src = pkgs.fetchFromGitHub {
+          owner = "jethrokuan";
+          repo = "z";
+          rev = "85f863f20f24faf675827fb00f3a4e15c7838d76";
+          sha256 = "+FUBM7CodtZrYKqU542fQD+ZDGrd2438trKM0tIESs0=";
+        };
+      }
+    ];
   };
 
   programs.gh = {
@@ -96,10 +118,6 @@
   programs.tmux = {
     enable = true;
     terminal = "xterm-256color";
-  };
-
-  programs.zoxide = {
-    enable = true;
   };
 
   home.file.".asdfrc".text = "legacy_version_file = yes";
