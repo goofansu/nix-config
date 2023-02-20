@@ -25,6 +25,7 @@
     jq
     lnav
     nix-prefetch-github
+    openssl
     pandoc
     ripgrep
     shellcheck
