@@ -25,9 +25,7 @@
     pkgs.jq
     pkgs.lnav
     pkgs.pandoc
-    pkgs.pkg-config
     pkgs.ripgrep
-    pkgs.shared-mime-info
     pkgs.shellcheck
     pkgs.tealdeer
     pkgs.tmux
