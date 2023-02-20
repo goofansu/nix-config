@@ -5,7 +5,6 @@
     ansible
     asciinema
     asdf-vm
-    cmake
     coreutils
     deno
     exercism
@@ -15,15 +14,12 @@
     gist
     gnugrep
     gnused
-    graphviz
     htop
-    hyperfine
     imagemagick
     inetutils
     jq
     lnav
     nix-prefetch-github
-    openssl
     pandoc
     ripgrep
     shellcheck
@@ -31,6 +27,5 @@
     tokei
     tree
     wget
-    wxGTK32
   ];
 }
