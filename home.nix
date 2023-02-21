@@ -4,6 +4,10 @@
   home.username = "james";
   home.homeDirectory = "/Users/james";
   home.stateVersion = "22.11";
+  home.sessionVariables = {
+    DIRENV_LOG_FORMAT = "";
+  };
+
   programs.home-manager.enable = true;
 
   programs.direnv = {
