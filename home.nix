@@ -37,6 +37,7 @@
 
   programs.tmux = {
     enable = true;
+    shell = "~/.nix-profile/bin/fish";
     terminal = "xterm-256color";
   };
 
