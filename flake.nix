@@ -10,19 +10,14 @@
   };
 
   outputs = { nixpkgs, home-manager, ... }:
-
-  let
-    arch = "aarch64-darwin";
-  in
-
-  {
-    defaultPackage.${arch} =
-      home-manager.defaultPackage.${arch};
-
-    homeConfigurations.james =
-      home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${arch};
-        modules = [ ./home.nix ];
-      };
-  };
+    let
+      arch = "aarch64-darwin";
+      pkgs = nixpkgs.legacyPackages.${arch};
+    in {
+      homeConfigurations.james =
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ ./home.nix ];
+        };
+    };
 }
