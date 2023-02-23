@@ -3,6 +3,9 @@
 {
   programs.fish = {
     enable = true;
+    shellInit = ''
+      set -U hydro_multiline true;
+    '';
     interactiveShellInit = ''
       if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
           fenv source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
