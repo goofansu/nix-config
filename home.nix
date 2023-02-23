@@ -9,10 +9,11 @@
   };
 
   imports = [
+    ./packages.nix
     ./files.nix
+    ./emacs.nix
     ./fish.nix
     ./git.nix
-    ./packages.nix
     ./rest.nix
   ];
 }
