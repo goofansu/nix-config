@@ -38,6 +38,7 @@
 
     # dev
     ansible
+    awscli2
     asdf-vm
     flyctl
   ];
