@@ -12,9 +12,10 @@
     # Nix
     nix-prefetch-github
 
-    # Doom Emacs prerequisites
+    # Doom Emacs
     deno       # format JSON
     fd         # better GNU find
+    fontconfig # detect fonts
     pandoc     # markdown compiler
     ripgrep    # search tool
     shellcheck # shell script linting
