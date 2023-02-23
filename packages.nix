@@ -37,6 +37,13 @@
     tokei
     tree
 
+    # fonts
+    emacs-all-the-icons-fonts
+    ibm-plex
+    jetbrains-mono
+    julia-mono
+    overpass
+
     # dev
     ansible
     awscli2

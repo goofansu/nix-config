@@ -8,6 +8,8 @@
     DIRENV_LOG_FORMAT = "";
   };
 
+  fonts.fontconfig.enable = true;
+
   imports = [
     ./packages.nix
     ./files.nix
