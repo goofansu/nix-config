@@ -4,6 +4,7 @@
   home.packages = with pkgs; [
     # Nix
     nix-prefetch-github
+    nixfmt
 
     # GNU softwares
     coreutils
