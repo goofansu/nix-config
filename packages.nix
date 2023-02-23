@@ -29,7 +29,6 @@
     exercism
     gist
     inetutils
-    jq
     lnav
     tealdeer
     tokei
