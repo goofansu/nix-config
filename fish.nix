@@ -123,14 +123,10 @@
 
       # Rails dev
       load-puma = {
-        body = "launchctl unload ~/Library/LaunchAgents/io.puma.dev.plist";
-      };
-      unload-puma = {
         body = "launchctl load -w ~/Library/LaunchAgents/io.puma.dev.plist";
       };
-      kill-spring = {
-        body =
-          "ps -ef | grep spring | grep -v grep | awk '{print $2}' | xargs -I {} kill -9 {}";
+      unload-puma = {
+        body = "launchctl unload ~/Library/LaunchAgents/io.puma.dev.plist";
       };
 
       # Elixir dev
