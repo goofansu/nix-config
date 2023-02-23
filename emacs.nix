@@ -1,4 +1,4 @@
-{ pkgs, lib, ... } :
+{ pkgs, lib, ... }:
 
 {
   programs.emacs = {
@@ -7,7 +7,7 @@
   };
 
   home.activation = {
-    installDoomEmacs = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    installDoomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ ! -d $HOME/.emacs.d ]; then
         if [ -v DRY_RUN ]; then
           echo "Running installDoomEmacs"

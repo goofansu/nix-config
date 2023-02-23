@@ -16,8 +16,14 @@
       end
     '';
     plugins = [
-      { name = "done"; src = pkgs.fishPlugins.done.src; }
-      { name = "hydro"; src = pkgs.fishPlugins.hydro.src; }
+      {
+        name = "done";
+        src = pkgs.fishPlugins.done.src;
+      }
+      {
+        name = "hydro";
+        src = pkgs.fishPlugins.hydro.src;
+      }
       {
         name = "dracula";
         src = pkgs.fetchFromGitHub {
@@ -123,7 +129,8 @@
         body = "launchctl load -w ~/Library/LaunchAgents/io.puma.dev.plist";
       };
       kill-spring = {
-        body = "ps -ef | grep spring | grep -v grep | awk '{print $2}' | xargs -I {} kill -9 {}";
+        body =
+          "ps -ef | grep spring | grep -v grep | awk '{print $2}' | xargs -I {} kill -9 {}";
       };
 
       # Elixir dev

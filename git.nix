@@ -17,18 +17,8 @@
       pull = { rebase = true; };
       github = { user = "goofansu"; };
     };
-    ignores = [
-      ".DS_Store"
-      "*.log*"
-      "node_modules"
-      ".elixir_ls"
-      ".direnv"
-    ];
-    includes = [
-      { path = "~/.gitconfig_local"; }
-    ];
-    delta = {
-      enable = true;
-    };
+    ignores = [ ".DS_Store" "*.log*" "node_modules" ".elixir_ls" ".direnv" ];
+    includes = [{ path = "~/.gitconfig_local"; }];
+    delta = { enable = true; };
   };
 }

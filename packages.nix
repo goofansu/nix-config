@@ -14,12 +14,12 @@
     wget
 
     # Doom Emacs
-    deno       # format JSON
-    fd         # better GNU find
+    deno # format JSON
+    fd # better GNU find
     fontconfig # detect fonts
-    ripgrep    # search tool
+    ripgrep # search tool
     shellcheck # shell script linting
-    zstd       # undo list compression
+    zstd # undo list compression
 
     # fonts
     emacs-all-the-icons-fonts

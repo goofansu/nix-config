@@ -14,10 +14,9 @@
       arch = "aarch64-darwin";
       pkgs = nixpkgs.legacyPackages.${arch};
     in {
-      homeConfigurations.james =
-        home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [ ./home.nix ];
-        };
+      homeConfigurations.james = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./home.nix ];
+      };
     };
 }

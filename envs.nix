@@ -1,7 +1,5 @@
 {
-  home.sessionPath = [
-    "$HOME/.emacs.d/bin"
-  ];
+  home.sessionPath = [ "$HOME/.emacs.d/bin" ];
 
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
