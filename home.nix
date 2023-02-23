@@ -10,6 +10,7 @@
     ./files.nix
     ./envs.nix
     ./emacs.nix
+    ./bash.nix
     ./fish.nix
     ./git.nix
     ./rest.nix
