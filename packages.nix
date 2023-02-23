@@ -2,15 +2,15 @@
 
 {
   home.packages = with pkgs; [
+    # Nix
+    nix-prefetch-github
+
     # GNU softwares
     coreutils
     findutils
     gnugrep
     gnused
     wget
-
-    # Nix
-    nix-prefetch-github
 
     # Doom Emacs
     deno       # format JSON
@@ -20,20 +20,6 @@
     shellcheck # shell script linting
     zstd       # undo list compression
 
-    # media processing
-    ffmpeg_5
-    imagemagick
-
-    # utils
-    asciinema
-    exercism
-    gist
-    inetutils
-    lnav
-    tealdeer
-    tokei
-    tree
-
     # fonts
     emacs-all-the-icons-fonts
     ibm-plex
@@ -41,10 +27,22 @@
     julia-mono
     overpass
 
+    # utils
+    asciinema
+    exercism
+    ffmpeg_5
+    gist
+    imagemagick
+    inetutils
+    lnav
+    tealdeer
+    tokei
+    tree
+
     # dev
     ansible
-    awscli2
     asdf-vm
+    awscli2
     flyctl
   ];
 }
