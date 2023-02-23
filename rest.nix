@@ -1,12 +1,9 @@
 {
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-
-  programs.gh = {
-    enable = true;
-  };
+  programs.exa.enable = true;
+  programs.fzf.enable = true;
+  programs.gh.enable = true;
+  programs.htop.enable = true;
+  programs.pandoc.enable = true;
 
   programs.bat = {
     enable = true;
@@ -16,12 +13,9 @@
     };
   };
 
-  programs.exa = {
+  programs.direnv = {
     enable = true;
-  };
-
-  programs.fzf = {
-    enable = true;
+    nix-direnv.enable = true;
   };
 
   programs.tmux = {

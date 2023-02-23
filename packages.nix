@@ -16,7 +16,6 @@
     deno       # format JSON
     fd         # better GNU find
     fontconfig # detect fonts
-    pandoc     # markdown compiler
     ripgrep    # search tool
     shellcheck # shell script linting
     zstd       # undo list compression
@@ -29,7 +28,6 @@
     asciinema
     exercism
     gist
-    htop
     inetutils
     jq
     lnav
