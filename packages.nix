@@ -13,6 +13,7 @@
     nix-prefetch-github
 
     # Doom Emacs
+    emacs      # GNU Emacs
     deno       # format JSON
     fd         # better GNU find
     fontconfig # detect fonts
