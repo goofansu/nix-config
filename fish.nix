@@ -63,10 +63,6 @@
         description = "Ask before removing a file.";
         body = "command rm -i $argv";
       };
-      vi = {
-        description = "Emacs in the terminal.";
-        body = "emacsclient -s term -nw $argv";
-      };
 
       # macOS
       reset-launchpad = {
@@ -78,21 +74,31 @@
       };
 
       # Emacs commands
-      emacs-server = {
-        description = "Start Emacs in terminal.";
-        body = "emacs --daemon=term";
-      };
-      magit = {
-        description = "Manage Git repository in Emacs.";
-        body = ''
-          emacsclient -s term -nw -u -e "(magit-status)"
-        '';
+      e = {
+        description = "Edit file in Emacs.";
+        body = "emacsclient -s term -a '' -nw $argv";
       };
       ediff = {
-        description = "Compare files in Emacs.";
+        description = "Diff files in Emacs.";
         body = ''
           emacsclient -s term -nw -u -e "(ediff \"$argv[1]\" \"$argv[2]\")"
         '';
+      };
+      egit = {
+        description = "Git in Emacs.";
+        body = ''
+          emacsclient -s term -nw -u -e '(magit-status)'
+        '';
+      };
+      eman = {
+        description = "Man page in Emacs.";
+        body = ''
+          emacsclient -s term -nw -u -e "(man \"$argv[1]\")"
+        '';
+      };
+      ekill = {
+        description = "Kill Emacs.";
+        body = "emacsclient -s term -e '(kill-emacs)'";
       };
 
       # Fuzzy find everything!
