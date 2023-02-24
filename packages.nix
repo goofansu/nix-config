@@ -9,6 +9,8 @@
     # GNU softwares
     coreutils
     findutils
+    inetutils
+    gawk
     gnugrep
     gnused
     wget
@@ -34,7 +36,6 @@
     ffmpeg_5
     gist
     imagemagick
-    inetutils
     lnav
     tealdeer
     tokei
