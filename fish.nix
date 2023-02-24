@@ -61,10 +61,6 @@
         description = "A simple, fast and user-friendly alternative to `find`.";
         body = "if command -sq fd; fd $argv; end";
       };
-      ls = {
-        description = "A modern replacement for ‘ls’.";
-        body = "if command -sq exa; exa $argv; end";
-      };
       rm = {
         description = "Ask before removing a file.";
         body = "command rm -i $argv";
