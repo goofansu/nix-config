@@ -34,7 +34,6 @@
     asciinema
     exercism
     ffmpeg_5
-    gist
     imagemagick
     lnav
     tealdeer
