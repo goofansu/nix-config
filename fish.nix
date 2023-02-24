@@ -128,6 +128,14 @@
       unload-puma = {
         body = "launchctl unload ~/Library/LaunchAgents/io.puma.dev.plist";
       };
+      reload-puma = {
+        body = ''
+          if pgrep puma
+            unload-puma
+          end
+          load-puma
+        '';
+      };
 
       # Elixir dev
       hex-package = {
