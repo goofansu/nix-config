@@ -1,11 +1,6 @@
 { pkgs, lib, ... }:
 
 {
-  programs.emacs = {
-    enable = true;
-    package = pkgs.emacs;
-  };
-
   home.activation = {
     installDoomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ ! -d $HOME/.emacs.d ]; then
