@@ -1,6 +1,5 @@
 {
   programs.fzf.enable = true;
-  programs.gh.enable = true;
   programs.htop.enable = true;
   programs.jq.enable = true;
   programs.pandoc.enable = true;

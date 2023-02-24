@@ -1,4 +1,13 @@
 {
+  programs.gh = {
+    enable = true;
+    settings = {
+      aliases = {
+        co = "pr checkout";
+      };
+    };
+  };
+
   programs.git = {
     enable = true;
     userName = "Yejun Su";
