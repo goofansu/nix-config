@@ -19,9 +19,7 @@ sudo launchctl kickstart -k system/org.nixos.nix-daemon
 3. Install [Home Manager](https://github.com/nix-community/home-manager)
 
 ```shell
-mkdir -p ~/.config
 git clone git@github.com:goofansu/dotfiles.nix.git ~/.config/nixpkgs
-
 cd ~/.config/nixpkgs
 nix run . switch
 ```
