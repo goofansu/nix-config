@@ -6,6 +6,7 @@ brew "logrotate"
 brew "mysql", restart_service: true
 brew "postgresql@15", restart_service: true
 brew "redis", restart_service: true
+brew "wxwidgets"
 brew "puma/puma/puma-dev"
 cask "1password"
 cask "alfred"
@@ -19,7 +20,6 @@ cask "dropbox"
 cask "emacs-app"
 cask "figma"
 cask "google-chrome"
-cask "gpg-suite"
 cask "hey"
 cask "iterm2"
 cask "livebook"
