@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   programs.fzf.enable = true;
   programs.htop.enable = true;
@@ -24,7 +26,7 @@
 
   programs.tmux = {
     enable = true;
-    shell = "~/.nix-profile/bin/fish";
+    shell = "${pkgs.fish}/bin/fish";
     terminal = "xterm-256color";
   };
 }

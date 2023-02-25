@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   programs.gh = {
     enable = true;
@@ -20,7 +22,7 @@
     signing = {
       key = null;
       signByDefault = true;
-      gpgPath = "/usr/local/bin/gpg";
+      gpgPath = "${pkgs.gnupg}/bin/gpg";
     };
     extraConfig = {
       init = { defaultBranch = "main"; };

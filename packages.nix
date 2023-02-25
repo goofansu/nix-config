@@ -12,6 +12,7 @@
     inetutils
     gawk
     gnugrep
+    gnupg
     gnused
     wget
 

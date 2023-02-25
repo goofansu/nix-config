@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   programs.bash = {
     enable = true;
@@ -5,7 +7,7 @@
     shellOptions = [ ];
     sessionVariables = { BASH_SILENCE_DEPRECATION_WARNING = 1; };
     profileExtra = ''
-      . $HOME/.nix-profile/share/asdf-vm/asdf.sh
+      . ${pkgs.asdf-vm}/share/asdf-vm/asdf.sh
     '';
   };
 }
