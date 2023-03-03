@@ -20,8 +20,10 @@
     deno # format JSON
     fd # better GNU find
     fontconfig # detect fonts
+    graphviz # generate graphs in org-roam
     ripgrep # search tool
     shellcheck # shell script linting
+    shfmt # formt shell script
     zstd # undo list compression
 
     # fonts
