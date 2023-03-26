@@ -42,6 +42,7 @@
     tealdeer
     tokei
     tree
+    wakatime
 
     # dev
     ansible
