@@ -16,6 +16,7 @@
     userName = "Yejun Su";
     userEmail = "yejun@hey.com";
     aliases = {
+      br = "branch";
       ci = "commit";
       co = "checkout";
     };
