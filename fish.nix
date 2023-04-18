@@ -114,13 +114,13 @@
           rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ssh "$result"
         '';
       };
-      fzf-git-co = {
+      gcb = {
         description = "Fuzzy find and checkout a git branch.";
         body = ''
           git br | fzf | awk '{print $1}' | read -l result; and git co $result
         '';
       };
-      fzf-gh-co = {
+      gco = {
         description = "Fuzzy find and checkout a GitHub pull request.";
         body = ''
           gh pr list | fzf | awk '{print $1}' | read -l result; and gh co $result
