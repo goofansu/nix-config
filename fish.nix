@@ -126,6 +126,12 @@
           git br | fzf | awk '{print $1}' | read -l result; and git co $result
         '';
       };
+      glc = {
+        description = "Fuzzy find and list commits of a specific git branch.";
+        body = ''
+          git br | fzf | awk '{print $1}' | read -l result; and git log --oneline $result
+        '';
+      };
       gco = {
         description = "Fuzzy find and checkout a GitHub pull request.";
         body = ''
@@ -153,6 +159,14 @@
       hex-package = {
         description = "Fetch Elixir package config.";
         body = "mix hex.info $argv | grep 'Config:' | sed 's/Config: //g'";
+      };
+
+      # OpenApply dev
+      oa-release-pr = {
+        description = "Fetch the pull request id of weekly release.";
+        body = ''
+          gh pr list -s open -A 'johnnylai' | grep release | awk '{print $1}'
+        '';
       };
     };
   };
