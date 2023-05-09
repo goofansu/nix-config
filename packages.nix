@@ -36,6 +36,7 @@
     # utils
     asciinema
     exercism
+    doggo
     ffmpeg_5
     imagemagick
     lnav
@@ -49,5 +50,6 @@
     asdf-vm
     awscli2
     flyctl
+    httpie
   ];
 }
