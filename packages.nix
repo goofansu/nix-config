@@ -7,7 +7,7 @@
     nixfmt
 
     # GNU softwares
-    coreutils
+    coreutils-prefixed
     findutils
     inetutils
     gawk
