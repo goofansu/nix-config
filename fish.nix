@@ -172,10 +172,10 @@
       };
 
       # OpenApply dev
-      oa-release-pr = {
-        description = "Fetch the pull request id of weekly release.";
+      release-pr-id = {
+        description = "Fetch the id of release pull request.";
         body = ''
-          gh pr list -s open -A 'johnnylai' | grep release | awk '{print $1}'
+          gh pr list -s open | grep 'release/' | awk '{print $1}'
         '';
       };
     };
