@@ -120,16 +120,18 @@
           rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ssh "$result"
         '';
       };
+
+      # Git
+      gcl = {
+        description = "Fuzzy find and list commits of a specific git branch.";
+        body = ''
+          git br | fzf | awk '{print $1}' | read -l result; and git log --oneline $result
+        '';
+      };
       gcb = {
         description = "Fuzzy find and checkout a git branch.";
         body = ''
           git br | fzf | awk '{print $1}' | read -l result; and git co $result
-        '';
-      };
-      glc = {
-        description = "Fuzzy find and list commits of a specific git branch.";
-        body = ''
-          git br | fzf | awk '{print $1}' | read -l result; and git log --oneline $result
         '';
       };
       gco = {
@@ -137,6 +139,14 @@
         body = ''
           gh pr list | fzf | awk '{print $1}' | read -l result; and gh co $result
         '';
+      };
+      gcd = {
+        description = "Checkout the develop branch.";
+        body = "git co develop";
+      };
+      gcm = {
+        description = "Checkout the main branch.";
+        body = "git br -l master main | sed 's/^* //' | xargs git co";
       };
 
       # Rails dev
