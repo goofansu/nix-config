@@ -6,6 +6,11 @@
   programs.jq.enable = true;
   programs.pandoc.enable = true;
 
+  programs.atuin = {
+    enable = true;
+    flags = [ "--disable-up-arrow" ];
+  };
+
   programs.bat = {
     enable = true;
     config = {
