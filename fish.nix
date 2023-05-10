@@ -123,19 +123,19 @@
 
       # Git
       gcl = {
-        description = "Fuzzy find and list commits of a specific git branch.";
+        description = "Fuzzy find and list commits of the selected git branch.";
         body = ''
           git br | fzf | awk '{print $1}' | read -l result; and git log --oneline $result
         '';
       };
       gcb = {
-        description = "Fuzzy find and checkout a git branch.";
+        description = "Fuzzy find and checkout the selected git branch.";
         body = ''
           git br | fzf | awk '{print $1}' | read -l result; and git co $result
         '';
       };
       gco = {
-        description = "Fuzzy find and checkout a GitHub pull request.";
+        description = "Fuzzy find and checkout the selected pull request.";
         body = ''
           gh pr list | fzf | awk '{print $1}' | read -l result; and gh co $result
         '';
@@ -147,6 +147,12 @@
       gcm = {
         description = "Checkout the main branch.";
         body = "git br -l master main | sed 's/^* //' | xargs git co";
+      };
+      gp = {
+        description = "Git pull current branch.";
+        body = ''
+          git pull origin $(git rev-parse --abbrev-ref HEAD)
+        '';
       };
 
       # Rails dev
