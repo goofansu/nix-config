@@ -120,8 +120,6 @@
           rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ssh "$result"
         '';
       };
-
-      # Git
       gcl = {
         description = "Fuzzy find and list commits of the selected git branch";
         body = ''
@@ -138,20 +136,6 @@
         description = "Fuzzy find and checkout the selected pull request";
         body = ''
           gh pr list | fzf | awk '{print $1}' | read -l result; and gh co $result
-        '';
-      };
-      gcd = {
-        description = "Checkout the develop branch";
-        body = "git co develop";
-      };
-      gcm = {
-        description = "Checkout the main branch";
-        body = "git br -l master main | sed 's/^* //' | xargs git co";
-      };
-      gp = {
-        description = "Git pull current branch";
-        body = ''
-          git pull origin $(git rev-parse --abbrev-ref HEAD)
         '';
       };
 
