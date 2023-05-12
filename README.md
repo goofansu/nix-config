@@ -1,5 +1,5 @@
 # dotfiles.nix
-🚀 dotfiles powered by Nix
+My `$HOME` configuration powered by [Nix](https://nixos.org) and [home-manager](https://github.com/nix-community/home-manager).
 
 ## Install
 1. Install Nix
