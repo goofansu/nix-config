@@ -53,6 +53,8 @@
     asdf-vm
     awscli2
     chromedriver
+    elixir
+    erlang
     flyctl
     httpie
     ngrok
