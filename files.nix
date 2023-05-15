@@ -4,5 +4,4 @@
   home.file.".xrayconfig".text =
     ":editor: '/opt/homebrew/bin/emacsclient -s gui -c $file'";
   home.file.".Brewfile".source = ./Brewfile;
-  home.file.".Brewfile.lock.json".source = ./Brewfile.lock.json;
 }
