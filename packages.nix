@@ -54,7 +54,6 @@
     chromedriver
     elixir
     elixir-ls
-    erlang
     flyctl
     httpie
     ngrok
