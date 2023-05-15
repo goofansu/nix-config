@@ -2,7 +2,6 @@ tap "homebrew/bundle"
 tap "homebrew/services"
 tap "railwaycat/emacsmacport"
 tap "puma/puma"
-brew "logrotate"
 brew "mysql", restart_service: true
 brew "postgresql@15", restart_service: true
 brew "redis", restart_service: true
