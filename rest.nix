@@ -5,6 +5,7 @@
   programs.htop.enable = true;
   programs.jq.enable = true;
   programs.pandoc.enable = true;
+  programs.zoxide.enable = true;
 
   programs.atuin = {
     enable = true;
