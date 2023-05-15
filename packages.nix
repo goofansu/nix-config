@@ -52,6 +52,7 @@
     ansible
     asdf-vm
     awscli2
+    chromedriver
     flyctl
     httpie
   ];
