@@ -38,8 +38,11 @@
     exercism
     doggo
     ffmpeg_5
+    htop
     imagemagick
+    jq
     lnav
+    pandoc
     tealdeer
     tokei
     tree
