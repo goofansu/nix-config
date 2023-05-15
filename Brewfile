@@ -1,10 +1,8 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
-tap "puma/puma"
 tap "railwaycat/emacsmacport"
 brew "mysql", restart_service: true
 brew "redis", restart_service: true
-brew "puma/puma/puma-dev"
 cask "1password"
 cask "alfred"
 cask "anki"
