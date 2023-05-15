@@ -10,10 +10,6 @@
       if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
           fenv source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
       end
-
-      if test -d $HOME/.asdf
-          source ${pkgs.asdf-vm}/share/asdf-vm/asdf.fish
-      end
     '';
     plugins = [
       {

@@ -50,7 +50,6 @@
 
     # dev
     ansible
-    asdf-vm
     awscli2
     chromedriver
     elixir
