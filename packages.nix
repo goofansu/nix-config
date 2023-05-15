@@ -9,11 +9,11 @@
     # GNU softwares
     coreutils-prefixed
     findutils
-    inetutils
     gawk
     gnugrep
     gnupg
     gnused
+    inetutils
     wget
 
     # Doom Emacs
@@ -35,8 +35,8 @@
 
     # utils
     asciinema
-    exercism
     doggo
+    exercism
     ffmpeg_5
     htop
     imagemagick
