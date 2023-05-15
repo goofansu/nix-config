@@ -53,6 +53,7 @@
     awscli2
     chromedriver
     elixir
+    elixir-ls
     erlang
     flyctl
     httpie
