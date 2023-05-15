@@ -55,5 +55,6 @@
     chromedriver
     flyctl
     httpie
+    ngrok
   ];
 }
