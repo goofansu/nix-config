@@ -32,6 +32,6 @@
     };
     ignores = [ ".DS_Store" "*.log*" "node_modules" ".elixir_ls" ".direnv" ];
     includes = [{ path = "~/.gitconfig_local"; }];
-    delta = { enable = true; };
+    difftastic = { enable = true; };
   };
 }
