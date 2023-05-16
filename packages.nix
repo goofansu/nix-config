@@ -21,6 +21,7 @@
     fd # better GNU find
     fontconfig # detect fonts
     graphviz # generate graphs in org-roam
+    nodejs # copilot.el
     ripgrep # search tool
     shellcheck # shell script linting
     shfmt # formt shell script
