@@ -22,6 +22,7 @@
     fontconfig # detect fonts
     graphviz # generate graphs in org-roam
     nodejs # copilot.el
+    pandoc # markdown compiler
     ripgrep # search tool
     shellcheck # shell script linting
     shfmt # formt shell script
@@ -34,29 +35,26 @@
     julia-mono
     overpass
 
+    # languages
+    elixir
+    elixir-ls
+
     # utils
-    asciinema
-    doggo
-    exercism
-    ffmpeg_5
+    ansible
+    ffmpeg
     htop
-    imagemagick
+    httpie
     jq
-    lnav
-    pandoc
     tealdeer
     tokei
     tree
-    wakatime
 
-    # dev
-    ansible
+    # services
+    asciinema
     awscli2
-    chromedriver
-    elixir
-    elixir-ls
+    exercism
     flyctl
-    httpie
     ngrok
+    wakatime
   ];
 }
