@@ -1,8 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "railwaycat/emacsmacport"
-brew "mysql", restart_service: true
-brew "redis", restart_service: true
 cask "1password"
 cask "alfred"
 cask "anki"
