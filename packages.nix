@@ -42,6 +42,7 @@
     # utils
     ansible
     ffmpeg
+    graphviz
     htop
     httpie
     jq
