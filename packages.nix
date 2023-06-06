@@ -38,7 +38,6 @@
     # languages
     elixir
     elixir-ls
-    ruby
 
     # utils
     ansible
