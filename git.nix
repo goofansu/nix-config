@@ -29,6 +29,7 @@
       init = { defaultBranch = "main"; };
       pull = { rebase = true; };
       github = { user = "goofansu"; };
+      advice = { detachedHead = false; };
     };
     ignores = [ ".DS_Store" "*.log*" "node_modules" ".elixir_ls" ".direnv" ];
     includes = [{ path = "~/.gitconfig_local"; }];
