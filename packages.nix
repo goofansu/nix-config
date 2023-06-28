@@ -47,6 +47,7 @@
     htop
     httpie
     jq
+    mkcert
     tealdeer
     tokei
     tree
