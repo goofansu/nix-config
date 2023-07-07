@@ -42,7 +42,6 @@
     ruby
 
     # utils
-    ansible
     ffmpeg
     graphviz
     htop
