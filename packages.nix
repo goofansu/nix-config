@@ -43,7 +43,6 @@
 
     # utils
     ffmpeg
-    graphviz
     htop
     httpie
     jq
