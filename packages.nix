@@ -21,7 +21,6 @@
     fd # better GNU find
     fontconfig # detect fonts
     graphviz # generate graphs in org-roam
-    guile # learn SICP with scheme
     nodejs # copilot.el
     pandoc # markdown compiler
     ripgrep # search tool
