@@ -16,17 +16,9 @@
     inetutils
     wget
 
-    # Doom Emacs
-    deno # format JSON
-    fd # better GNU find
-    fontconfig # detect fonts
-    graphviz # generate graphs in org-roam
+    # Emacs
     nodejs # copilot.el
-    pandoc # markdown compiler
-    ripgrep # search tool
-    shellcheck # shell script linting
-    shfmt # formt shell script
-    zstd # undo list compression
+    ispell # spell checking
 
     # fonts
     emacs-all-the-icons-fonts
@@ -42,12 +34,15 @@
     solargraph
 
     # utils
+    fd
     ffmpeg
+    fontconfig
     htop
     httpie
-    ispell
     jq
     mkcert
+    pandoc
+    ripgrep
     tealdeer
     tokei
     tree
