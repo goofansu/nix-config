@@ -35,10 +35,11 @@
     julia-mono
     overpass
 
-    # languages
+    # languages with their language servers
     elixir
     elixir-ls
     ruby
+    solargraph
 
     # utils
     ffmpeg
