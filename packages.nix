@@ -45,6 +45,7 @@
     ffmpeg
     htop
     httpie
+    ispell
     jq
     mkcert
     tealdeer
