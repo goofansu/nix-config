@@ -50,9 +50,7 @@
     # services
     asciinema
     awscli2
-    exercism
     flyctl
     ngrok
-    wakatime
   ];
 }
