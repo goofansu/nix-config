@@ -1,5 +1,5 @@
 {
-  home.sessionPath = [ "$HOME/.config/emacs/bin" ];
+  home.sessionPath = [ "$HOME/.gem/ruby/3.2.0/bin" "$HOME/.config/emacs/bin" ];
 
   home.sessionVariables = {
     LANG = "en_US.UTF-8";

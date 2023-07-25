@@ -30,7 +30,7 @@
     # languages with their language servers
     elixir
     elixir-ls
-    ruby
+    ruby_3_2
     solargraph
 
     # utils
