@@ -42,6 +42,7 @@
     jq
     mkcert
     pandoc
+    pass
     ripgrep
     tealdeer
     tokei
