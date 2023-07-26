@@ -30,8 +30,6 @@
     # languages with their language servers
     elixir
     elixir-ls
-    ruby_3_2
-    solargraph
 
     # utils
     fd
