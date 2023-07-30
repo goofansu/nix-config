@@ -3,8 +3,8 @@
 {
   home.packages = with pkgs; [
     # GNU softwares
-    coreutils
     coreutils-prefixed
+    coreutils
     findutils
     inetutils
     gawk
@@ -26,6 +26,7 @@
     mkcert
     ngrok
     pandoc
+    pass
     ripgrep
     tealdeer
     tokei

@@ -8,5 +8,6 @@
     # fonts
     emacs-all-the-icons-fonts
     jetbrains-mono
+    overpass
   ];
 }
