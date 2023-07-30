@@ -1,6 +1,16 @@
 { pkgs, lib, ... }:
 
 {
+  home.packages = with pkgs; [
+    fd # better GNU find
+    graphviz # org-roam graphs
+    nixfmt # Nix code formatting
+    nodejs # lsp and copilot.el
+    shellcheck # shell script linting
+    shfmt # shell script code formatting
+    zstd # undo list compression
+  ];
+
   home.activation = {
     installEmacsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       if [ ! -d $HOME/.config/emacs ]; then

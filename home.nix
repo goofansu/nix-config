@@ -3,10 +3,10 @@
   home.homeDirectory = "/Users/james";
   home.stateVersion = "22.11";
   programs.home-manager.enable = true;
-  fonts.fontconfig.enable = true;
 
   imports = [
     ./packages.nix
+    ./fonts.nix
     ./files.nix
     ./envs.nix
     ./emacs.nix
