@@ -3,7 +3,6 @@
 {
   home.packages = with pkgs; [
     # GNU softwares
-    coreutils-prefixed
     coreutils
     findutils
     inetutils
