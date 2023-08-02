@@ -54,3 +54,15 @@ $ home-manager generations
 $ /nix/store/fjyvxlpg6rnglrlk2km4l248m3fa7mgh-home-manager-generation/activate
 ```
 
+### Upgrade packages
+
+``` shell
+nix flake update
+home-manager switch
+```
+
+### Garbage collection
+
+``` shell
+nix-collect-garbage -d
+```
