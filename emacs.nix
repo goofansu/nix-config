@@ -2,6 +2,7 @@
 
 {
   home.packages = with pkgs; [
+    emacs-all-the-icons-fonts # icons
     fd # better GNU find
     graphviz # org-roam graphs
     nixfmt # Nix code formatting

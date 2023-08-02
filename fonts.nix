@@ -5,9 +5,11 @@
   home.packages = with pkgs; [
     fontconfig
 
-    # fonts
-    emacs-all-the-icons-fonts
+    # Fonts
     jetbrains-mono
     overpass
+
+    # Patched fonts
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 }
