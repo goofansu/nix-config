@@ -27,32 +27,6 @@
     enableAliases = true;
   };
 
-  programs.gh-dash = {
-    enable = true;
-    settings = {
-      prSections = [
-        {
-          title = "Created";
-          filters = "is:open author:@me";
-        }
-        {
-          title = "Review";
-          filters = "is:open review-requested:@me";
-        }
-      ];
-      issuesSections = [
-        {
-          title = "Created";
-          filters = "is:open author:@me";
-        }
-        {
-          title = "Assigned";
-          filters = "is:open assignee:@me";
-        }
-      ];
-    };
-  };
-
   programs.tmux = {
     enable = true;
     shell = "${pkgs.fish}/bin/fish";
