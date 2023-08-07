@@ -11,6 +11,7 @@
     gnupg
     gnused
     wget
+    bash
 
     # utils
     asciinema
