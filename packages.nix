@@ -2,37 +2,48 @@
 
 {
   home.packages = with pkgs; [
-    # GNU softwares
+    # System utilities
     coreutils
     findutils
     inetutils
-    gawk
-    gnugrep
-    gnupg
-    gnused
-    wget
-    bash
-
-    # utils
-    asciinema
-    awscli2
-    curl
-    ffmpeg
-    flyctl
     htop
-    httpie
-    imagemagick
-    jq
-    mkcert
-    ngrok
-    pandoc
-    pass
-    ripgrep
-    tealdeer
-    tokei
     tree
 
-    # languages
+    # Text processing
+    gawk
+    gnused
+
+    # Text searching
+    gnugrep
+    ripgrep
+
+    # Network
+    curl
+    wget
+
+    # Security
+    gnupg
+    pass
+
+    # Converters
+    ffmpeg
+    imagemagick
+    pandoc
+
+    # Software development
+    httpie
+    jq
+    mkcert
+    tealdeer
+    tokei
+
+    # Web services
+    asciinema
+    awscli2
+    flyctl
+    ngrok
+
+    # Languages
     elixir
     elixir-ls
     ruby

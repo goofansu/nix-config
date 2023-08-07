@@ -2,9 +2,11 @@
 
 {
   home.packages = with pkgs; [
+    bash # latest bash is required by eshell
     emacs-all-the-icons-fonts # icons
     fd # better GNU find
     graphviz # org-roam graphs
+    ispell # required by flyspell
     nixfmt # Nix code formatting
     nodejs # lsp and copilot.el
     shellcheck # shell script linting
