@@ -126,24 +126,8 @@
         '';
       };
 
-      # Rails dev
-      load-puma = {
-        body = "launchctl load -w ~/Library/LaunchAgents/io.puma.dev.plist";
-      };
-      unload-puma = {
-        body = "launchctl unload ~/Library/LaunchAgents/io.puma.dev.plist";
-      };
-      reload-puma = {
-        body = ''
-          if pgrep puma
-            unload-puma
-          end
-          load-puma
-        '';
-      };
-
       # Elixir dev
-      hex-package = {
+      mix-hex-info = {
         description = "Fetch Elixir package config";
         body = "mix hex.info $argv | grep 'Config:' | sed 's/Config: //g'";
       };

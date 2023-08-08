@@ -3,12 +3,13 @@
 {
   home.packages = with pkgs; [
     bash # latest bash is required by eshell
+    coreutils-prefixed # gls is required by dired module
     emacs-all-the-icons-fonts # icons
     fd # better GNU find
+    gnutls # required by irc module
     graphviz # org-roam graphs
     ispell # required by flyspell
     nixfmt # Nix code formatting
-    nodejs # lsp and copilot.el
     shellcheck # shell script linting
     shfmt # shell script code formatting
     zstd # undo list compression
