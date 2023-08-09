@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration";
+  description = "My macOS configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
@@ -18,7 +18,7 @@
   outputs = { nixpkgs, darwin, home-manager, ... }: {
     darwinConfigurations.jamess-macbook-pro = darwin.lib.darwinSystem {
       modules = [
-        ./configuration.nix
+        ./darwin.nix
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
