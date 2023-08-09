@@ -14,11 +14,21 @@
     plugins = [
       {
         name = "done";
-        src = pkgs.fishPlugins.done.src;
+        src = pkgs.fetchFromGitHub {
+          owner = "franciscolourenco";
+          repo = "done";
+          rev = "6oeyN9ngXWvps1c5QAUjlyPDQwRWAoxBiVTNmZ4sG8E=";
+          sha256 = "6oeyN9ngXWvps1c5QAUjlyPDQwRWAoxBiVTNmZ4sG8E=";
+        };
       }
       {
         name = "hydro";
-        src = pkgs.fishPlugins.hydro.src;
+        src = pkgs.fetchFromGitHub {
+          owner = "jorgebucaran";
+          repo = "hydro";
+          rev = "41b46a05c84a15fe391b9d43ecb71c7a243b5703";
+          sha256 = "zmEa/GJ9jtjzeyJUWVNSz/wYrU2FtqhcHdgxzi6ANHg=";
+        };
       }
       {
         name = "dracula";
@@ -32,10 +42,10 @@
       {
         name = "foreign-env";
         src = pkgs.fetchFromGitHub {
-          "owner" = "oh-my-fish";
-          "repo" = "plugin-foreign-env";
-          "rev" = "3ee95536106c11073d6ff466c1681cde31001383";
-          "sha256" = "vyW/X2lLjsieMpP9Wi2bZPjReaZBkqUbkh15zOi8T4Y=";
+          owner = "oh-my-fish";
+          repo = "plugin-foreign-env";
+          rev = "3ee95536106c11073d6ff466c1681cde31001383";
+          sha256 = "vyW/X2lLjsieMpP9Wi2bZPjReaZBkqUbkh15zOi8T4Y=";
         };
       }
     ];
