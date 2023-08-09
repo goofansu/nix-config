@@ -1,7 +1,7 @@
-{
-  home.username = "james";
-  home.homeDirectory = "/Users/james";
-  home.stateVersion = "22.11";
+{ lib, ... }: {
+  home.username = lib.mkForce "james";
+  home.homeDirectory = lib.mkForce "/Users/james";
+  home.stateVersion = "23.05";
   programs.home-manager.enable = true;
 
   imports = [
@@ -15,11 +15,4 @@
     ./git.nix
     ./rest.nix
   ];
-
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-      allowUnfreePredicate = (_: true);
-    };
-  };
 }

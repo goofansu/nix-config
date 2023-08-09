@@ -6,11 +6,6 @@
     shellInit = ''
       set -U hydro_multiline true;
     '';
-    interactiveShellInit = ''
-      if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-          fenv source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-      end
-    '';
     plugins = [
       {
         name = "done";
@@ -37,15 +32,6 @@
           repo = "fish";
           rev = "0e51af5e5346e5d24efabd43fb4631e2a8fd1b70";
           sha256 = "YXh6pPJ9dJDPpq1kX5xd1edoOaH6jDq8pDOkx3k03/0=";
-        };
-      }
-      {
-        name = "foreign-env";
-        src = pkgs.fetchFromGitHub {
-          owner = "oh-my-fish";
-          repo = "plugin-foreign-env";
-          rev = "3ee95536106c11073d6ff466c1681cde31001383";
-          sha256 = "vyW/X2lLjsieMpP9Wi2bZPjReaZBkqUbkh15zOi8T4Y=";
         };
       }
     ];
