@@ -17,15 +17,8 @@
 
   outputs = { nixpkgs, darwin, home-manager, ... }: {
     darwinConfigurations.jamess-macbook-pro = darwin.lib.darwinSystem {
-      modules = [
-        ./darwin.nix
-        home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.james = import ./home.nix;
-        }
-      ];
+      system = "aarch64-darwin";
+      modules = [ home-manager.darwinModules.home-manager ./darwin.nix ];
     };
   };
 }
