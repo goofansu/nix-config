@@ -26,7 +26,6 @@
     {
       name = "lencx/chatgpt";
       clone_target = "https://github.com/lencx/ChatGPT.git";
-      force_auto_update = true;
     }
   ];
   homebrew.casks = [
