@@ -31,6 +31,7 @@
 
   # Homebrew
   homebrew.enable = true;
+  homebrew.onActivation.cleanup = "zap";
   homebrew.taps = [
     "railwaycat/emacsmacport"
     {
