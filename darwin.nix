@@ -52,7 +52,7 @@
     "google-chrome"
     "gpg-suite"
     "hey"
-    "iterm2"
+    "kitty"
     "livebook"
     "notion"
     "postman"
