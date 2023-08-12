@@ -41,11 +41,15 @@
       size = 16;
     };
     darwinLaunchOptions = [ "--listen-on=unix:/tmp/kitty.sock" ];
-    shellIntegration.enableFishIntegration = true;
+    shellIntegration = {
+      mode = "no-cursor";
+      enableFishIntegration = true;
+    };
     settings = {
       shell = "${pkgs.fish}/bin/fish";
       allow_remote_control = "yes";
       cursor_blink_interval = 0;
+      cursor_shape = "block";
       macos_option_as_alt = "left";
       macos_traditional_fullscreen = "yes";
       tab_bar_style = "powerline";
