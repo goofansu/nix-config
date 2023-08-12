@@ -56,6 +56,7 @@
     "notion"
     "postman"
     "prince"
+    "raycast"
     "rectangle"
     "slack"
     "spotify"
