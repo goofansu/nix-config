@@ -52,7 +52,6 @@
     "google-chrome"
     "gpg-suite"
     "hey"
-    "kitty"
     "livebook"
     "notion"
     "postman"
