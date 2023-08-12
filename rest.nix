@@ -28,7 +28,7 @@
   };
 
   programs.tmux = {
-    enable = true;
+    enable = false;
     shell = "${pkgs.fish}/bin/fish";
     terminal = "xterm-256color";
   };
@@ -43,6 +43,7 @@
     darwinLaunchOptions = [ "--listen-on=unix:/tmp/kitty.sock" ];
     shellIntegration.enableFishIntegration = true;
     settings = {
+      shell = "${pkgs.fish}/bin/fish";
       allow_remote_control = "yes";
       cursor_blink_interval = 0;
       macos_option_as_alt = "left";
