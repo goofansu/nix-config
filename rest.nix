@@ -50,10 +50,11 @@
       allow_remote_control = "yes";
       cursor_blink_interval = 0;
       cursor_shape = "block";
+      enabled_layouts = "splits, stack";
       macos_option_as_alt = "left";
       macos_traditional_fullscreen = "yes";
       tab_bar_style = "powerline";
-      enabled_layouts = "splits, stack";
+      window_padding_width = 4;
     };
     extraConfig = ''
       action_alias launch_window launch --type window --cwd current
