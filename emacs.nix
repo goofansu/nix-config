@@ -2,17 +2,31 @@
 
 {
   home.packages = with pkgs; [
-    bash # latest bash is required by eshell
-    coreutils-prefixed # gls is required by dired module
-    emacs-all-the-icons-fonts # icons
-    fd # better GNU find
-    gnutls # required by irc module
-    graphviz # org-roam graphs
-    ispell # required by flyspell
-    nixfmt # Nix code formatting
-    shellcheck # shell script linting
-    shfmt # shell script code formatting
-    zstd # undo list compression
+    # Doom Emacs dependencies
+    emacs-all-the-icons-fonts
+
+    # :emacs dired
+    coreutils-prefixed
+
+    # :emacs undo
+    zstd
+
+    # :lang lsp
+    nodejs_20
+
+    # :lang nix
+    nixfmt
+
+    # :lang org
+    graphviz
+
+    # :lang sh
+    shfmt
+    shellcheck
+
+    # :lang web
+    nodePackages.stylelint
+    nodePackages.js-beautify
   ];
 
   home.activation = {
