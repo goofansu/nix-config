@@ -40,14 +40,6 @@
         description = "A cat(1) clone with wings";
         body = "if command -sq bat; bat $argv; end";
       };
-      find = {
-        description = "A simple, fast and user-friendly alternative to `find`";
-        body = "if command -sq fd; fd $argv; end";
-      };
-      gist = {
-        description = "Work with GitHub gists";
-        body = "if command -sq gh; gh gist $argv; end";
-      };
       rm = {
         description = "Ask before removing a file";
         body = "command rm -i $argv";
