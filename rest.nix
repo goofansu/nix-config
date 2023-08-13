@@ -27,12 +27,6 @@
     enableAliases = true;
   };
 
-  programs.tmux = {
-    enable = false;
-    shell = "${pkgs.fish}/bin/fish";
-    terminal = "xterm-256color";
-  };
-
   programs.kitty = {
     enable = true;
     theme = "Dracula";
