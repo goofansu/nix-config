@@ -6,7 +6,6 @@
   programs.jq.enable = true;
   programs.pandoc.enable = true;
   programs.password-store.enable = true;
-  programs.ripgrep.enable = true;
   programs.tealdeer.enable = true;
   programs.zoxide.enable = true;
 

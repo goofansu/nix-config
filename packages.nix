@@ -2,39 +2,27 @@
 
 {
   home.packages = with pkgs; [
-    # System utilities
+    # GNU softwares
     coreutils
-    findutils
     inetutils
-    tree
-
-    # Text processing
-    gawk
-    gnused
-
-    # Text searching
     gnugrep
+    gnused
+    gawk
 
-    # Network
-    curl
-    wget
-
-    # Converters
+    # Tools
     ffmpeg
     imagemagick
 
     # Software development
-    httpie
-    mkcert
-    newman
-    postman
-    tokei
-
-    # Web services
     asciinema
     awscli2
+    curl
     flyctl
+    httpie
+    newman
     ngrok
+    postman
+    tokei
 
     # Languages
     elixir

@@ -2,6 +2,11 @@
 
 {
   home.packages = with pkgs; [
+    # Doom Emacs prerequisites
+    findutils
+    ripgrep
+    fd
+
     # Doom Emacs dependencies
     emacs-all-the-icons-fonts
 
