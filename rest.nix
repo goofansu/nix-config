@@ -47,6 +47,7 @@
     settings = {
       shell = "${pkgs.fish}/bin/fish";
       allow_remote_control = "yes";
+      confirm_os_window_close = 1;
       cursor_blink_interval = 0;
       cursor_shape = "block";
       enabled_layouts = "splits, stack";
