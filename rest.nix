@@ -2,7 +2,12 @@
 
 {
   programs.fzf.enable = true;
+  programs.htop.enable = true;
+  programs.jq.enable = true;
+  programs.pandoc.enable = true;
+  programs.password-store.enable = true;
   programs.ripgrep.enable = true;
+  programs.tealdeer.enable = true;
   programs.zoxide.enable = true;
 
   programs.direnv = {

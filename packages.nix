@@ -6,7 +6,6 @@
     coreutils
     findutils
     inetutils
-    htop
     tree
 
     # Text processing
@@ -20,22 +19,15 @@
     curl
     wget
 
-    # Security
-    gnupg
-    pass
-
     # Converters
     ffmpeg
     imagemagick
-    pandoc
 
     # Software development
     httpie
-    jq
     mkcert
     newman
     postman
-    tealdeer
     tokei
 
     # Web services
