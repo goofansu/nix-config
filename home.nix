@@ -13,6 +13,7 @@
     ./bash.nix
     ./fish.nix
     ./git.nix
+    ./gpg.nix
     ./rest.nix
   ];
 }
