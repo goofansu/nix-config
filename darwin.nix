@@ -49,7 +49,6 @@
     "dropbox"
     "emacs-mac"
     "google-chrome"
-    "gpg-suite"
     "hey"
     "livebook"
     "notion"
