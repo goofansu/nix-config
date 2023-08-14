@@ -15,7 +15,6 @@
 
     # Text searching
     gnugrep
-    ripgrep
 
     # Network
     curl

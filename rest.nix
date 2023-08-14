@@ -2,7 +2,13 @@
 
 {
   programs.fzf.enable = true;
+  programs.ripgrep.enable = true;
   programs.zoxide.enable = true;
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 
   programs.atuin = {
     enable = true;
@@ -15,11 +21,6 @@
       theme = "Dracula";
       style = "plain";
     };
-  };
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
   };
 
   programs.exa = {
