@@ -52,7 +52,6 @@
     "hey"
     "livebook"
     "notion"
-    "postman"
     "prince"
     "raycast"
     "rectangle"

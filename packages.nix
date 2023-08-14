@@ -34,6 +34,8 @@
     httpie
     jq
     mkcert
+    newman
+    postman
     tealdeer
     tokei
 
