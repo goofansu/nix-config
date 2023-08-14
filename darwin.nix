@@ -54,7 +54,6 @@
     "notion"
     "prince"
     "raycast"
-    "rectangle"
     "slack"
     "spotify"
     "viscosity"
