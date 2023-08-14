@@ -10,15 +10,14 @@
     gawk
 
     # Tools
-    ffmpeg
-    imagemagick
-
-    # Software development
     asciinema
     awscli2
     curl
+    ffmpeg
     flyctl
     httpie
+    hugo
+    imagemagick
     newman
     ngrok
     postman
