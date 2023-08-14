@@ -61,11 +61,12 @@
       action_alias launch_window launch --type window --cwd current
     '';
     keybindings = {
-      "cmd+d" = "launch_window --location vsplit";
-      "shift+cmd+d" = "launch_window --location hsplit";
-      "shift+cmd+Enter" = "toggle_layout stack";
       "cmd+]" = "next_window";
       "cmd+[" = "previous_window";
+      "cmd+d" = "launch_window --location vsplit";
+      "shift+cmd+d" = "launch_window --location hsplit";
+      "shift+cmd+t" = "detach_window new-tab";
+      "shift+cmd+Enter" = "toggle_layout stack";
     };
   };
 }
