@@ -41,7 +41,6 @@
   ];
   homebrew.casks = [
     "1password"
-    "alfred"
     "anki"
     "arc"
     "cleanshot"
