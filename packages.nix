@@ -12,6 +12,7 @@
     # Tools
     asciinema
     awscli2
+    bitwarden-cli
     curl
     ffmpeg
     flyctl
