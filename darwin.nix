@@ -31,7 +31,7 @@
 
   # Homebrew
   homebrew.enable = true;
-  homebrew.onActivation.cleanup = "zap";
+  homebrew.onActivation.cleanup = "uninstall";
   homebrew.taps = [
     "railwaycat/emacsmacport"
     {
