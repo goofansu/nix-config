@@ -56,7 +56,6 @@
     "raycast"
     "rapidapi"
     "slack"
-    "spotify"
     "viscosity"
     "zoom"
     {
