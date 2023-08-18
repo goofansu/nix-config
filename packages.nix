@@ -2,27 +2,25 @@
 
 {
   home.packages = with pkgs; [
-    # GNU softwares
+    # Common utils
     coreutils
     inetutils
     gnugrep
     gnused
     gawk
+    curl
+    wget
 
     # Tools
     asciinema
-    awscli2
     bitwarden-cli
-    curl
     ffmpeg
-    flyctl
-    httpie
-    hugo
     imagemagick
-    newman
+
+    # Development
+    awscli2
+    flyctl
     ngrok
-    postman
-    tokei
 
     # Languages
     elixir

@@ -52,6 +52,7 @@
     "google-chrome"
     "hey"
     "livebook"
+    "postman"
     "prince"
     "raycast"
     "rapidapi"
