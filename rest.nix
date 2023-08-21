@@ -62,7 +62,9 @@
     '';
     keybindings = {
       "cmd+]" = "next_window";
+      "cmd+0x1e" = "next_window";
       "cmd+[" = "previous_window";
+      "cmd+0x21" = "previous_window";
       "cmd+d" = "launch_window --location vsplit";
       "shift+cmd+d" = "launch_window --location hsplit";
       "shift+cmd+t" = "detach_window new-tab";
