@@ -8,5 +8,8 @@
     # Fonts
     jetbrains-mono
     overpass
+
+    # Patched fonts
+    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 }
