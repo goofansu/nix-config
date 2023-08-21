@@ -32,13 +32,7 @@
   # Homebrew
   homebrew.enable = true;
   homebrew.onActivation.cleanup = "uninstall";
-  homebrew.taps = [
-    "railwaycat/emacsmacport"
-    {
-      name = "lencx/chatgpt";
-      clone_target = "https://github.com/lencx/ChatGPT.git";
-    }
-  ];
+  homebrew.taps = [ "railwaycat/emacsmacport" ];
   homebrew.casks = [
     "1password"
     "anki"
@@ -59,9 +53,5 @@
     "slack"
     "viscosity"
     "zoom"
-    {
-      name = "chatgpt";
-      args = { no_quarantine = true; };
-    }
   ];
 }
