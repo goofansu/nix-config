@@ -40,7 +40,6 @@
     "cleanshot"
     "dash"
     "deepl"
-    "discord"
     "dropbox"
     "emacs-mac"
     "google-chrome"
