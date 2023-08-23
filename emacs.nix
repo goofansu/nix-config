@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [
@@ -40,8 +40,8 @@
         if [ -v DRY_RUN ]; then
           echo "Running installEmacsConfig"
         else
-          ${pkgs.git}/bin/git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
-          ${pkgs.git}/bin/git clone https://codeberg.org/goofansu/.doom.d $HOME/.config/doom
+          ${pkgs.git}/bin/git clone --depth 1 https://github.com/doomemacs/doomemacs ${config.xdg.configHome}/emacs
+          ${pkgs.git}/bin/git clone https://codeberg.org/goofansu/.doom.d ${config.xdg.configHome}/doom
         fi
       fi
     '';
