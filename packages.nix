@@ -25,7 +25,6 @@
     # Languages
     elixir
     elixir-ls
-    ruby
-    solargraph
+    ruby_3_2
   ];
 }
