@@ -16,6 +16,7 @@
     bitwarden-cli
     ffmpeg
     imagemagick
+    zbar
 
     # Development
     awscli2
