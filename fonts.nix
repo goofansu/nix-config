@@ -7,9 +7,8 @@
 
     # Fonts
     jetbrains-mono
-    overpass
-
-    # Patched fonts
+    iosevka
+    emacs-all-the-icons-fonts
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 }

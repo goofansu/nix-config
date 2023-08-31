@@ -8,8 +8,6 @@
     fd
 
     # Doom Emacs dependencies
-    emacs-all-the-icons-fonts
-
     # :emacs dired
     coreutils-prefixed
 
