@@ -50,6 +50,7 @@
     "raycast"
     "rapidapi"
     "slack"
+    "the-unarchiver"
     "viscosity"
     "zoom"
   ];
