@@ -27,7 +27,7 @@ sudo launchctl kickstart -k system/org.nixos.nix-daemon
 ## Install
 
 ```shell
-git clone git@codeberg.org:goofansu/dotfiles.nix.git ~/.config/nixpkgs
+git clone git@git.sr.ht:~goofansu/dotfiles.nix ~/.config/nixpkgs
 nix run nix-darwin -- switch --flake ~/.config/nixpkgs
 ```
 

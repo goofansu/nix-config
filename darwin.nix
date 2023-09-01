@@ -17,7 +17,7 @@
     };
     to = {
       type = "git";
-      url = "https://codeberg.org/goofansu/nix-templates";
+      url = "https://git.sr.ht/~goofansu/nix-templates";
     };
   };
 

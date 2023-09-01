@@ -39,7 +39,7 @@
           echo "Running installEmacsConfig"
         else
           ${pkgs.git}/bin/git clone --depth 1 https://github.com/doomemacs/doomemacs ${config.xdg.configHome}/emacs
-          ${pkgs.git}/bin/git clone https://codeberg.org/goofansu/.doom.d ${config.xdg.configHome}/doom
+          ${pkgs.git}/bin/git clone https://git.sr.ht/~goofansu/.doom.d ${config.xdg.configHome}/doom
         fi
       fi
     '';
