@@ -16,6 +16,7 @@
     bitwarden-cli
     ffmpeg
     hugo
+    hut
     imagemagick
     zbar
 
