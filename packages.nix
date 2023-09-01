@@ -15,6 +15,7 @@
     asciinema
     bitwarden-cli
     ffmpeg
+    hugo
     imagemagick
     zbar
 
