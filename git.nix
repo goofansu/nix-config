@@ -31,7 +31,7 @@
       github = { user = "goofansu"; };
       advice = { detachedHead = false; };
     };
-    ignores = [ ".DS_Store" "*.log*" "node_modules" ".elixir_ls" ".direnv" ];
+    ignores = [ ".DS_Store" "*.log*" "node_modules" ".elixir_ls" ];
     includes = [{ path = "~/.gitconfig_local"; }];
     difftastic = { enable = true; };
   };
