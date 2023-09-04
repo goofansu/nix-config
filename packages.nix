@@ -17,11 +17,13 @@
     hugo
     hut
     imagemagick
+    unar
     zbar
 
     # Development
     awscli2
     flyctl
+    livebook
     ngrok
 
     # Languages

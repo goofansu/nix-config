@@ -45,13 +45,11 @@
     "dropbox"
     "google-chrome"
     "hey"
-    "livebook"
     "postman"
     "prince"
     "raycast"
     "rapidapi"
     "slack"
-    "the-unarchiver"
     "viscosity"
     "zoom"
   ];
