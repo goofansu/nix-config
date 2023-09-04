@@ -13,7 +13,6 @@
 
     # Tools
     asciinema
-    bitwarden-cli
     ffmpeg
     hugo
     hut
