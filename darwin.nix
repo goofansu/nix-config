@@ -1,4 +1,7 @@
 {
+  # the stateVersion of nix-darwin
+  system.stateVersion = 4;
+
   # Make sure the nix daemon always runs
   services.nix-daemon.enable = true;
 
