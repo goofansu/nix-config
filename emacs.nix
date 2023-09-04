@@ -2,6 +2,8 @@
 
 {
   home.packages = with pkgs; [
+    emacs29-macport
+
     # Doom Emacs prerequisites
     findutils
     ripgrep

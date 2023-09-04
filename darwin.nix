@@ -35,7 +35,6 @@
   # Homebrew
   homebrew.enable = true;
   homebrew.onActivation.cleanup = "uninstall";
-  homebrew.taps = [ "railwaycat/emacsmacport" ];
   homebrew.casks = [
     "1password"
     "anki"
@@ -44,7 +43,6 @@
     "dash"
     "deepl"
     "dropbox"
-    "emacs-mac"
     "google-chrome"
     "hey"
     "livebook"
