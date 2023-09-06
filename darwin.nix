@@ -45,6 +45,8 @@
     "dropbox"
     "google-chrome"
     "hey"
+    "mysqlworkbench"
+    "netnewswire"
     "postman"
     "prince"
     "raycast"
