@@ -11,6 +11,9 @@
   # Enable the flakes feature
   nix.settings.experimental-features = "nix-command flakes";
 
+  # Add myself to trusted-users
+  nix.settings.trusted-users = [ "root" "james" ];
+
   # Add my flakes templates to nix registry
   nix.registry.nix-templates = {
     from = {
