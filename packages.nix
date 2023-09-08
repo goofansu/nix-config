@@ -17,6 +17,7 @@
     hugo
     hut
     imagemagick
+    tree
     unar
     zbar
 
