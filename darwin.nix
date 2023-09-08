@@ -57,5 +57,6 @@
     "slack"
     "viscosity"
     "zoom"
+    "zotero"
   ];
 }
