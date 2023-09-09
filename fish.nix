@@ -62,30 +62,36 @@
 
       # Emacs commands
       e = {
-        description = "Edit file in Emacs";
-        body = "emacsclient -s term -a '' -nw $argv";
+        description = "The Emacs version of vi";
+        body = "emacsclient -s term -nw -a '' $argv";
       };
-      ediff = {
-        description = "Diff files in Emacs";
+      ekill = {
+        description = "Kill the term Emacs server";
         body = ''
-          emacsclient -s term -nw -u -e "(ediff \"$argv[1]\" \"$argv[2]\")"
+          emacsclient -s term -e "(kill-emacs)"
         '';
       };
+      ec = {
+        description = "Same as e, but requires the term Emacs server";
+        body = "emacsclient -s term -nw -u $argv";
+      };
       egit = {
-        description = "Git in Emacs";
+        description = "Version control with magit";
         body = ''
-          emacsclient -s term -nw -u -e '(magit-status)'
+          ec -e "(magit-status)"
+        '';
+      };
+      ediff = {
+        description = "Compare two files with ediff";
+        body = ''
+          ec -e "(ediff \"$argv[1]\" \"$argv[2]\")"
         '';
       };
       eman = {
-        description = "Man page in Emacs";
+        description = "Display manual page in Emacs";
         body = ''
-          emacsclient -s term -nw -u -e "(man \"$argv[1]\")"
+          ec -e "(progn (man \"$argv[1]\") (delete-other-windows))"
         '';
-      };
-      ekill = {
-        description = "Kill Emacs";
-        body = "emacsclient -s term -e '(kill-emacs)'";
       };
 
       # Fuzzy find everything!
