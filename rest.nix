@@ -67,6 +67,7 @@
       enabled_layouts = "splits, stack";
       macos_option_as_alt = "left";
       macos_traditional_fullscreen = "yes";
+      scrollback_pager_history_size = 20;
       tab_bar_style = "powerline";
       window_padding_width = 4;
     };
