@@ -23,7 +23,7 @@
     };
     to = {
       type = "git";
-      url = "https://git.sr.ht/~goofansu/flake-templates";
+      url = "https://git.sr.ht/~goofansu/nix-templates";
     };
   };
 
