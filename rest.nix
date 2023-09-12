@@ -40,7 +40,7 @@
   programs.gpg = {
     enable = true;
     publicKeys = [{
-      source = ./pubkey.asc;
+      source = ./gpg/pubkey.asc;
       trust = "ultimate";
     }];
   };
