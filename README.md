@@ -1,4 +1,4 @@
-# dotfiles.nix
+# nix-config
 My dev environment powered by [Nix](https://nixos.org).
 
 ## Prerequisites
@@ -27,8 +27,8 @@ sudo launchctl kickstart -k system/org.nixos.nix-daemon
 ## Install
 
 ```shell
-git clone git@git.sr.ht:~goofansu/dotfiles.nix ~/.config/nixpkgs
-nix run nix-darwin -- switch --flake ~/.config/nixpkgs
+git clone git@git.sr.ht:~goofansu/nix-config ~/.config/nix-config
+nix run nix-darwin -- switch --flake ~/.config/nix-config
 ```
 
 ## Usage
@@ -36,15 +36,15 @@ nix run nix-darwin -- switch --flake ~/.config/nixpkgs
 ### Build system 
 
 ```shell
-darwin-rebuild switch --flake ~/.config/nixpkgs
+darwin-rebuild switch --flake ~/.config/nix-config
 ```
 
 ### Upgrade packages
 
 ``` shell
-cd ~/.config/nixpkgs
+cd ~/.config/nix-config
 nix flake update
-darwin-rebuild switch --flake ~/.config/nixpkgs
+darwin-rebuild switch --flake ~/.config/nix-config
 ```
 
 ### Garbage collection
