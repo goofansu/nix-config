@@ -11,10 +11,10 @@
     };
   };
 
-  programs.git = {
+  programs.git = rec {
     enable = true;
     userName = "Yejun Su";
-    userEmail = "yejun@hey.com";
+    userEmail = "goofan.su@gmail.com";
     aliases = {
       br = "branch";
       ci = "commit";
@@ -30,6 +30,12 @@
       pull = { rebase = true; };
       github = { user = "goofansu"; };
       advice = { detachedHead = false; };
+      sendemail = {
+        smtpserver = "smtp.gmail.com";
+        smtpuser = userEmail;
+        smtpencryption = "tls";
+        smtpserverport = 587;
+      };
     };
     ignores = [ ".DS_Store" "*.log*" "node_modules" ".elixir_ls" ];
     includes = [{ path = "~/.gitconfig_local"; }];
