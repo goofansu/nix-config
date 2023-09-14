@@ -48,7 +48,7 @@
       # GnuPG
       gpg-encrypt = {
         description = "Encrypt a file with GnuPG";
-        body = "gpg --encrypt --sign --recipient yejun@hey.com $argv[1]";
+        body = "gpg --encrypt --sign --recipient goofan.su@gmail.com $argv[1]";
       };
 
       # macOS
