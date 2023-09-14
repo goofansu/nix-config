@@ -40,7 +40,6 @@
     "cleanshot"
     "dash"
     "deepl"
-    "dropbox"
     "google-chrome"
     "hey"
     "mysqlworkbench"
