@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-stable, ... }:
 
 {
   programs.fzf.enable = true;
@@ -39,6 +39,7 @@
 
   programs.gpg = {
     enable = true;
+    package = pkgs-stable.gnupg;
     publicKeys = [{
       source = ./gpg/pubkey.asc;
       trust = "ultimate";

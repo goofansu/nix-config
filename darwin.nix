@@ -30,11 +30,6 @@
   # Allow installing unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # HomeManager
-  home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
-  home-manager.users.james = import ./home.nix;
-
   # Homebrew
   homebrew.enable = true;
   homebrew.onActivation.cleanup = "uninstall";
