@@ -11,6 +11,7 @@
     ./envs.nix
     ./emacs.nix
     ./fish.nix
+    ./mail.nix
     ./git.nix
     ./rest.nix
   ];

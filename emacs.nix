@@ -1,9 +1,13 @@
 { config, pkgs, lib, ... }:
 
 {
-  home.packages = with pkgs; [
-    emacs29-macport
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs29-macport;
+    extraPackages = epkgs: [ pkgs.mu ];
+  };
 
+  home.packages = with pkgs; [
     # Doom Emacs prerequisites
     findutils
     ripgrep
@@ -32,6 +36,9 @@
     # :lang web
     nodePackages.stylelint
     nodePackages.js-beautify
+
+    # :email mu4e
+    mu
   ];
 
   home.activation = {
