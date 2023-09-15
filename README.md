@@ -49,8 +49,10 @@ darwin-rebuild switch --flake ~/.config/nix-config
 
 ### Garbage collection
 
+According to [nix-darwin wiki](https://github.com/LnL7/nix-darwin/wiki/Deleting-old-generations#for-multi-user-installation):
+
 ``` shell
-nix-collect-garbage -d
+sudo nix-collect-garbage -d
 ```
 
 ## References
