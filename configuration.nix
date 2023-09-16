@@ -48,6 +48,7 @@
       "google-chrome"
       "hey"
       "mysqlworkbench"
+      "ngrok"
       "postman"
       "prince"
       "raycast"

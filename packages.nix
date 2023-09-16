@@ -25,7 +25,6 @@
     awscli2
     flyctl
     livebook
-    ngrok
 
     # Languages
     elixir
