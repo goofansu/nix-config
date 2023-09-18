@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-stable, ... }:
+{ pkgs, ... }:
 
 {
   programs.fzf.enable = true;
@@ -35,15 +35,6 @@
   programs.exa = {
     enable = true;
     enableAliases = true;
-  };
-
-  programs.gpg = {
-    enable = true;
-    package = pkgs-stable.gnupg;
-    publicKeys = [{
-      source = ./gpg/pubkey.asc;
-      trust = "ultimate";
-    }];
   };
 
   programs.kitty = {
@@ -84,15 +75,6 @@
       "shift+cmd+d" = "launch_window --location hsplit";
       "shift+cmd+t" = "detach_window new-tab";
       "shift+cmd+Enter" = "toggle_layout stack";
-    };
-  };
-
-  programs.password-store = {
-    enable = true;
-    package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
-    settings = {
-      PASSWORD_STORE_DIR = "${config.home.homeDirectory}/.password-store";
-      PASSWORD_STORE_KEY = "FB93D0EE";
     };
   };
 }
