@@ -8,7 +8,5 @@
     # Fonts
     jetbrains-mono
     iosevka
-    emacs-all-the-icons-fonts
-    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 }

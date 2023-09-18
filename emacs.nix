@@ -39,6 +39,9 @@
 
     # :email mu4e
     mu
+
+    # icons
+    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 
   home.activation = {
