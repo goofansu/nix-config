@@ -40,6 +40,9 @@
     # :email mu4e
     mu
 
+    # :tools docker
+    dockfmt
+
     # icons
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];

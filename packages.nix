@@ -17,6 +17,8 @@
     hugo
     hut
     imagemagick
+    paperkey
+    qrencode
     tree
     unar
     zbar
