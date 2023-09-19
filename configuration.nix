@@ -48,6 +48,7 @@
       "google-chrome"
       "hey"
       "mysqlworkbench"
+      "netnewswire"
       "ngrok"
       "postman"
       "prince"
