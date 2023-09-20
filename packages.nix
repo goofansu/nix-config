@@ -13,6 +13,7 @@
 
     # Tools
     asciinema
+    csvq
     ffmpeg
     hugo
     hut
