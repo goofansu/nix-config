@@ -48,7 +48,7 @@
       # GnuPG
       gpg-encrypt = {
         description = "Encrypt a file with GnuPG";
-        body = "gpg --encrypt --sign --recipient FB93D0EE $argv[1]";
+        body = "gpg --encrypt --sign --recipient 3C2DE0F1FB93D0EE $argv[1]";
       };
 
       # macOS
