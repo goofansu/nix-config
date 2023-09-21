@@ -4,10 +4,16 @@
   programs.gpg = {
     enable = true;
     package = pkgs-stable.gnupg;
-    publicKeys = [{
-      source = ./gpg/pubkey.asc;
-      trust = "ultimate";
-    }];
+    publicKeys = [
+      {
+        source = ./gpg/pubkey.asc;
+        trust = "ultimate";
+      }
+      {
+        source = ./gpg/sr.ht_pubkey.asc;
+        trust = "ultimate";
+      }
+    ];
   };
 
   programs.password-store = {
