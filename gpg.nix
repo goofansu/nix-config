@@ -16,6 +16,11 @@
     ];
   };
 
+  home.file.".gnupg/gpg-agent.conf".text = ''
+    default-cache-ttl 28800
+    max-cache-ttl 86400
+  '';
+
   programs.password-store = {
     enable = true;
     package = pkgs.pass.withExtensions (exts: [ exts.pass-otp ]);
