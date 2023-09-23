@@ -49,6 +49,7 @@
       "hey"
       "mysqlworkbench"
       "ngrok"
+      "orbstack"
       "postman"
       "prince"
       "raycast"
