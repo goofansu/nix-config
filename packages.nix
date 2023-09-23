@@ -10,19 +10,17 @@
     gawk
     curl
     wget
-
-    # Tools
-    asciinema
-    csvq
-    ffmpeg
-    hugo
-    hut
-    imagemagick
-    paperkey
-    qrencode
     tree
     unar
+
+    # Tools
+    imagemagick
+    ffmpeg
+    hut
     zbar
+    paperkey
+    qrencode
+    csvq
 
     # Development
     awscli2
