@@ -21,7 +21,7 @@
       co = "checkout";
     };
     signing = {
-      key = null;
+      key = "3C2DE0F1FB93D0EE";
       signByDefault = true;
       gpgPath = "${pkgs-stable.gnupg}/bin/gpg";
     };
