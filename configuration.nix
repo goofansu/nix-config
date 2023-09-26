@@ -18,7 +18,6 @@
       trusted-users = [ "root" "james" ];
     };
 
-    # Add flake registries
     registry = {
       flake-templates = {
         from = {
