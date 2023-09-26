@@ -1,6 +1,14 @@
 { pkgs, ... }:
 
-{
+let
+  kitty-select-tab = pkgs.writeShellScriptBin "kitty-select-tab" ''
+    ${pkgs.kitty}/bin/kitty @ ls \
+      | ${pkgs.jq}/bin/jq -r '.[] | select(.is_active) | .tabs[] | select(.is_focused == false) | "\(.title)\t\(.id)"' \
+      | ${pkgs.fzf}/bin/fzf \
+      | ${pkgs.gawk}/bin/awk '{print $NF}' \
+      | xargs -I % ${pkgs.kitty}/bin/kitty @ focus-tab -m id:%
+  '';
+in {
   programs.kitty = {
     enable = true;
     theme = "Dracula";
@@ -29,6 +37,7 @@
     };
     extraConfig = ''
       action_alias launch_window launch --type window --cwd current
+      action_alias launch_overlay launch --type overlay --cwd current
     '';
     keybindings = {
       "cmd+]" = "next_window";
@@ -39,6 +48,7 @@
       "shift+cmd+d" = "launch_window --location hsplit";
       "shift+cmd+t" = "detach_window new-tab";
       "shift+cmd+Enter" = "toggle_layout stack";
+      "cmd+e" = "launch_overlay ${kitty-select-tab}/bin/kitty-select-tab";
     };
   };
 }
