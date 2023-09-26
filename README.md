@@ -56,6 +56,7 @@ sudo nix-collect-garbage -d
 ```
 
 ## References
+- [Tidying up your $HOME with Nix](https://juliu.is/tidying-your-home-with-nix/)
 - [Nix Flakes, Part 1: An Introduction And Tutorial](https://www.tweag.io/blog/2020-05-25-flakes/)
 - [Home Manager - Option Search](https://mipmip.github.io/home-manager-option-search/)
 - [Darwin configuration options](https://daiderd.com/nix-darwin/manual/)
