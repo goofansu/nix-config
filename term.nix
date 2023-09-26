@@ -1,13 +1,17 @@
 { pkgs, ... }:
 
 let
-  kitty-select-tab = pkgs.writeShellScriptBin "kitty-select-tab" ''
-    ${pkgs.kitty}/bin/kitty @ ls \
-      | ${pkgs.jq}/bin/jq -r '.[] | select(.is_active) | .tabs[] | select(.is_focused == false) | "\(.title)\t\(.id)"' \
-      | ${pkgs.fzf}/bin/fzf \
-      | ${pkgs.gawk}/bin/awk '{print $NF}' \
-      | xargs -I % ${pkgs.kitty}/bin/kitty @ focus-tab -m id:%
-  '';
+  kitty-select-tab = pkgs.writeShellApplication {
+    name = "kitty-select-tab";
+    runtimeInputs = with pkgs; [ kitty jq fzf gawk ];
+    text = ''
+      kitty @ ls \
+        | jq -r '.[] | select(.is_active) | .tabs[] | select(.is_focused == false) | "\(.title)\t\(.id)"' \
+        | fzf \
+        | awk '{print $NF}' \
+        | xargs -I % kitty @ focus-tab -m id:%
+    '';
+  };
 in {
   programs.kitty = {
     enable = true;
