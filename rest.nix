@@ -5,7 +5,6 @@
   programs.htop.enable = true;
   programs.jq.enable = true;
   programs.pandoc.enable = true;
-  programs.tealdeer.enable = true;
   programs.zoxide.enable = true;
 
   programs.direnv = {
@@ -35,5 +34,13 @@
   programs.exa = {
     enable = true;
     enableAliases = true;
+  };
+
+  programs.tealdeer = {
+    enable = true;
+    settings = {
+      display = { compact = true; };
+      updates = { auto_update = true; };
+    };
   };
 }
