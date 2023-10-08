@@ -43,6 +43,7 @@
       "arc"
       "cleanshot"
       "dash"
+      "dropbox"
       "deepl"
       "google-chrome"
       "hey"
