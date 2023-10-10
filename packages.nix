@@ -18,12 +18,14 @@
     ffmpeg
     hut
     zbar
-    paperkey
-    qrencode
 
     # Development
     awscli2
     flyctl
     livebook
+
+    # Languages
+    elixir_1_15
+    ruby_3_2
   ];
 }
