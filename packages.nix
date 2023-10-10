@@ -20,16 +20,10 @@
     zbar
     paperkey
     qrencode
-    csvq
 
     # Development
     awscli2
     flyctl
     livebook
-
-    # Languages
-    elixir
-    elixir-ls
-    ruby_3_2
   ];
 }
