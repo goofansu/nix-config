@@ -4,7 +4,7 @@
   programs.emacs = {
     enable = true;
     package = pkgs.emacs29-macport;
-    extraPackages = epkgs: [ pkgs.mu ];
+    extraPackages = epkgs: [ epkgs.mu4e ];
   };
 
   home.packages = with pkgs; [
