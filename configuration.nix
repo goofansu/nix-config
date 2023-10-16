@@ -48,7 +48,6 @@
       "google-chrome"
       "hey"
       "mysqlworkbench"
-      "ngrok"
       "orbstack"
       "postman"
       "prince"
