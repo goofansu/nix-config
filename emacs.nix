@@ -24,6 +24,7 @@
     nodejs_20
 
     # :lang nix
+    nixfmt
     nixpkgs-fmt
 
     # :lang org
