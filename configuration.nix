@@ -56,6 +56,7 @@
       "slack"
       "spotify"
       "viscosity"
+      "wechatwebdevtools"
       "zoom"
       "zotero"
     ];

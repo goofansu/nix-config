@@ -12,12 +12,14 @@
     wget
     tree
     unar
+    hut
 
     # Tools
     imagemagick
     ffmpeg
-    hut
     zbar
+    qrencode
+    paperkey
 
     # Development
     awscli2
