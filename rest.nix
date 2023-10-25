@@ -1,7 +1,18 @@
 { pkgs, ... }:
 
 {
-  programs.fzf.enable = true;
+  programs.fzf = {
+    enable = true;
+    package = pkgs.fzf.overrideAttrs (final: prev: {
+      postInstall = (prev.postInstall or "") + ''
+        cat << EOF > $out/share/fish/vendor_conf.d/load-fzf-key-bindings.fish
+          status is-interactive; or exit 0
+          fzf_key_bindings
+        EOF
+      '';
+    });
+  };
+
   programs.htop.enable = true;
   programs.jq.enable = true;
   programs.pandoc.enable = true;
