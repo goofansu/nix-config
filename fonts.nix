@@ -9,5 +9,6 @@
     iosevka
     jetbrains-mono
     noto-fonts-cjk-sans
+    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 }

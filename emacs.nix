@@ -43,9 +43,6 @@
 
     # :tools docker
     dockfmt
-
-    # icons
-    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 
   home.activation = {
