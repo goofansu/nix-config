@@ -6,7 +6,8 @@
     fontconfig
 
     # Fonts
-    jetbrains-mono
     iosevka
+    jetbrains-mono
+    noto-fonts-cjk-sans
   ];
 }
