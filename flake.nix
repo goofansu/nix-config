@@ -20,8 +20,7 @@
     let
       system = "aarch64-darwin";
       pkgs-stable = nixpkgs-stable.legacyPackages.${system};
-    in
-    {
+    in {
       darwinConfigurations = {
         jamess-macbook-pro = darwin.lib.darwinSystem {
           system = system;

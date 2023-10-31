@@ -12,8 +12,7 @@ let
         | xargs -I % kitty @ focus-tab -m id:%
     '';
   };
-in
-{
+in {
   programs.kitty = {
     enable = true;
     theme = "Dracula";

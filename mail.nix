@@ -3,8 +3,7 @@
 let
   name = "Yejun Su";
   email = "goofan.su@gmail.com";
-in
-{
+in {
   accounts.email = {
     maildirBasePath = ".mail";
     accounts = {
