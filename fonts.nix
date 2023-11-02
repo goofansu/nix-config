@@ -8,7 +8,7 @@
     # Fonts
     iosevka
     jetbrains-mono
-    noto-fonts-cjk-sans
+    source-han-mono
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 }
