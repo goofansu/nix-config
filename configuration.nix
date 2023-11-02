@@ -43,6 +43,7 @@
       "arc"
       "cleanshot"
       "dash"
+      "discord"
       "dropbox"
       "deepl"
       "google-chrome"
