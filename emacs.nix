@@ -51,9 +51,8 @@
         if [ -v DRY_RUN ]; then
           echo "Running installEmacsConfig"
         else
-          ${pkgs.git}/bin/git clone --depth 1 https://github.com/doomemacs/doomemacs ${config.xdg.configHome}/emacs
-          ${pkgs.git}/bin/git clone https://git.sr.ht/~goofansu/doom-config ${config.xdg.configHome}/doom && cd ${config.xdg.configHome}/doom
-          ${pkgs.git}/bin/git remote set-url origin git@git.sr.ht:~goofansu/doom-config
+          ${pkgs.git}/bin/git clone https://git.sr.ht/~goofansu/emacs-config ${config.xdg.configHome}/emacs && cd ${config.xdg.configHome}/emacs
+          ${pkgs.git}/bin/git remote set-url origin git@git.sr.ht:~goofansu/emacs-config
         fi
       fi
     '';
