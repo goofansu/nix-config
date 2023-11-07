@@ -7,43 +7,7 @@
     extraPackages = epkgs: [ epkgs.mu4e ];
   };
 
-  home.packages = with pkgs; [
-    # Doom Emacs prerequisites
-    findutils
-    ripgrep
-    fd
-
-    # Doom Emacs dependencies
-    # :emacs dired
-    coreutils-prefixed
-
-    # :emacs undo
-    zstd
-
-    # :lang lsp
-    nodejs_20
-
-    # :lang nix
-    nixfmt
-    nixpkgs-fmt
-
-    # :lang org
-    graphviz
-
-    # :lang sh
-    shfmt
-    shellcheck
-
-    # :lang web
-    nodePackages.stylelint
-    nodePackages.js-beautify
-
-    # :email mu4e
-    mu
-
-    # :tools docker
-    dockfmt
-  ];
+  home.packages = with pkgs; [ nixpkgs-fmt nixfmt mu ];
 
   home.activation = {
     installEmacsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

@@ -4,8 +4,10 @@
   home.packages = with pkgs; [
     # Common utils
     coreutils
+    findutils
     inetutils
     gnugrep
+    ripgrep
     gnused
     gawk
     curl
@@ -13,6 +15,7 @@
     tree
     unar
     hut
+    fd
 
     # Tools
     imagemagick
