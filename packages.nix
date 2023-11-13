@@ -21,8 +21,6 @@
     imagemagick
     ffmpeg
     zbar
-    qrencode
-    paperkey
 
     # Development
     awscli2
