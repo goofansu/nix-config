@@ -39,6 +39,7 @@
     onActivation = { cleanup = "uninstall"; };
     casks = [
       "1password"
+      "alfred"
       "anki"
       "arc"
       "cleanshot"
@@ -51,8 +52,8 @@
       "orbstack"
       "postman"
       "prince"
-      "raycast"
       "rapidapi"
+      "rectangle"
       "slack"
       "viscosity"
       "wechatwebdevtools"
