@@ -7,7 +7,7 @@
     extraPackages = epkgs: [ epkgs.mu4e ];
   };
 
-  home.packages = with pkgs; [ nixpkgs-fmt nixfmt mu ];
+  home.packages = with pkgs; [ mu nixfmt nixpkgs-fmt ];
 
   home.activation = {
     installEmacsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
