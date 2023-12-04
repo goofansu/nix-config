@@ -55,6 +55,7 @@
       "rapidapi"
       "rectangle"
       "slack"
+      "spotify"
       "viscosity"
       "wechatwebdevtools"
       "zoom"
