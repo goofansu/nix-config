@@ -116,7 +116,11 @@
       gco = {
         description = "Fuzzy find and checkout the selected pull request";
         body = ''
-          gh pr list | fzf | awk '{print $1}' | read -l result; and gh co $result
+          gh pr list --json number,title,headRefName \
+             -t '{{range .}}{{tablerow .number .title .headRefName}}{{end}}' |\
+             fzf |\
+             awk '{print $1}' |\
+             read -l result; and gh co $result
         '';
       };
 
