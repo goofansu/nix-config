@@ -30,5 +30,6 @@
     # Languages
     elixir_1_15
     ruby_3_2
+    rubyPackages_3_2.ruby-lsp
   ];
 }
