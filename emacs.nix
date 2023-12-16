@@ -7,7 +7,13 @@
     extraPackages = epkgs: [ epkgs.mu4e ];
   };
 
-  home.packages = with pkgs; [ mu nixfmt nixpkgs-fmt nodePackages.jsonlint ];
+  home.packages = with pkgs; [
+    mu
+    nixfmt
+    nixpkgs-fmt
+    nodePackages.jsonlint
+    zstd # undo-fu-session-compression
+  ];
 
   home.activation = {
     installEmacsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
