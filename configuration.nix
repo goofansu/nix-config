@@ -42,6 +42,7 @@
       "alfred"
       "anki"
       "arc"
+      "chromedriver"
       "cleanshot"
       "dash"
       "dropbox"
