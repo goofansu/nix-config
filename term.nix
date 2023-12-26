@@ -52,7 +52,7 @@ in {
       "shift+cmd+d" = "launch_window --location hsplit";
       "shift+cmd+t" = "detach_window new-tab";
       "shift+cmd+Enter" = "toggle_layout stack";
-      "cmd+e" = "launch_overlay ${kitty-select-tab}/bin/kitty-select-tab";
+      "cmd+g" = "launch_overlay ${kitty-select-tab}/bin/kitty-select-tab";
     };
   };
 }
