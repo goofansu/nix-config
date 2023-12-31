@@ -28,7 +28,7 @@
     livebook
 
     # Languages
-    elixir_1_15
+    elixir_1_16
     ruby_3_2
     rubyPackages_3_2.ruby-lsp
   ];
