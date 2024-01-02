@@ -22,6 +22,7 @@
         else
           ${pkgs.git}/bin/git clone https://git.sr.ht/~goofansu/emacs-config ${config.xdg.configHome}/emacs && cd ${config.xdg.configHome}/emacs
           ${pkgs.git}/bin/git remote set-url origin git@git.sr.ht:~goofansu/emacs-config
+          ${pkgs.git}/bin/git submodule update --init --recursive
         fi
       fi
     '';
