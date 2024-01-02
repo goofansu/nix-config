@@ -26,6 +26,7 @@
     awscli2
     flyctl
     livebook
+    httpie
 
     # Languages
     elixir_1_16
