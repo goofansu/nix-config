@@ -11,7 +11,6 @@
     mu
     nixfmt
     nixpkgs-fmt
-    nodePackages.jsonlint
     zstd # undo-fu-session-compression
   ];
 
