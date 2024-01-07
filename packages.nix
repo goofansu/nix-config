@@ -21,6 +21,8 @@
     imagemagick
     ffmpeg
     zbar
+    mpv
+    youtube-dl
 
     # Development
     awscli2
