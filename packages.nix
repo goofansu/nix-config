@@ -27,7 +27,6 @@
     # Development
     awscli2
     flyctl
-    livebook
     httpie
 
     # Languages
