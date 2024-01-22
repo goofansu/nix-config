@@ -18,15 +18,12 @@
     fd
 
     # Tools
-    imagemagick
     ffmpeg
-    zbar
-    mpv
+    imagemagick
     youtube-dl
+    zbar
 
     # Development
-    awscli2
-    flyctl
     httpie
 
     # Languages

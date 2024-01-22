@@ -4,6 +4,7 @@
   programs.fzf.enable = true;
   programs.htop.enable = true;
   programs.jq.enable = true;
+  programs.mpv.enable = true;
   programs.pandoc.enable = true;
   programs.zoxide.enable = true;
 

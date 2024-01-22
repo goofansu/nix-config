@@ -49,7 +49,6 @@
       "deepl"
       "google-chrome"
       "hey"
-      "livebook"
       "mysqlworkbench"
       "orbstack"
       "postman"
