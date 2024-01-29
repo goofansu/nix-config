@@ -14,7 +14,6 @@
     wget
     tree
     unar
-    hut
     fd
 
     # Tools

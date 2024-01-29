@@ -11,7 +11,7 @@
       }
       {
         source = ./gpg/sr.ht_pubkey.asc;
-        trust = "ultimate";
+        trust = "full";
       }
     ];
   };
