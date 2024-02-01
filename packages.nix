@@ -1,7 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-stable, ... }:
 
-{
-  home.packages = with pkgs; [
+let
+  stable-packages = with pkgs-stable; [ hut ];
+  unstable-packages = with pkgs; [
     # Common utils
     coreutils
     findutils
@@ -30,4 +31,4 @@
     ruby_3_2
     rubyPackages_3_2.ruby-lsp
   ];
-}
+in { home.packages = stable-packages ++ unstable-packages; }
