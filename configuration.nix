@@ -47,6 +47,7 @@
       "dash"
       "dropbox"
       "deepl"
+      "firefox"
       "google-chrome"
       "hey"
       "mysqlworkbench"
