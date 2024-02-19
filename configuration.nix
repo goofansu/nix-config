@@ -42,6 +42,7 @@
       "alfred"
       "anki"
       "arc"
+      "calibre"
       "chromedriver"
       "cleanshot"
       "dash"
