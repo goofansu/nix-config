@@ -6,6 +6,7 @@
     fontconfig
 
     # Fonts
+    alegreya
     iosevka
     jetbrains-mono
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
