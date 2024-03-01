@@ -22,6 +22,7 @@ let
     imagemagick
     youtube-dl
     zbar
+    hugo
 
     # Development
     httpie
