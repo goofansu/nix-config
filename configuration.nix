@@ -37,6 +37,7 @@
   homebrew = {
     enable = true;
     onActivation = { cleanup = "uninstall"; };
+    taps = [ "homebrew/cask-versions" ];
     casks = [
       "1password"
       "alfred"
@@ -49,6 +50,7 @@
       "dash"
       "dropbox"
       "firefox"
+      "firefox-developer-edition"
       "google-chrome"
       "hey"
       "mysqlworkbench"
