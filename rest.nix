@@ -1,6 +1,7 @@
 { pkgs, ... }:
 
 {
+  programs.eza.enable = true;
   programs.fzf.enable = true;
   programs.htop.enable = true;
   programs.jq.enable = true;
@@ -30,11 +31,6 @@
       theme = "Dracula";
       style = "plain";
     };
-  };
-
-  programs.eza = {
-    enable = true;
-    enableAliases = true;
   };
 
   programs.tealdeer = {

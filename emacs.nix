@@ -3,13 +3,13 @@
 {
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs29-macport;
+    package = pkgs.emacs;
     extraPackages = epkgs: [ epkgs.mu4e ];
   };
 
   home.packages = with pkgs; [
     mu
-    nixfmt
+    nixfmt-classic
     nixpkgs-fmt
     zstd # undo-fu-session-compression
   ];
