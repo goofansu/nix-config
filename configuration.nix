@@ -52,6 +52,7 @@
       "firefox-developer-edition"
       "google-chrome"
       "hey"
+      "micro-snitch"
       "mysqlworkbench"
       "orbstack"
       "postman"
