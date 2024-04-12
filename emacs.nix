@@ -8,9 +8,12 @@
   };
 
   home.packages = with pkgs; [
-    mu
-    nixfmt-classic
-    nixpkgs-fmt
+    ispell # flyspell-mode
+    mu # mu4e
+    nixfmt-classic # nix-mode's default formatter
+    nixpkgs-fmt # nix-mode's alternative formatter
+    racket # racket-mode
+    zbar # password-store-otp
     zstd # undo-fu-session-compression
   ];
 

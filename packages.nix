@@ -20,17 +20,10 @@ let
     # Tools
     ffmpeg
     imagemagick
-    youtube-dl
-    zbar
-    hugo
-
-    # Development
-    httpie
 
     # Languages
     elixir_1_16
     ruby_3_2
     rubyPackages_3_2.ruby-lsp
-    racket
   ];
 in { home.packages = stable-packages ++ unstable-packages; }
