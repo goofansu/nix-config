@@ -17,8 +17,8 @@ in {
     enable = true;
     theme = "Dracula";
     font = {
-      name = "JetBrains Mono";
-      size = 16;
+      name = "Iosevka Comfy Fixed";
+      size = 18;
     };
     darwinLaunchOptions = [ "--listen-on=unix:/tmp/kitty.sock" ];
     shellIntegration = {

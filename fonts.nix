@@ -6,11 +6,9 @@
     fontconfig
 
     # Fonts
-    alegreya
-    iosevka
     iosevka-comfy.comfy
+    iosevka-comfy.comfy-fixed
     iosevka-comfy.comfy-motion-duo
-    jetbrains-mono
     (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 }
