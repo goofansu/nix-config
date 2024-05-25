@@ -45,15 +45,15 @@
       "arc"
       "audacity"
       "calibre"
+      "chatgpt"
       "chromedriver"
       "cleanshot"
       "dash"
       "dropbox"
-      "firefox-developer-edition"
+      "firefox"
+      "firefox@developer-edition"
       "google-chrome"
       "hey"
-      "micro-snitch"
-      "mysqlworkbench"
       "orbstack"
       "postman"
       "prince"
@@ -64,7 +64,7 @@
       "viscosity"
       "wechatwebdevtools"
       "zoom"
-      "zotero"
+      "zotero@beta"
     ];
   };
 }
