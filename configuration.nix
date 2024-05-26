@@ -45,7 +45,6 @@
       "arc"
       "audacity"
       "calibre"
-      "chatgpt"
       "chromedriver"
       "cleanshot"
       "dash"
