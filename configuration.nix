@@ -50,7 +50,6 @@
       "dash"
       "dropbox"
       "firefox"
-      "firefox@developer-edition"
       "google-chrome"
       "hey"
       "orbstack"
