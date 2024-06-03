@@ -1,4 +1,4 @@
-{ pkgs, pkgs-stable, ... }:
+{ pkgs, ... }:
 
 {
   programs.gh = {
@@ -23,7 +23,7 @@
     signing = {
       key = "3C2DE0F1FB93D0EE";
       signByDefault = true;
-      gpgPath = "${pkgs-stable.gnupg}/bin/gpg";
+      gpgPath = "${pkgs.gnupg}/bin/gpg";
     };
     extraConfig = {
       init = { defaultBranch = "main"; };

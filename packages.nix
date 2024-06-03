@@ -1,7 +1,7 @@
-{ pkgs, pkgs-stable, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 let
-  stable-packages = with pkgs-stable; [
+  stable-packages = with pkgs; [
     # GNU utilities
     coreutils
     findutils
@@ -9,17 +9,19 @@ let
     gnugrep
     gnused
     gawk
-  ];
 
-  unstable-packages = with pkgs; [
-    # Tools
+    # Common utilities
     curl
-    fd
-    hut
-    ripgrep
     tree
     unar
     wget
+  ];
+
+  unstable-packages = with pkgs-unstable; [
+    # Tools
+    fd
+    hut
+    ripgrep
 
     # Languages
     elixir

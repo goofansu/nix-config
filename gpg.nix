@@ -1,9 +1,9 @@
-{ config, pkgs, pkgs-stable, ... }:
+{ config, pkgs, ... }:
 
 {
   programs.gpg = {
     enable = true;
-    package = pkgs-stable.gnupg;
+    package = pkgs.gnupg;
     publicKeys = [
       {
         source = ./gpg/pubkey.asc;
