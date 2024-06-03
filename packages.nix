@@ -1,28 +1,28 @@
 { pkgs, pkgs-stable, ... }:
 
 let
-  stable-packages = with pkgs-stable; [ hut ];
-  unstable-packages = with pkgs; [
-    # Common utils
+  stable-packages = with pkgs-stable; [
+    # GNU utilities
     coreutils
     findutils
     inetutils
     gnugrep
-    ripgrep
     gnused
     gawk
+  ];
+
+  unstable-packages = with pkgs; [
+    # Tools
     curl
-    wget
+    fd
+    hut
+    ripgrep
     tree
     unar
-    fd
-
-    # Tools
-    ffmpeg
-    imagemagick
+    wget
 
     # Languages
-    elixir_1_16
+    elixir
     ruby_3_2
     rubyPackages_3_2.ruby-lsp
   ];
