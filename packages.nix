@@ -19,9 +19,13 @@ let
 
   unstable-packages = with pkgs-unstable; [
     # Tools
-    fd
+    duckdb
+    ffmpeg
+    imagemagick
+
+    # Services
+    flyctl
     hut
-    ripgrep
 
     # Languages
     elixir
