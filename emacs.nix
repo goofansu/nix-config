@@ -4,12 +4,10 @@
   programs.emacs = {
     enable = true;
     package = pkgs.emacs;
-    extraPackages = epkgs: [ epkgs.mu4e ];
   };
 
   home.packages = with pkgs; [
     ispell # flyspell-mode
-    mu # mu4e
     nixfmt-classic # nix-mode's default formatter
     nixpkgs-fmt # nix-mode's alternative formatter
     racket # racket-mode

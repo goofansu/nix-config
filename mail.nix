@@ -1,6 +1,27 @@
 { config, pkgs, ... }:
 
-{
+let
+  gmailSettings = {
+    imap = {
+      host = "imap.gmail.com";
+      port = 993;
+    };
+    smtp = {
+      host = "smtp.gmail.com";
+      port = 587;
+      tls.useStartTls = true;
+    };
+
+    mbsync = {
+      enable = true;
+      create = "both";
+      expunge = "both";
+      patterns = [ "*" "[Gmail]*" ];
+    };
+    notmuch.enable = true;
+    msmtp.enable = true;
+  };
+in {
   accounts.email = {
     maildirBasePath = ".mail";
     accounts = {
@@ -11,28 +32,21 @@
         realName = "Yejun Su";
         passwordCommand = "${pkgs.pass}/bin/pass goofan.su@gmail.com";
         maildir = { path = "Personal"; };
-        mbsync = {
-          enable = true;
-          create = "both";
-          expunge = "both";
-          patterns = [ "*" "[Gmail]*" ];
-        };
-        imap = {
-          host = "imap.gmail.com";
-          port = 993;
-        };
-        msmtp.enable = true;
-        smtp = {
-          host = "smtp.gmail.com";
-          port = 587;
-          tls.useStartTls = true;
-        };
-      };
+      } // gmailSettings;
+      work = {
+        address = "james.su@managebac.com";
+        userName = "james.su@managebac.com";
+        realName = "James Su";
+        passwordCommand = "${pkgs.pass}/bin/pass james.su@managebac.com";
+        maildir = { path = "Work"; };
+      } // gmailSettings;
     };
   };
 
-  programs = {
-    mbsync.enable = true;
-    msmtp.enable = true;
+  programs.mbsync.enable = true;
+  programs.msmtp.enable = true;
+  programs.notmuch = {
+    enable = true;
+    hooks = { preNew = "mbsync -a"; };
   };
 }
