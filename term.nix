@@ -55,18 +55,4 @@ in {
       "cmd+g" = "launch_overlay ${kitty-select-tab}/bin/kitty-select-tab";
     };
   };
-
-  programs.zellij = {
-    enable = true;
-    enableFishIntegration = false;
-    settings = {
-      theme = "dracula";
-      default_shell = "fish";
-      default_layout = "compact";
-      copy_command = "pbcopy";
-      scroll_buffer_size = 200000;
-      ui = { pane_frames = { hide_session_name = true; }; };
-      keybinds = { unbind = "Ctrl g"; };
-    };
-  };
 }
