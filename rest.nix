@@ -48,6 +48,7 @@
     config = {
       slang = "en";
       sub-auto = "fuzzy";
+      sub-scale = 0.5;
       ytdl-raw-options = ''sub-langs="en",write-sub=,write-auto-sub='';
     };
   };
