@@ -6,7 +6,6 @@
   programs.fzf.enable = true;
   programs.htop.enable = true;
   programs.jq.enable = true;
-  programs.mpv.enable = true;
   programs.pandoc.enable = true;
   programs.ripgrep.enable = true;
   programs.yt-dlp.enable = true;
@@ -41,6 +40,15 @@
     settings = {
       display = { compact = true; };
       updates = { auto_update = true; };
+    };
+  };
+
+  programs.mpv = {
+    enable = true;
+    config = {
+      slang = "en";
+      sub-auto = "fuzzy";
+      ytdl-raw-options = ''sub-langs="en",write-sub=,write-auto-sub='';
     };
   };
 }
