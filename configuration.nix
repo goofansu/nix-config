@@ -50,6 +50,7 @@
       "dropbox"
       "firefox@developer-edition"
       "google-chrome"
+      "hey"
       "orbstack"
       "postman"
       "prince"
