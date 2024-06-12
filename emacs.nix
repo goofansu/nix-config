@@ -11,7 +11,6 @@
     nixfmt-classic # nix-mode's default formatter
     nixpkgs-fmt # nix-mode's alternative formatter
     racket # racket-mode
-    zbar # password-store-otp
     zstd # undo-fu-session-compression
   ];
 
