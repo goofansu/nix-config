@@ -19,9 +19,9 @@ let
 
   unstable-packages = with pkgs-unstable; [
     # Tools
-    duckdb
-    ffmpeg
     imagemagick
+    ffmpeg
+    duckdb
 
     # Services
     flyctl
@@ -29,7 +29,7 @@ let
 
     # Languages
     elixir
-    ruby_3_2
-    rubyPackages_3_2.ruby-lsp
+    ruby
+    ruby-lsp
   ];
 in { home.packages = stable-packages ++ unstable-packages; }
