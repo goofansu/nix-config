@@ -48,6 +48,7 @@
       "cleanshot"
       "dropbox"
       "firefox"
+      "gimp"
       "google-chrome"
       "orbstack"
       "postman"
@@ -57,6 +58,7 @@
       "slack"
       "spotify"
       "viscosity"
+      "wireshark"
       "zoom"
       "zotero@beta"
     ];
