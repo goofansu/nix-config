@@ -49,8 +49,8 @@
       "dash"
       "dropbox"
       "firefox"
-      "gimp"
       "google-chrome"
+      "hey"
       "orbstack"
       "postman"
       "prince"
@@ -59,7 +59,6 @@
       "slack"
       "spotify"
       "viscosity"
-      "wireshark"
       "zoom"
       "zotero@beta"
     ];
