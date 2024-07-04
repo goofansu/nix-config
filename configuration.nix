@@ -46,6 +46,7 @@
       "calibre"
       "chromedriver"
       "cleanshot"
+      "dash"
       "dropbox"
       "firefox"
       "gimp"
