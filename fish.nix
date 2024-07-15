@@ -130,11 +130,13 @@
         body = "mix hex.info $argv | grep 'Config:' | sed 's/Config: //g'";
       };
 
-      # OpenApply dev
-      release-pr-id = {
-        description = "Fetch the id of release pull request";
+      # notmuch
+      notmuch-mark-read = {
+        description = "Mark messages as read";
         body = ''
-          gh pr list -s open | grep 'release/' | awk '{print $1}'
+          for mid in (notmuch search --output=messages tag:unread)
+            notmuch tag -unread "$mid"
+          end
         '';
       };
     };
