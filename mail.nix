@@ -25,13 +25,13 @@ in {
   accounts.email = {
     maildirBasePath = ".mail";
     accounts = {
-      personal = {
+      home = {
         primary = true;
         address = "goofan.su@gmail.com";
         userName = "goofan.su@gmail.com";
         realName = "Yejun Su";
         passwordCommand = "${pkgs.pass}/bin/pass goofan.su@gmail.com";
-        maildir = { path = "Personal"; };
+        maildir = { path = "Home"; };
       } // gmailSettings;
       work = {
         address = "james.su@managebac.com";
