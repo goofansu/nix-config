@@ -60,7 +60,7 @@
         '';
       };
 
-      # Emacs commands
+      # Emacs
       e = {
         description = "The Emacs version of vi";
         body = "emacsclient -s term -nw -a '' $argv";
@@ -124,20 +124,10 @@
         '';
       };
 
-      # Elixir dev
+      # Elixir
       mix-hex-info = {
         description = "Fetch Elixir package config";
         body = "mix hex.info $argv | grep 'Config:' | sed 's/Config: //g'";
-      };
-
-      # notmuch
-      notmuch-mark-read = {
-        description = "Mark messages as read";
-        body = ''
-          for mid in (notmuch search --output=messages tag:unread)
-            notmuch tag -unread "$mid"
-          end
-        '';
       };
     };
   };
