@@ -33,13 +33,6 @@ in {
         passwordCommand = "${pkgs.pass}/bin/pass goofan.su@gmail.com";
         maildir = { path = "Home"; };
       } // gmailSettings;
-      work = {
-        address = "james.su@managebac.com";
-        userName = "james.su@managebac.com";
-        realName = "James Su";
-        passwordCommand = "${pkgs.pass}/bin/pass james.su@managebac.com";
-        maildir = { path = "Work"; };
-      } // gmailSettings;
     };
   };
 
