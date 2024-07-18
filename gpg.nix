@@ -5,7 +5,7 @@
     enable = true;
     package = pkgs.gnupg;
     publicKeys = [{
-      source = ./gpg/pubkey.asc;
+      source = ./pubkey.asc;
       trust = "ultimate";
     }];
   };
