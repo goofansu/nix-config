@@ -23,9 +23,10 @@ let
     ffmpeg
     duckdb
 
-    # Services
-    flyctl
+    # Development
     hut
+    flyctl
+    ollama
 
     # Languages
     elixir
