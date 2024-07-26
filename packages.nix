@@ -15,21 +15,22 @@ let
     tree
     unar
     wget
-  ];
 
-  unstable-packages = with pkgs-unstable; [
     # Tools
     imagemagick
     ffmpeg
-    duckdb
+  ];
 
+  unstable-packages = with pkgs-unstable; [
     # Development
     hut
     flyctl
     ollama
+    duckdb
 
     # Languages
     elixir
+    next-ls
     ruby
     ruby-lsp
   ];
