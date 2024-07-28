@@ -30,7 +30,6 @@ let
 
     # Languages
     elixir
-    next-ls
     ruby
     ruby-lsp
     nixd
