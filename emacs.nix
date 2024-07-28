@@ -4,10 +4,10 @@
   programs.emacs = {
     enable = true;
     package = pkgs.emacs;
+    extraPackages = epkgs: [ epkgs.jinx ];
   };
 
   home.packages = with pkgs; [
-    ispell # flyspell-mode
     nixfmt-classic # nix-mode's default formatter
     nixpkgs-fmt # nix-mode's alternative formatter
     racket # racket-mode
