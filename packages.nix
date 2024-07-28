@@ -33,5 +33,6 @@ let
     next-ls
     ruby
     ruby-lsp
+    nixd
   ];
 in { home.packages = stable-packages ++ unstable-packages; }
