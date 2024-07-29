@@ -48,7 +48,6 @@
       "cleanshot"
       "dash"
       "dropbox"
-      "firefox"
       "google-chrome"
       "hey"
       "orbstack"
