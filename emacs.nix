@@ -10,6 +10,7 @@
   home.packages = with pkgs; [
     nixfmt-classic # nix-mode's default formatter
     nixpkgs-fmt # nix-mode's alternative formatter
+    pngpaste # org-download
     racket # racket-mode
     zstd # undo-fu-session-compression
   ];
