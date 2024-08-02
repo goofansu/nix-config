@@ -56,6 +56,7 @@
       "rapidapi"
       "rectangle"
       "slack"
+      "spotify"
       "viscosity"
       "zoom"
       "zotero@beta"
