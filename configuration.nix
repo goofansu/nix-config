@@ -46,6 +46,7 @@
       "calibre"
       "chromedriver"
       "cleanshot"
+      "cursor"
       "dash"
       "dropbox"
       "google-chrome"
