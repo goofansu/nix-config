@@ -98,7 +98,7 @@
       fssh = {
         description = "Fuzzy find and ssh into a host";
         body = ''
-          rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ssh "$result"
+          rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ${pkgs.kitty}/bin/kitten ssh "$result"
         '';
       };
       gcl = {
