@@ -47,7 +47,6 @@
       "chromedriver"
       "cleanshot"
       "cursor"
-      "dash"
       "dropbox"
       "google-chrome"
       "hey"
