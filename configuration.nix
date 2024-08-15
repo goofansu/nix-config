@@ -46,7 +46,6 @@
       "calibre"
       "chromedriver"
       "cleanshot"
-      "cursor"
       "dropbox"
       "google-chrome"
       "hey"
@@ -58,6 +57,7 @@
       "rectangle"
       "slack"
       "viscosity"
+      "visual-studio-code"
       "zoom"
       "zotero@beta"
     ];
