@@ -27,6 +27,7 @@ let
     flyctl
     ollama
     duckdb
+    devenv
 
     # Languages
     elixir
