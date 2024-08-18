@@ -42,6 +42,7 @@
       "1password"
       "alfred"
       "anki"
+      "arc"
       "bitwarden"
       "calibre"
       "chromedriver"
