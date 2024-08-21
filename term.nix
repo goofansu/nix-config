@@ -1,18 +1,6 @@
 { pkgs, ... }:
 
-let
-  kitty-select-tab = pkgs.writeShellApplication {
-    name = "kitty-select-tab";
-    runtimeInputs = with pkgs; [ kitty jq fzf gawk ];
-    text = ''
-      kitty @ ls \
-        | jq -r '.[] | select(.is_active) | .tabs[] | select(.is_focused == false) | "\(.title)\t\(.id)"' \
-        | fzf \
-        | awk '{print $NF}' \
-        | xargs -I % kitty @ focus-tab -m id:%
-    '';
-  };
-in {
+{
   programs.kitty = {
     enable = true;
     theme = "Dracula";
@@ -52,7 +40,6 @@ in {
       "shift+cmd+d" = "launch_window --location hsplit";
       "shift+cmd+t" = "detach_window new-tab";
       "shift+cmd+Enter" = "toggle_layout stack";
-      "cmd+g" = "launch_overlay ${kitty-select-tab}/bin/kitty-select-tab";
     };
   };
 }
