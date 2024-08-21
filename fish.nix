@@ -45,21 +45,6 @@
         body = "command rm -i $argv";
       };
 
-      # GnuPG
-      gpg-encrypt = {
-        description = "Encrypt a file with GnuPG";
-        body = "gpg --encrypt --sign --recipient 3C2DE0F1FB93D0EE $argv[1]";
-      };
-
-      # macOS
-      reset-launchpad = {
-        description = "Reset macOS Launchpad";
-        body = ''
-          defaults write com.apple.dock ResetLaunchPad -bool true
-          killall Dock
-        '';
-      };
-
       # Emacs
       e = {
         description = "The Emacs version of vi";
@@ -71,28 +56,6 @@
           emacsclient -s term -e "(kill-emacs)"
         '';
       };
-      ec = {
-        description = "Same as e, but requires the term Emacs server";
-        body = "emacsclient -s term -nw -u $argv";
-      };
-      egit = {
-        description = "Version control with magit";
-        body = ''
-          ec -e "(magit-status)"
-        '';
-      };
-      ediff = {
-        description = "Compare two files with ediff";
-        body = ''
-          ec -e "(ediff \"$argv[1]\" \"$argv[2]\")"
-        '';
-      };
-      eman = {
-        description = "Display manual page in Emacs";
-        body = ''
-          ec -e "(progn (man \"$argv[1]\") (delete-other-windows))"
-        '';
-      };
 
       # Fuzzy find everything!
       fssh = {
@@ -100,34 +63,6 @@
         body = ''
           rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ${pkgs.kitty}/bin/kitten ssh "$result"
         '';
-      };
-      gcl = {
-        description = "Fuzzy find and list commits of the selected git branch";
-        body = ''
-          git br | fzf | awk '{print $1}' | read -l result; and git log --oneline $result
-        '';
-      };
-      gcb = {
-        description = "Fuzzy find and checkout the selected git branch";
-        body = ''
-          git br | fzf | awk '{print $1}' | read -l result; and git co $result
-        '';
-      };
-      gco = {
-        description = "Fuzzy find and checkout the selected pull request";
-        body = ''
-          gh pr list --json number,title,headRefName \
-             -t '{{range .}}{{tablerow .number .title .headRefName}}{{end}}' |\
-             fzf |\
-             awk '{print $1}' |\
-             read -l result; and gh co $result
-        '';
-      };
-
-      # Elixir
-      mix-hex-info = {
-        description = "Fetch Elixir package config";
-        body = "mix hex.info $argv | grep 'Config:' | sed 's/Config: //g'";
       };
     };
   };
