@@ -26,7 +26,7 @@
       confirm_os_window_close = 1;
 
       # Advanced
-      shell = "${pkgs.fish}/bin/fish --login --interactive";
+      shell = "${pkgs.fish}/bin/fish";
 
       # OS specific tweaks
       macos_option_as_alt = "both";
