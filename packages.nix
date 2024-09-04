@@ -16,24 +16,26 @@ let
     unar
     wget
 
-    # Tools
+    # Multimedia utilities
     imagemagick
     ffmpeg
   ];
 
   unstable-packages = with pkgs-unstable; [
-    # Development
-    hut
-    flyctl
-    ollama
-    duckdb
-    devenv
-
     # Languages
     elixir
     next-ls
+    nixd
     ruby
     ruby-lsp
-    nixd
+
+    # Tools
+    devenv
+    duckdb
+    ollama
+
+    # Services
+    flyctl
+    hut
   ];
 in { home.packages = stable-packages ++ unstable-packages; }
