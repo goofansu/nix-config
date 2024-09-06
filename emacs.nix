@@ -4,7 +4,7 @@
   programs.emacs = {
     enable = true;
     package = pkgs.emacs;
-    extraPackages = epkgs: [ epkgs.jinx ];
+    extraPackages = epkgs: [ epkgs.jinx epkgs.eglot ];
   };
 
   home.packages = with pkgs; [
