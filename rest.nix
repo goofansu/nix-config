@@ -8,7 +8,6 @@
   programs.jq.enable = true;
   programs.pandoc.enable = true;
   programs.ripgrep.enable = true;
-  programs.yt-dlp.enable = true;
   programs.zoxide.enable = true;
 
   programs.direnv = {
