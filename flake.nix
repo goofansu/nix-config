@@ -32,6 +32,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.james = import ./home.nix;
               home-manager.extraSpecialArgs = { inherit pkgs-unstable; };
+              home-manager.backupFileExtension = "backup";
             }
           ];
         };
