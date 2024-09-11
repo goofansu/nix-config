@@ -41,18 +41,4 @@
       updates = { auto_update = true; };
     };
   };
-
-  programs.vscode = {
-    enable = true;
-    enableUpdateCheck = false;
-    extensions = with pkgs.vscode-extensions; [ mkhl.direnv shopify.ruby-lsp ];
-    userSettings = {
-      "editor.fontSize" = 16;
-      "extensions.ignoreRecommendations" = true;
-      "rubyLsp.formatter" = "none";
-      "window.autoDetectColorScheme" = true;
-      "workbench.activityBar.location" = "top";
-      "workbench.colorTheme" = "Default Light Modern";
-    };
-  };
 }
