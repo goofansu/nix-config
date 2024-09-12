@@ -33,6 +33,8 @@
     };
   };
 
+  nixpkgs.config.allowUnfree = true;
+
   # Homebrew
   homebrew = {
     enable = true;
@@ -56,7 +58,6 @@
       "prince"
       "rapidapi"
       "rectangle"
-      "rubymine"
       "slack"
       "viscosity"
       "zoom"
