@@ -10,7 +10,8 @@
     ./files.nix
     ./envs.nix
     ./emacs.nix
-    ./term.nix
+    ./kitty.nix
+    ./fish.nix
     ./mail.nix
     ./git.nix
     ./gpg.nix
