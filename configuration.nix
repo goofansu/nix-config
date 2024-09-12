@@ -43,7 +43,6 @@
       "alfred"
       "anki"
       "bitwarden"
-      "calibre"
       "chromedriver"
       "cleanshot"
       "dash"
@@ -60,7 +59,7 @@
       "viscosity"
       "visual-studio-code"
       "zoom"
-      "zotero@beta"
+      "zotero"
     ];
   };
 }
