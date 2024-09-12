@@ -33,8 +33,6 @@
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
-
   # Homebrew
   homebrew = {
     enable = true;
@@ -60,6 +58,7 @@
       "rectangle"
       "slack"
       "viscosity"
+      "visual-studio-code"
       "zoom"
       "zotero@beta"
     ];
