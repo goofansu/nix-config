@@ -39,6 +39,22 @@
           rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ${pkgs.kitty}/bin/kitten ssh "$result"
         '';
       };
+
+      # macOS
+      reset-launchpad = {
+        description = "Reset macOS Launchpad";
+        body = ''
+          defaults write com.apple.dock ResetLaunchPad -bool true
+          killall Dock
+        '';
+      };
+
+      reset-launch-services = {
+        description = "Reset macOS Launch Services";
+        body = ''
+          /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+        '';
+      };
     };
   };
 }
