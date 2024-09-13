@@ -47,6 +47,7 @@
       "cleanshot"
       "dropbox"
       "google-chrome"
+      "hey"
       "livebook"
       "orbstack"
       "postman"
