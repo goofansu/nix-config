@@ -53,9 +53,9 @@
       "postman"
       "prince"
       "rectangle"
+      "rubymine"
       "slack"
       "viscosity"
-      "visual-studio-code"
       "zoom"
       "zotero"
     ];
