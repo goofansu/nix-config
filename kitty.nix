@@ -35,6 +35,7 @@
     keybindings = {
       "cmd+enter" = "launch --cwd=current";
       "shift+cmd+enter" = "toggle_layout stack";
+      "shift+cmd+d" = "close_window_with_confirmation";
     };
   };
 }
