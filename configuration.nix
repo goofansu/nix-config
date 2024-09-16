@@ -45,6 +45,7 @@
       "bitwarden"
       "chromedriver"
       "cleanshot"
+      "dash"
       "dropbox"
       "google-chrome"
       "hey"
