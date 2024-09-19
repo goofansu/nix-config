@@ -27,6 +27,7 @@
     };
     extraConfig = {
       init = { defaultBranch = "main"; };
+      merge = { conflictStyle = "diff3"; };
       pull = { rebase = true; };
       github = { user = "goofansu"; };
       advice = { detachedHead = false; };
