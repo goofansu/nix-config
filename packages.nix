@@ -36,6 +36,5 @@ let
 
     # Services
     flyctl
-    hut
   ];
 in { home.packages = stable-packages ++ unstable-packages; }
