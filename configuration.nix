@@ -15,7 +15,10 @@
       experimental-features = "nix-command flakes";
 
       # Add myself to trusted-users to work with direnv
-      trusted-users = [ "root" "james" ];
+      trusted-users = [
+        "root"
+        "james"
+      ];
     };
 
     registry = {
@@ -36,7 +39,9 @@
   # Homebrew
   homebrew = {
     enable = true;
-    onActivation = { cleanup = "uninstall"; };
+    onActivation = {
+      cleanup = "uninstall";
+    };
     taps = [ "homebrew/cask-versions" ];
     casks = [
       "1password"

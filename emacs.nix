@@ -1,10 +1,18 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   programs.emacs = {
     enable = true;
     package = pkgs.emacs;
-    extraPackages = epkgs: [ epkgs.jinx epkgs.eglot ];
+    extraPackages = epkgs: [
+      epkgs.jinx
+      epkgs.eglot
+    ];
   };
 
   home.packages = with pkgs; [

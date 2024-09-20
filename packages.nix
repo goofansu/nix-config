@@ -37,4 +37,7 @@ let
     # Services
     flyctl
   ];
-in { home.packages = stable-packages ++ unstable-packages; }
+in
+{
+  home.packages = stable-packages ++ unstable-packages;
+}

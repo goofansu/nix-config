@@ -4,10 +4,12 @@
   programs.gpg = {
     enable = true;
     package = pkgs.gnupg;
-    publicKeys = [{
-      source = ./pubkey.asc;
-      trust = "ultimate";
-    }];
+    publicKeys = [
+      {
+        source = ./pubkey.asc;
+        trust = "ultimate";
+      }
+    ];
   };
 
   home.file.".gnupg/gpg-agent.conf".text = ''

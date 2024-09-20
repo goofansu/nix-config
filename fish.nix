@@ -6,10 +6,12 @@
     shellInit = ''
       set -U hydro_multiline true;
     '';
-    plugins = [{
-      name = "hydro";
-      src = pkgs.fishPlugins.hydro.src;
-    }];
+    plugins = [
+      {
+        name = "hydro";
+        src = pkgs.fishPlugins.hydro.src;
+      }
+    ];
     functions = {
       cat = {
         description = "A cat(1) clone with wings";

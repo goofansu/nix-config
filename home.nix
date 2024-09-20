@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ lib, ... }:
+{
   home.username = lib.mkForce "james";
   home.homeDirectory = lib.mkForce "/Users/james";
   home.stateVersion = "24.05";

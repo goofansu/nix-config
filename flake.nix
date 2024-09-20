@@ -16,11 +16,18 @@
     };
   };
 
-  outputs = { nixpkgs-unstable, darwin, home-manager, ... }:
+  outputs =
+    {
+      nixpkgs-unstable,
+      darwin,
+      home-manager,
+      ...
+    }:
     let
       system = "aarch64-darwin";
       pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-    in {
+    in
+    {
       darwinConfigurations = {
         jamess-macbook-pro = darwin.lib.darwinSystem {
           system = system;
@@ -31,7 +38,9 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.james = import ./home.nix;
-              home-manager.extraSpecialArgs = { inherit pkgs-unstable; };
+              home-manager.extraSpecialArgs = {
+                inherit pkgs-unstable;
+              };
               home-manager.backupFileExtension = "backup";
             }
           ];

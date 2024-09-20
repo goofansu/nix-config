@@ -16,12 +16,16 @@ let
       enable = true;
       create = "both";
       expunge = "both";
-      patterns = [ "*" "[Gmail]*" ];
+      patterns = [
+        "*"
+        "[Gmail]*"
+      ];
     };
     notmuch.enable = true;
     msmtp.enable = true;
   };
-in {
+in
+{
   accounts.email = {
     maildirBasePath = ".mail";
     accounts = {
@@ -31,7 +35,9 @@ in {
         userName = "goofan.su@gmail.com";
         realName = "Yejun Su";
         passwordCommand = "${pkgs.pass}/bin/pass goofan.su@gmail.com";
-        maildir = { path = "Home"; };
+        maildir = {
+          path = "Home";
+        };
       } // gmailSettings;
     };
   };
@@ -40,6 +46,8 @@ in {
   programs.msmtp.enable = true;
   programs.notmuch = {
     enable = true;
-    hooks = { preNew = "mbsync -a"; };
+    hooks = {
+      preNew = "mbsync -a";
+    };
   };
 }

@@ -26,11 +26,21 @@
       gpgPath = "${pkgs.gnupg}/bin/gpg";
     };
     extraConfig = {
-      init = { defaultBranch = "main"; };
-      merge = { conflictStyle = "diff3"; };
-      pull = { rebase = true; };
-      github = { user = "goofansu"; };
-      advice = { detachedHead = false; };
+      init = {
+        defaultBranch = "main";
+      };
+      merge = {
+        conflictStyle = "diff3";
+      };
+      pull = {
+        rebase = true;
+      };
+      github = {
+        user = "goofansu";
+      };
+      advice = {
+        detachedHead = false;
+      };
       sendemail = {
         smtpserver = "smtp.gmail.com";
         smtpuser = userEmail;
@@ -38,8 +48,15 @@
         smtpserverport = 587;
       };
     };
-    ignores = [ ".DS_Store" "*.log*" "node_modules" ".elixir_ls" ];
-    includes = [{ path = "~/.gitconfig_local"; }];
-    difftastic = { enable = true; };
+    ignores = [
+      ".DS_Store"
+      "*.log*"
+      "node_modules"
+      ".elixir_ls"
+    ];
+    includes = [ { path = "~/.gitconfig_local"; } ];
+    difftastic = {
+      enable = true;
+    };
   };
 }
