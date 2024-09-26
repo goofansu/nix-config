@@ -47,6 +47,7 @@
       "1password"
       "alfred"
       "anki"
+      "audacity"
       "bitwarden"
       "chromedriver"
       "cleanshot"
