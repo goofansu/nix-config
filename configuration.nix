@@ -30,7 +30,7 @@
         };
         to = {
           type = "git";
-          url = "https://github.com/goofansu/flake-templates";
+          url = "https://git.sr.ht/~goofansu/flake-templates";
         };
       };
     };
