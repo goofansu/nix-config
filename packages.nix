@@ -36,6 +36,7 @@ let
 
     # Services
     flyctl
+    hut
   ];
 in
 {
