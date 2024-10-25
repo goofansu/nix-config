@@ -56,7 +56,6 @@
       "dropbox"
       "google-chrome"
       "hey"
-      "hoppscotch"
       "livebook"
       "orbstack"
       "postman"
