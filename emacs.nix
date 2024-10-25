@@ -16,6 +16,8 @@
   };
 
   home.packages = with pkgs; [
+    mupdf # doc-view
+    poppler_utils # doc-view
     nixfmt-rfc-style # nix-mode
     pngpaste # org-download
     racket # racket-mode
