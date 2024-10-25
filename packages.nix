@@ -32,7 +32,6 @@ let
     # Tools
     devenv
     duckdb
-    ollama
 
     # Services
     flyctl
