@@ -60,6 +60,7 @@
       "pdf-expert"
       "postman"
       "prince"
+      "rapidapi"
       "rubymine"
       "slack"
       "viscosity"
