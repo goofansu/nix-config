@@ -58,6 +58,7 @@
       "hey"
       "livebook"
       "orbstack"
+      "pdf-expert"
       "postman"
       "prince"
       "rectangle"
