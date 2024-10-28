@@ -55,6 +55,7 @@
       "dash"
       "dropbox"
       "google-chrome"
+      "hey"
       "livebook"
       "orbstack"
       "pdf-expert"

@@ -33,10 +33,6 @@ let
     devenv
     duckdb
 
-    # LLM
-    ollama
-    fabric-ai
-
     # Services
     flyctl
     hut
