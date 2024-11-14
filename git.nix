@@ -11,10 +11,10 @@
     };
   };
 
-  programs.git = rec {
+  programs.git = {
     enable = true;
-    userName = "Yejun Su";
     userEmail = "goofan.su@gmail.com";
+    userName = "Yejun Su";
     aliases = {
       br = "branch";
       ci = "commit";
@@ -43,7 +43,7 @@
       };
       sendemail = {
         smtpserver = "smtp.gmail.com";
-        smtpuser = userEmail;
+        smtpuser = "goofan.su@gmail.com";
         smtpencryption = "tls";
         smtpserverport = 587;
       };
@@ -57,6 +57,16 @@
     includes = [ { path = "~/.gitconfig_local"; } ];
     difftastic = {
       enable = true;
+    };
+  };
+
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        email = "goofan.su@gmail.com";
+        name = "Yejun Su";
+      };
     };
   };
 }
