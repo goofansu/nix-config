@@ -39,9 +39,6 @@
   # Homebrew
   homebrew = {
     enable = true;
-    onActivation = {
-      cleanup = "uninstall";
-    };
     taps = [ "homebrew/cask-versions" ];
     casks = [
       "1password"
