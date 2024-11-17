@@ -49,7 +49,6 @@
       "anki"
       "audacity"
       "bitwarden"
-      "calibre"
       "chromedriver"
       "cleanshot"
       "dash"
