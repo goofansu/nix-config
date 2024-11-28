@@ -58,6 +58,9 @@
     difftastic = {
       enable = true;
     };
+    lfs = {
+      enable = true;
+    };
   };
 
   programs.jujutsu = {
