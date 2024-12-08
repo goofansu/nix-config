@@ -55,6 +55,7 @@
       "httpie"
       "livebook"
       "ngrok"
+      "ollama"
       "orbstack"
       "pdf-expert"
       "postman"
