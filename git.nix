@@ -62,14 +62,4 @@
       enable = true;
     };
   };
-
-  programs.jujutsu = {
-    enable = true;
-    settings = {
-      user = {
-        email = "goofan.su@gmail.com";
-        name = "Yejun Su";
-      };
-    };
-  };
 }
