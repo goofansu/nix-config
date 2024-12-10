@@ -47,6 +47,7 @@
       "audacity"
       "bitwarden"
       "chromedriver"
+      "claude"
       "cleanshot"
       "dash"
       "dropbox"
