@@ -3,7 +3,7 @@
 {
   home.file = {
     ".gemrc".text = "gem: --no-document";
-    ".xrayconfig".text = ":editor: '/etc/profiles/per-user/james/bin/emacsclient -s gui -nc $file'";
+    ".xrayconfig".text = ":editor: '/opt/homebrew/bin/rubymine'";
 
     # Dictionaries for jinx
     ".config/enchant/hunspell/en_US.aff".source = "${pkgs.hunspellDicts.en_US}/share/hunspell/en_US.aff";
