@@ -28,6 +28,7 @@ let
     nixd
     ruby
     ruby-lsp
+    pipx
 
     # Tools
     devenv

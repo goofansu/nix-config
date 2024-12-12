@@ -13,5 +13,5 @@
     ERL_AFLAGS = "-kernel shell_history enabled";
   };
 
-  home.sessionPath = [ "$HOME/Library/Python/3.9/bin" ];
+  home.sessionPath = [ "$HOME/.local/bin" ];
 }
