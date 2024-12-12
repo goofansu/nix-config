@@ -3,7 +3,7 @@
 {
   programs.kitty = {
     enable = true;
-    theme = "Modus Vivendi";
+    themeFile = "Modus_Vivendi";
     font = {
       name = "Iosevka Comfy Fixed";
       size = 18;
