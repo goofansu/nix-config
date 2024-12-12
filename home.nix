@@ -2,7 +2,7 @@
 {
   home.username = lib.mkForce "james";
   home.homeDirectory = lib.mkForce "/Users/james";
-  home.stateVersion = "24.05";
+  home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 
   imports = [

@@ -2,7 +2,7 @@
   description = "My macOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixOS/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs.url = "github:nixOS/nixpkgs/nixpkgs-24.11-darwin";
     nixpkgs-unstable.url = "github:nixOS/nixpkgs/nixpkgs-unstable";
 
     darwin = {
@@ -11,7 +11,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
