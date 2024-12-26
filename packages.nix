@@ -33,11 +33,6 @@ let
     # Tools
     devenv
     duckdb
-    httpie
-
-    # Services
-    flyctl
-    hut
   ];
 in
 {

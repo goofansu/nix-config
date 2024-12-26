@@ -39,7 +39,6 @@
   # Homebrew
   homebrew = {
     enable = true;
-    taps = [ "homebrew/cask-versions" ];
     casks = [
       "1password"
       "alfred"
@@ -53,13 +52,13 @@
       "dropbox"
       "google-chrome"
       "hey"
-      "httpie"
       "livebook"
       "ngrok"
       "ollama"
       "orbstack"
       "pdf-expert"
       "postman"
+      "prince"
       "rapidapi"
       "rectangle"
       "rubymine"
