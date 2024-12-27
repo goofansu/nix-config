@@ -11,7 +11,6 @@
     ./files.nix
     ./envs.nix
     ./emacs.nix
-    ./kitty.nix
     ./fish.nix
     ./mail.nix
     ./git.nix

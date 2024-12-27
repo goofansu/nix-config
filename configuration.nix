@@ -50,6 +50,7 @@
       "cleanshot"
       "dash"
       "dropbox"
+      "ghostty"
       "google-chrome"
       "hey"
       "livebook"
