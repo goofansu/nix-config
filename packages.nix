@@ -15,7 +15,6 @@ let
     tree
     unar
     wget
-    fastfetch
 
     # Multimedia utilities
     imagemagick
