@@ -16,5 +16,6 @@
     ./git.nix
     ./gpg.nix
     ./rest.nix
+    ./neovim.nix
   ];
 }
