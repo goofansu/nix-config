@@ -1,5 +1,4 @@
 {
-  programs.atuin.enable = true;
   programs.bat.enable = true;
   programs.btop.enable = true;
   programs.eza.enable = true;
@@ -17,5 +16,12 @@
     enable = true;
     silent = true;
     nix-direnv.enable = true;
+  };
+
+  programs.atuin = {
+    enable = true;
+    settings = {
+      filter_mode_shell_up_key_binding = "session";
+    };
   };
 }
