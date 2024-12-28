@@ -11,48 +11,26 @@
         source "$GHOSTTY_RESOURCES_DIR/shell-integration/fish/vendor_conf.d/ghostty-shell-integration.fish"
       end
     '';
-    plugins = [
+    plugins = with pkgs.fishPlugins; [
       {
         name = "hydro";
-        src = pkgs.fishPlugins.hydro.src;
+        src = hydro.src;
+      }
+      {
+        name = "done";
+        src = done.src;
       }
     ];
     functions = {
-      cat = {
-        description = "A cat(1) clone with wings";
-        body = "if command -sq bat; bat $argv; end";
-      };
       rm = {
         description = "Ask before removing a file";
         body = "command rm -i $argv";
       };
 
-      # Fuzzy find everything!
       fssh = {
         description = "Fuzzy find and ssh into a host";
         body = ''
           rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ssh "$result"
-        '';
-      };
-
-      gco = {
-        description = "Fuzzy find and checkout a pull request";
-        body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh pr checkout $result";
-      };
-
-      # macOS
-      reset-launchpad = {
-        description = "Reset macOS Launchpad";
-        body = ''
-          defaults write com.apple.dock ResetLaunchPad -bool true
-          killall Dock
-        '';
-      };
-
-      reset-launch-services = {
-        description = "Reset macOS Launch Services";
-        body = ''
-          /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
         '';
       };
     };
