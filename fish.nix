@@ -27,18 +27,6 @@
         body = "command rm -i $argv";
       };
 
-      # Emacs
-      e = {
-        description = "The Emacs version of vi";
-        body = "emacsclient -s term -nw -a '' $argv";
-      };
-      ekill = {
-        description = "Kill the term Emacs server";
-        body = ''
-          emacsclient -s term -e "(kill-emacs)"
-        '';
-      };
-
       # Fuzzy find everything!
       fssh = {
         description = "Fuzzy find and ssh into a host";
