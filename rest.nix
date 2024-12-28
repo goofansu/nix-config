@@ -1,4 +1,6 @@
 {
+  programs.atuin.enable = true;
+  programs.bat.enable = true;
   programs.btop.enable = true;
   programs.eza.enable = true;
   programs.fastfetch.enable = true;
@@ -8,42 +10,12 @@
   programs.jq.enable = true;
   programs.pandoc.enable = true;
   programs.ripgrep.enable = true;
+  programs.tealdeer.enable = true;
   programs.zoxide.enable = true;
 
   programs.direnv = {
     enable = true;
     silent = true;
     nix-direnv.enable = true;
-  };
-
-  programs.atuin = {
-    enable = true;
-    flags = [ "--disable-up-arrow" ];
-    settings = {
-      auto_sync = true;
-      sync_frequency = "5m";
-      sync_address = "https://api.atuin.sh";
-      search_mode = "prefix";
-    };
-  };
-
-  programs.bat = {
-    enable = true;
-    config = {
-      theme = "Dracula";
-      style = "plain";
-    };
-  };
-
-  programs.tealdeer = {
-    enable = true;
-    settings = {
-      display = {
-        compact = true;
-      };
-      updates = {
-        auto_update = true;
-      };
-    };
   };
 }
