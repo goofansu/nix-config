@@ -26,13 +26,6 @@
         description = "Ask before removing a file";
         body = "command rm -i $argv";
       };
-
-      fssh = {
-        description = "Fuzzy find and ssh into a host";
-        body = ''
-          rg --ignore-case '^host [^*]' ~/.ssh/* | cut -d ' ' -f 2 | fzf | read -l result; and ssh "$result"
-        '';
-      };
     };
   };
 }
