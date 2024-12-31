@@ -48,9 +48,7 @@
       "chromedriver"
       "claude"
       "cleanshot"
-      "cursor"
       "dash"
-      "discord"
       "dropbox"
       "ghostty"
       "google-chrome"
@@ -67,6 +65,7 @@
       "rubymine"
       "slack"
       "viscosity"
+      "wireshark"
       "zoom"
       "zotero"
     ];
