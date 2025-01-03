@@ -6,6 +6,7 @@
     ".xrayconfig".text = ":editor: '/opt/homebrew/bin/rubymine'";
     ".config/ghostty/config".text = ''
       font-size = 16
+      font-thicken = true
       macos-option-as-alt = true
       cursor-style-blink = false
       shell-integration-features = no-cursor
