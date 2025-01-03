@@ -16,10 +16,6 @@
       # Author: Protesilaos Stavrou, <https://protesilaos.com>
       background = #000000
       foreground = #ffffff
-      cursor-color = #ffffff
-      selection-foreground = #ffffff
-      selection-background = #5c5c5c
-
       palette = 0=#000000
       palette = 1=#ff8059
       palette = 2=#44bc44
@@ -30,12 +26,12 @@
       palette = 7=#bfbfbf
       palette = 8=#595959
       palette = 9=#ef8b50
-      palette = 1=#70b900
-      palette = 1=#c0c530
-      palette = 1=#79a8ff
-      palette = 1=#b6a0ff
-      palette = 1=#6ae4b9
-      palette = 1=#ffffff
+      palette = 10=#70b900
+      palette = 11=#c0c530
+      palette = 12=#79a8ff
+      palette = 13=#b6a0ff
+      palette = 14=#6ae4b9
+      palette = 15=#ffffff
     '';
 
     # Dictionaries for jinx
