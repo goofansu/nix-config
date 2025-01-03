@@ -13,6 +13,8 @@
       telescope-fzf-native-nvim
     ];
     extraLuaConfig = ''
+      vim.opt.undofile = true
+
       vim.g.mapleader = " "
       vim.g.maplocalleader = " "
 
