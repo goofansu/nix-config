@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixOS/nixpkgs/nixpkgs-24.11-darwin";
-    nixpkgs-unstable.url = "github:nixOS/nixpkgs/nixpkgs-unstable";
 
     darwin = {
       url = "github:lnl7/nix-darwin";
@@ -17,20 +16,11 @@
   };
 
   outputs =
-    {
-      nixpkgs-unstable,
-      darwin,
-      home-manager,
-      ...
-    }:
-    let
-      system = "aarch64-darwin";
-      pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-    in
+    { darwin, home-manager, ... }:
     {
       darwinConfigurations = {
         jamess-macbook-pro = darwin.lib.darwinSystem {
-          system = system;
+          system = "aarch64-darwin";
           modules = [
             ./configuration.nix
             home-manager.darwinModules.home-manager
@@ -38,9 +28,6 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.james = import ./home.nix;
-              home-manager.extraSpecialArgs = {
-                inherit pkgs-unstable;
-              };
               home-manager.backupFileExtension = "backup";
             }
           ];

@@ -1,3 +1,5 @@
+{ config, ... }:
+
 {
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
@@ -10,5 +12,7 @@
     ERL_AFLAGS = "-kernel shell_history enabled";
   };
 
-  home.sessionPath = [ "$HOME/.local/bin" ];
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.local/bin"
+  ];
 }
