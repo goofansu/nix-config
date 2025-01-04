@@ -1,7 +1,7 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
-let
-  stable-packages = with pkgs; [
+{
+  home.packages = with pkgs; [
     # GNU utilities
     coreutils
     findutils
@@ -19,22 +19,24 @@ let
     # Multimedia utilities
     imagemagick
     ffmpeg
-  ];
 
-  unstable-packages = with pkgs-unstable; [
-    # Languages
+    # Interpreters
+    ruby
     elixir
+
+    # Language Servers
+    ruby-lsp
     next-ls
     nixd
-    ruby
-    ruby-lsp
-    pipx
 
     # Tools
     devenv
     duckdb
+    pipx
+
+    # Services
+    awscli2
+    flyctl
+    hut
   ];
-in
-{
-  home.packages = stable-packages ++ unstable-packages;
 }
