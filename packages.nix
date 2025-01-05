@@ -32,7 +32,7 @@
     # Tools
     devenv
     duckdb
-    pipx
+    uv
 
     # Services
     awscli2
