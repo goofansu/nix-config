@@ -23,11 +23,13 @@
     # Interpreters
     ruby
     elixir
+    nodejs
 
     # Language Servers
     ruby-lsp
     next-ls
     nixd
+    ruff-lsp
 
     # Tools
     devenv
