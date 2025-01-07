@@ -57,6 +57,7 @@
       "ngrok"
       "ollama"
       "orbstack"
+      "pixelsnap"
       "pdf-expert"
       "postman"
       "prince"
