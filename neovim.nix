@@ -11,6 +11,12 @@
     plugins = with pkgs.vimPlugins; [
       telescope-nvim
       telescope-fzf-native-nvim
+      (nvim-treesitter.withPlugins (
+        plugins: with plugins; [
+          markdown
+          markdown_inline
+        ]
+      ))
     ];
     extraLuaConfig = ''
       vim.opt.undofile = true
@@ -31,6 +37,14 @@
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+
+      require('nvim-treesitter.configs').setup({
+        auto_install = false,
+        sync_install = false,
+        highlight = {
+          enable = true
+        }
+      })
     '';
   };
 }
