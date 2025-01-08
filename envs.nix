@@ -10,6 +10,9 @@
 
     # Enable shell history for Elixir IEx
     ERL_AFLAGS = "-kernel shell_history enabled";
+
+    # Set uv run to always load .env
+    UV_ENV_FILE = ".env";
   };
 
   home.sessionPath = [
