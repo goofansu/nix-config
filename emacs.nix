@@ -22,6 +22,7 @@
     nixfmt-rfc-style # nix-mode
     pngpaste # org-download
     racket # racket-mode
+    ruff # ruff-format
     zstd # undo-fu-session-compression
   ];
 
