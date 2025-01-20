@@ -26,6 +26,10 @@
         description = "Ask before removing a file";
         body = "command rm -i $argv";
       };
+      gco = {
+        description = "Fuzzy find and checkout a pull request";
+        body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh pr checkout $result";
+      };
     };
   };
 }
