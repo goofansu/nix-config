@@ -9,6 +9,6 @@
     iosevka-comfy.comfy
     iosevka-comfy.comfy-fixed
     iosevka-comfy.comfy-motion-duo
-    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+    jetbrains-mono
   ];
 }
