@@ -37,7 +37,6 @@
     uv
 
     # Services
-    hut
     awscli2
     flyctl
     cloudflared
