@@ -44,6 +44,7 @@
       "alfred"
       "anki"
       "audacity"
+      "basecamp"
       "bitwarden"
       "chromedriver"
       "claude"
@@ -69,6 +70,7 @@
       "viscosity"
       "wireshark"
       "zoom"
+      "zotero"
     ];
   };
 }
