@@ -1,14 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   fonts.fontconfig.enable = true;
-  home.packages = with pkgs; [
-    fontconfig
+  home.packages = [
+    pkgs.fontconfig
 
     # Fonts
-    iosevka-comfy.comfy
-    iosevka-comfy.comfy-fixed
-    iosevka-comfy.comfy-motion-duo
-    jetbrains-mono
+    pkgs-unstable.aporetic
+    pkgs.jetbrains-mono
   ];
 }
