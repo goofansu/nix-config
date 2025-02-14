@@ -16,6 +16,6 @@
   };
 
   home.sessionPath = [
-    "${config.home.homeDirectory}/.local/bin"
+    "${config.home.homeDirectory}/.local/bin" # uv puts tool executables here
   ];
 }
