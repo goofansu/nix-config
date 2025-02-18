@@ -28,7 +28,6 @@
     # Language Servers
     next-ls
     nixd
-    ruff-lsp
 
     # Tools
     devenv
