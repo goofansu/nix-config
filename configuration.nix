@@ -72,7 +72,6 @@
       "viscosity"
       "wireshark"
       "zoom"
-      "zotero"
     ];
   };
 }
