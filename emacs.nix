@@ -8,7 +8,7 @@
 {
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs;
+    package = pkgs.emacs30;
     extraPackages = epkgs: [
       epkgs.jinx
       epkgs.eglot
