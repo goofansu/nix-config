@@ -45,7 +45,6 @@
       "anki"
       "audacity"
       "bitwarden"
-      "chatgpt"
       "chromedriver"
       "claude"
       "cleanshot"
