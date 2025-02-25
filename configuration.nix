@@ -57,7 +57,6 @@
       "hey"
       "imageoptim"
       "livebook"
-      "ngrok"
       "ollama"
       "orbstack"
       "pdf-expert"
