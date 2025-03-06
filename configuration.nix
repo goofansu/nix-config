@@ -43,7 +43,6 @@
       "1password"
       "alfred"
       "anki"
-      "audacity"
       "bitwarden"
       "chromedriver"
       "claude"
@@ -66,7 +65,6 @@
       "rubymine"
       "slack"
       "viscosity"
-      "wireshark"
       "zoom"
     ];
   };
