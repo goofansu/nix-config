@@ -19,6 +19,7 @@
     # Multimedia utilities
     imagemagick
     ffmpeg
+    libwebp
 
     # Interpreters
     ruby
