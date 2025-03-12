@@ -47,6 +47,7 @@
       "chromedriver"
       "claude"
       "cleanshot"
+      "cursor"
       "dash"
       "dropbox"
       "firefox"
