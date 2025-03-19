@@ -21,7 +21,7 @@
     ffmpeg
     libwebp
 
-    # Interpreters
+    # Runtimes
     ruby
     elixir
     nodejs
