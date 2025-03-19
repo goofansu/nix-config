@@ -35,6 +35,9 @@
       pull = {
         rebase = true;
       };
+      push = {
+        autoSetupRemote = true;
+      };
       github = {
         user = "goofansu";
       };
