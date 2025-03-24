@@ -11,8 +11,9 @@
     # Enable shell history for Elixir IEx
     ERL_AFLAGS = "-kernel shell_history enabled";
 
-    # Set uv run to always load .env
+    # uv: https://docs.astral.sh/uv/configuration/environment/
     UV_ENV_FILE = ".env";
+    UV_PYTHON = "3.12";
   };
 
   home.sessionPath = [
