@@ -28,7 +28,15 @@
       };
       gco = {
         description = "Fuzzy find and checkout a pull request";
-        body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh pr checkout $result";
+        body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh co $result";
+      };
+      gcb = {
+        description = "Fuzzy find and checkout the selected git branch";
+        body = "git br | fzf | awk '{print $1}' | read -l result; and git co $result";
+      };
+      gcl = {
+        description = "Fuzzy find and list commits of the selected git branch";
+        body = "git br | fzf | awk '{print $1}' | read -l result; and git log --oneline --graph $result";
       };
     };
   };
