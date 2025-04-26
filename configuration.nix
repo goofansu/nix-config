@@ -50,6 +50,7 @@
       "dropbox"
       "ghostty"
       "google-chrome"
+      "httpie"
       "obs"
       "orbstack"
       "pdf-expert"

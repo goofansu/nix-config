@@ -30,10 +30,13 @@
     next-ls
     nixd
 
+    # Package management
+    uv
+
     # Tools
     devenv
     duckdb
-    uv
+    httpie
 
     # Services
     awscli2
