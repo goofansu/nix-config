@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   # Auto upgrade nix package and the daemon service
   services.nix-daemon.enable = true;
@@ -32,6 +34,27 @@
           type = "git";
           url = "https://github.com/goofansu/flake-templates.git";
         };
+      };
+    };
+  };
+
+  # LaunchAgents
+  launchd = {
+    user = {
+      agents = {
+        notmuch-new = {
+          command = "${pkgs.notmuch}/bin/notmuch new";
+          serviceConfig = {
+            RunAtLoad = true;
+            StartInterval = 900;
+            StandardOutPath = "/tmp/notmuchnew.out.log";
+            StandardErrorPath = "/tmp/notmuchnew.err.log";
+          };
+        };
+      };
+      envVariables = {
+        # FIXME remove hard-coded value
+        PATH = "/etc/profiles/per-user/james/bin:$PATH";
       };
     };
   };
