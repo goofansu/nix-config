@@ -56,7 +56,7 @@ in
   programs.notmuch = {
     enable = true;
     hooks = {
-      preNew = "mbsync -a";
+      preNew = "${pkgs.isync}/bin/mbsync -a";
     };
   };
 }
