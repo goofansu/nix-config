@@ -1,14 +1,14 @@
 { pkgs, ... }:
 
 {
-  # Auto upgrade nix package and the daemon service
-  services.nix-daemon.enable = true;
-
   # Create fish configs that loads the nix-darwin environment
   programs.fish.enable = true;
 
   # Used for backwards compatibility of nix-darwin
-  system.stateVersion = 4;
+  system = {
+    stateVersion = 4;
+    primaryUser = "james";
+  };
 
   # Nix
   nix = {
