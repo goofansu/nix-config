@@ -70,6 +70,7 @@
       "calibre"
       "chromedriver"
       "cleanshot"
+      "cursor"
       "dropbox"
       "ghostty"
       "google-chrome"
