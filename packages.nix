@@ -37,6 +37,7 @@
     devenv
     duckdb
     httpie
+    lnav
 
     # Services
     awscli2
