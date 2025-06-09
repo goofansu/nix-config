@@ -3,7 +3,7 @@
 {
   home.file = {
     ".gemrc".text = "gem: --no-document";
-    ".xrayconfig".text = ":editor: '/opt/homebrew/bin/rubymine'";
+    ".xrayconfig".text = ":editor: '/opt/homebrew/bin/cursor'";
     ".config/ghostty/config".text = ''
       font-size = 16
       font-thicken = true
