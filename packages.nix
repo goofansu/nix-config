@@ -38,6 +38,7 @@
     duckdb
     httpie
     lnav
+    github-mcp-server
 
     # Services
     awscli2
