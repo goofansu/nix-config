@@ -20,6 +20,7 @@
     imagemagick
     ffmpeg
     libwebp
+    exiftool
 
     # Runtimes
     ruby
