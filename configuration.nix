@@ -74,7 +74,6 @@
       "dropbox"
       "ghostty"
       "google-chrome"
-      "httpie"
       "livebook"
       "obs"
       "orbstack"

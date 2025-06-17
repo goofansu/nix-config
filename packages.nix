@@ -37,13 +37,13 @@
     # Tools
     devenv
     duckdb
-    httpie
-    lnav
-    github-mcp-server
 
     # Services
     awscli2
     flyctl
     cloudflared
+
+    # MCP servers
+    github-mcp-server
   ];
 }
