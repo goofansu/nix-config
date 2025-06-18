@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   home.packages = with pkgs; [
@@ -43,7 +43,9 @@
     flyctl
     cloudflared
 
-    # MCP servers
-    github-mcp-server
+    # LLM tools
+    pkgs-unstable.github-mcp-server
+    pkgs-unstable.claude-code
   ];
+
 }
