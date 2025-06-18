@@ -69,6 +69,7 @@
       "bitwarden"
       "calibre"
       "chromedriver"
+      "claude"
       "cleanshot"
       "cursor"
       "dropbox"
