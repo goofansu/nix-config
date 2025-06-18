@@ -1,12 +1,12 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
   fonts.fontconfig.enable = true;
-  home.packages = [
-    pkgs.fontconfig
+  home.packages = with pkgs; [
+    fontconfig
 
     # Fonts
-    pkgs-unstable.aporetic
-    pkgs.jetbrains-mono
+    aporetic
+    jetbrains-mono
   ];
 }
