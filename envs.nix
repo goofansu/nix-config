@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
@@ -17,6 +15,6 @@
   };
 
   home.sessionPath = [
-    "${config.home.homeDirectory}/.local/bin" # uv puts tool executables here
+    "$HOME/.local/bin" # uv tools
   ];
 }
