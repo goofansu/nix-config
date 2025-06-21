@@ -1,9 +1,8 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
   programs.gh = {
     enable = true;
-    package = pkgs-unstable.gh;
     settings = {
       aliases = {
         clone = "repo clone";
