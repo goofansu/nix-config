@@ -1,57 +1,37 @@
 # nix-config
-My dev environment powered by [Nix](https://nixos.org).
+My dev environment on macOS powered by [Nix](https://nixos.org).
 
 ## Prerequisites
-
-### Install Nix
-
-```shell
-curl -L https://nixos.org/nix/install | sh
-```
-
-### Install Homebrew
-I use Homebrew Cask to install Applications that don't need to config.
-
-``` shell
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-### Enable Nix flakes feature
-
-```shell
-mkdir -p ~/.config/nix
-echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
-sudo launchctl kickstart -k system/org.nixos.nix-daemon
-```
+- Nix: https://nixos.org/download/#nix-install-macos
+- Homebrew: https://brew.sh/
 
 ## Install
+Reference: [installing nix-darwin](https://github.com/nix-darwin/nix-darwin?tab=readme-ov-file#step-2-installing-nix-darwin)
 
 ```shell
 git clone git@github.com:goofansu/nix-config.git ~/.config/nix-config
-nix run nix-darwin -- switch --flake ~/.config/nix-config
+sudo nix run nix-darwin -- switch --flake ~/.config/nix-config
 ```
 
 ## Usage
 
-### Build system 
-
+### Apply changes
 ```shell
-darwin-rebuild switch --flake ~/.config/nix-config
+cd ~/.config/nix-config
+sudo darwin-rebuild switch --flake .
 ```
 
-### Upgrade packages
-
+### Update flake inputs
 ``` shell
 cd ~/.config/nix-config
 nix flake update
-darwin-rebuild switch --flake ~/.config/nix-config
 ```
 
 ### Garbage collection
-
-According to [nix-darwin wiki](https://github.com/LnL7/nix-darwin/wiki/Deleting-old-generations#for-multi-user-installation):
+Reference: [nix-darwin wiki](https://github.com/LnL7/nix-darwin/wiki/Deleting-old-generations#for-multi-user-installation)
 
 ``` shell
+nix-collect-garbage -d
 sudo nix-collect-garbage -d
 ```
 
