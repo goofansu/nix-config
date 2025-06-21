@@ -1,7 +1,7 @@
 { pkgs, pkgs-unstable, ... }:
 
-{
-  home.packages = with pkgs; [
+let
+  stable-packages = with pkgs; [
     # GNU utilities
     coreutils
     findutils
@@ -42,10 +42,14 @@
     awscli2
     flyctl
     cloudflared
-
-    # LLM tools
-    pkgs-unstable.github-mcp-server
-    pkgs-unstable.claude-code
   ];
 
+  unstable-packages = with pkgs-unstable; [
+    # LLM tools
+    github-mcp-server
+    claude-code
+  ];
+in
+{
+  home.packages = stable-packages ++ unstable-packages;
 }
