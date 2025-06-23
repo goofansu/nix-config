@@ -56,6 +56,8 @@
       "*.log*"
       "node_modules"
       ".elixir_ls"
+      ".claude/*.local.json"
+      "CLAUDE.local.md"
     ];
     includes = [ { path = "~/.gitconfig_local"; } ];
     difftastic = {
