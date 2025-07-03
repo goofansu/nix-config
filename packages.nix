@@ -48,6 +48,7 @@ let
     # LLM tools
     github-mcp-server
     claude-code
+    gemini-cli
   ];
 in
 {
