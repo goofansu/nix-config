@@ -45,8 +45,7 @@ let
   ];
 
   unstable-packages = with pkgs-unstable; [
-    # LLM tools
-    github-mcp-server
+    # Agentic coding tools
     claude-code
     gemini-cli
   ];
