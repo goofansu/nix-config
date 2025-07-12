@@ -42,6 +42,11 @@ let
     awscli2
     flyctl
     cloudflared
+
+    # Nix tools
+    nix-prefetch-github
+    prefetch-npm-deps
+    nixpkgs-review
   ];
 
   unstable-packages = with pkgs-unstable; [
