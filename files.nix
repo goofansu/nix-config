@@ -33,9 +33,6 @@
       palette = 13=#b6a0ff
       palette = 14=#6ae4b9
       palette = 15=#ffffff
-
-      # Keybindings
-      keybind = global:f5=toggle_quick_terminal
     '';
 
     # Dictionaries for jinx
