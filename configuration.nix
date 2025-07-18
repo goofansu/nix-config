@@ -65,7 +65,6 @@
     casks = [
       "1password"
       "alfred"
-      "anki"
       "bitwarden"
       "calibre"
       "chromedriver"
@@ -75,7 +74,6 @@
       "dropbox"
       "ghostty"
       "google-chrome"
-      "livebook"
       "obs"
       "orbstack"
       "pdf-expert"
@@ -84,7 +82,6 @@
       "racket"
       "raindropio"
       "rectangle"
-      "rubymine"
       "slack"
       "viscosity"
       "zoom"
