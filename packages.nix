@@ -37,6 +37,7 @@ let
     # Tools
     devenv
     duckdb
+    httpie
 
     # Services
     awscli2

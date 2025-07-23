@@ -74,6 +74,7 @@
       "dropbox"
       "ghostty"
       "google-chrome"
+      "httpie-desktop"
       "obs"
       "orbstack"
       "pdf-expert"
