@@ -8,9 +8,6 @@
 
     # Enable shell history for Elixir IEx
     ERL_AFLAGS = "-kernel shell_history enabled";
-
-    # uv: https://docs.astral.sh/uv/configuration/environment/
-    UV_PYTHON = "3.12";
   };
 
   home.sessionPath = [
