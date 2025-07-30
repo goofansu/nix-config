@@ -84,7 +84,9 @@
       "raindropio"
       "rectangle"
       "slack"
+      "superwhisper"
       "viscosity"
+      "visual-studio-code"
       "zoom"
       "zotero"
     ];
