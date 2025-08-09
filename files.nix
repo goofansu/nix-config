@@ -3,6 +3,7 @@
 {
   home.file = {
     ".gemrc".text = "gem: --no-document";
+    ".npmrc".text = "prefix=~/.npm-global";
     ".xrayconfig".text = ":editor: '/etc/profiles/per-user/james/bin/emacsclient -s gui -nc $file'";
     ".config/ghostty/config".text = ''
       font-size = 16

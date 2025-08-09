@@ -1,7 +1,7 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
-let
-  stable-packages = with pkgs; [
+{
+  home.packages = with pkgs; [
     # GNU utilities
     coreutils
     findutils
@@ -49,13 +49,4 @@ let
     prefetch-npm-deps
     nixpkgs-review
   ];
-
-  unstable-packages = with pkgs-unstable; [
-    # Agentic coding tools
-    claude-code
-    gemini-cli
-  ];
-in
-{
-  home.packages = stable-packages ++ unstable-packages;
 }
