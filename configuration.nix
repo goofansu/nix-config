@@ -87,6 +87,7 @@
       "superwhisper"
       "viscosity"
       "visual-studio-code"
+      "zed"
       "zoom"
       "zotero"
     ];
