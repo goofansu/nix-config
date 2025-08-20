@@ -65,7 +65,6 @@
     casks = [
       "1password"
       "alfred"
-      "bitwarden"
       "calibre"
       "chromedriver"
       "cleanshot"
@@ -77,7 +76,6 @@
       "orbstack"
       "pdf-expert"
       "prince"
-      "racket"
       "rectangle"
       "slack"
       "viscosity"
