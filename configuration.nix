@@ -74,7 +74,6 @@
       "google-chrome"
       "obs"
       "orbstack"
-      "pdf-expert"
       "prince"
       "rectangle"
       "slack"
