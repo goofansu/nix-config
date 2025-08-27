@@ -27,7 +27,7 @@
         body = "command rm -i $argv";
       };
       gco = {
-        description = "Fuzzy find and checkout a pull request";
+        description = "Fuzzy find and checkout the selected pull request";
         body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh co $result";
       };
       gcb = {
@@ -37,6 +37,10 @@
       gcl = {
         description = "Fuzzy find and list commits of the selected git branch";
         body = "git br | fzf | awk '{print $1}' | read -l result; and git log --oneline --graph $result";
+      };
+      gcd = {
+        description = "Fuzzy find and cd the selected git worktree";
+        body = "git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf | awk '{print $1}' | read -l result; and cd $result";
       };
     };
   };
