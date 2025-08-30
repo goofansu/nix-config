@@ -72,6 +72,8 @@
       "firefox"
       "ghostty"
       "google-chrome"
+      "httpie-desktop"
+      "macwhisper"
       "obs"
       "orbstack"
       "prince"
