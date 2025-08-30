@@ -19,7 +19,6 @@
     graphviz # denote-explore
     mupdf-headless # doc-view
     poppler_utils # doc-view
-    nixfmt-rfc-style # nix-mode
     zstd # undo-fu-session-compression
   ];
 
