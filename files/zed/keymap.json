@@ -1,8 +1,0 @@
-[
-  {
-    "context": "Workspace",
-    "bindings": {
-      "alt-g": ["task::Spawn", { "task_name": "Open in Emacs" }]
-    }
-  }
-]
