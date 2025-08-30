@@ -20,7 +20,6 @@
     mupdf-headless # doc-view
     poppler_utils # doc-view
     nixfmt-rfc-style # nix-mode
-    ruff # ruff-format
     zstd # undo-fu-session-compression
   ];
 

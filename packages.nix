@@ -31,8 +31,9 @@
     next-ls
     nixd
 
-    # Package management
+    # Python
     uv
+    ruff
 
     # Tools
     devenv
