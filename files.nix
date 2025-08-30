@@ -5,7 +5,6 @@
     ".gemrc".text = "gem: --no-document";
     ".npmrc".text = "prefix=~/.npm-global";
     ".xrayconfig".text = ":editor: '/opt/homebrew/bin/zed'";
-    ".config/ghostty/config".source = ./files/ghostty/config;
     ".config/zed/tasks.json".source = ./files/zed/tasks.json;
     ".config/zed/keymap.json".source = ./files/zed/keymap.json;
 
