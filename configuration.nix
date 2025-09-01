@@ -73,6 +73,7 @@
       "ghostty"
       "google-chrome"
       "httpie-desktop"
+      "livebook"
       "macwhisper"
       "obs"
       "orbstack"
