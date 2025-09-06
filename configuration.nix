@@ -74,7 +74,6 @@
       "obs"
       "orbstack"
       "prince"
-      "racket"
       "rectangle"
       "slack"
       "viscosity"
