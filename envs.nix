@@ -13,5 +13,6 @@
   home.sessionPath = [
     "$HOME/.local/bin" # uv tools
     "$HOME/.npm-global/bin" # npm tools
+    "/opt/homebrew/bin" # brew
   ];
 }
