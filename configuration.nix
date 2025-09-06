@@ -65,16 +65,12 @@
     casks = [
       "1password"
       "alfred"
-      "calibre"
       "chromedriver"
       "cleanshot"
-      "dropbox"
       "firefox"
       "ghostty"
       "google-chrome"
       "httpie-desktop"
-      "livebook"
-      "macwhisper"
       "obs"
       "orbstack"
       "prince"
@@ -84,7 +80,6 @@
       "viscosity"
       "zed"
       "zoom"
-      "zotero"
     ];
   };
 }
