@@ -15,6 +15,7 @@
     settings = {
       # Enable the Nix flakes feature
       experimental-features = "nix-command flakes";
+      accept-flake-config = true;
 
       # Add myself to trusted-users to work with direnv
       trusted-users = [
