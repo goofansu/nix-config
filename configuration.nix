@@ -80,6 +80,7 @@
       "viscosity"
       "zed"
       "zoom"
+      "zotero"
     ];
   };
 }
