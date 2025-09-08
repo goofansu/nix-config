@@ -23,7 +23,7 @@
 
   home.activation = {
     installEmacsConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      if [ ! -d $HOME/.config/emacs ]; then
+      if [ ! -d ${config.xdg.configHome}/emacs ]; then
         if [ -v DRY_RUN ]; then
           echo "Running installEmacsConfig"
         else
