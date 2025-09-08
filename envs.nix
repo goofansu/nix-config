@@ -1,3 +1,5 @@
+{ config, ... }:
+
 {
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
@@ -11,8 +13,9 @@
   };
 
   home.sessionPath = [
-    "$HOME/.local/bin" # uv tools
-    "$HOME/.npm-global/bin" # npm tools
     "/opt/homebrew/bin" # brew
+    "/opt/homebrew/sbin" # brew
+    "${config.home.homeDirectory}/.local/bin" # uv tools
+    "${config.home.homeDirectory}/.npm-global/bin" # npm tools
   ];
 }
