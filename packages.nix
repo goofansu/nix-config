@@ -28,7 +28,6 @@
     nodejs
 
     # Language Servers
-    next-ls
     nixd
 
     # Python
