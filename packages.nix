@@ -23,12 +23,9 @@
     exiftool
 
     # Runtimes
-    ruby
-    elixir
     nodejs
 
     # Language Servers
-    next-ls
     nixd
 
     # Python
