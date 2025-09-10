@@ -66,6 +66,7 @@
     casks = [
       "1password"
       "alfred"
+      "calibre"
       "chromedriver"
       "cleanshot"
       "firefox"
@@ -80,7 +81,6 @@
       "viscosity"
       "zed"
       "zoom"
-      "zotero"
     ];
   };
 }
