@@ -50,7 +50,7 @@
       font-thicken = true;
       macos-option-as-alt = true;
       cursor-style-blink = false;
-      shell-integration-features = "no-cursor";
+      shell-integration-features = "no-cursor,sudo,title,ssh-env,ssh-terminfo";
       command = "${pkgs.fish}/bin/fish";
     };
     themes = {
