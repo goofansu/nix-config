@@ -22,7 +22,7 @@
       co = "checkout";
     };
     signing = {
-      key = "3C2DE0F1FB93D0EE";
+      key = "AD03A563F321CA44";
       signByDefault = true;
       signer = "${pkgs.gnupg}/bin/gpg";
     };
