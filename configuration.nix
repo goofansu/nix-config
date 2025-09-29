@@ -72,15 +72,15 @@
       "firefox"
       "ghostty"
       "google-chrome"
-      "httpie-desktop"
-      "obs"
       "orbstack"
       "prince"
+      "rapidapi"
       "rectangle"
       "slack"
       "viscosity"
       "zed"
       "zoom"
+      "zotero"
     ];
   };
 }
