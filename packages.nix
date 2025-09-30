@@ -45,7 +45,7 @@
     cloudflared
 
     # Nix tools
-    nixfmt-rfc-style # TODO renamed to nixfmt in unstable
+    nixfmt-rfc-style # TODO rename to nixfmt in unstable
     nix-prefetch-github
     prefetch-npm-deps
     nixpkgs-review
