@@ -27,9 +27,6 @@
     elixir
     nodejs
 
-    # Language Servers
-    nixd
-
     # Python
     uv
     ruff
@@ -37,15 +34,11 @@
     # Tools
     devenv
     duckdb
-    httpie
-
-    # Services
-    awscli2
-    flyctl
-    cloudflared
+    ast-grep
 
     # Nix tools
-    nixfmt-rfc-style # TODO rename to nixfmt in unstable
+    nixd # language server
+    nixfmt-rfc-style # formatter
     nix-prefetch-github
     prefetch-npm-deps
     nixpkgs-review
