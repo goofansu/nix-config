@@ -72,6 +72,7 @@
       "firefox"
       "ghostty"
       "google-chrome"
+      "livebook"
       "orbstack"
       "prince"
       "rapidapi"
