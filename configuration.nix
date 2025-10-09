@@ -73,6 +73,7 @@
       "ghostty"
       "google-chrome"
       "livebook"
+      "obs"
       "orbstack"
       "prince"
       "rapidapi"
