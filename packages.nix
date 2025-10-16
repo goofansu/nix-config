@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
-{
-  home.packages = with pkgs; [
+let
+  stable-packages = with pkgs; [
     # GNU utilities
     coreutils
     findutils
@@ -31,16 +31,20 @@
     uv
     ruff
 
-    # Tools
-    devenv
-    duckdb
-    ast-grep
-
-    # Nix tools
+    # Nix
     nixd # language server
     nixfmt-rfc-style # formatter
     nix-prefetch-github
     prefetch-npm-deps
     nixpkgs-review
   ];
+
+  unstable-packages = with pkgs-unstable; [
+    devenv
+    duckdb
+    ast-grep
+  ];
+in
+{
+  home.packages = stable-packages ++ unstable-packages;
 }
