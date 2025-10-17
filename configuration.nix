@@ -23,20 +23,6 @@
         "james"
       ];
     };
-
-    registry = {
-      flake-templates = {
-        from = {
-          id = "goofansu";
-          ref = "templates";
-          type = "indirect";
-        };
-        to = {
-          type = "git";
-          url = "https://github.com/goofansu/flake-templates.git";
-        };
-      };
-    };
   };
 
   # LaunchAgents
