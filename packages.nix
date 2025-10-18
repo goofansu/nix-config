@@ -43,6 +43,7 @@ let
     devenv
     duckdb
     ast-grep
+    bws
   ];
 in
 {
