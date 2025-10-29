@@ -65,6 +65,7 @@
       "rapidapi"
       "rectangle"
       "slack"
+      "spotify"
       "tailscale-app"
       "zed"
       "zoom"
