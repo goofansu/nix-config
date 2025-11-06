@@ -53,7 +53,6 @@
       "1password"
       "alfred"
       "calibre"
-      "claude"
       "cleanshot"
       "ghostty"
       "google-chrome"
