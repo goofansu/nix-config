@@ -34,6 +34,8 @@
     enable = true;
     settings = {
       filter_mode_shell_up_key_binding = "session";
+      sync_address = "https://atuin.yejun.dev";
+      auto_sync = true;
     };
   };
 }
