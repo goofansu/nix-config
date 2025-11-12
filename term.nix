@@ -52,6 +52,11 @@
       cursor-style-blink = false;
       shell-integration-features = "no-cursor,sudo,title,ssh-env,ssh-terminfo";
       command = "${pkgs.fish}/bin/fish";
+      keybind = [
+        "shift+enter=text:\\n" # newline
+        "ctrl+shift+m=set_font_size:20" # medium
+        "ctrl+shift+l=set_font_size:24" # large
+      ];
     };
     themes = {
       modus-vivendi = {
