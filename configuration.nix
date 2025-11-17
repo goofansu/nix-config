@@ -56,6 +56,7 @@
       "cleanshot"
       "ghostty"
       "google-chrome"
+      "ngrok"
       "obs"
       "orbstack"
       "prince"
