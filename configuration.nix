@@ -56,6 +56,7 @@
       "cleanshot"
       "ghostty"
       "google-chrome"
+      "obs"
       "orbstack"
       "prince"
       "rapidapi"
