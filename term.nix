@@ -53,6 +53,7 @@
       shell-integration-features = "no-cursor,sudo,title,ssh-env,ssh-terminfo";
       command = "${pkgs.fish}/bin/fish";
       keybind = [
+        "global:cmd+ctrl+backquote=toggle_quick_terminal"
         "shift+enter=text:\\n" # newline
         "ctrl+shift+m=set_font_size:20" # medium
         "ctrl+shift+l=set_font_size:24" # large
