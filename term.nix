@@ -55,6 +55,7 @@
       keybind = [
         "global:cmd+ctrl+backquote=toggle_quick_terminal"
         "shift+enter=text:\\n" # newline
+        "ctrl+shift+s=set_font_size:12" # small
         "ctrl+shift+m=set_font_size:20" # medium
         "ctrl+shift+l=set_font_size:24" # large
       ];
