@@ -54,6 +54,7 @@
       "alfred"
       "calibre"
       "cleanshot"
+      "firefox"
       "ghostty"
       "google-chrome"
       "ngrok"
