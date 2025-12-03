@@ -57,6 +57,7 @@
       "firefox"
       "ghostty"
       "google-chrome"
+      "marked-app"
       "ngrok"
       "obs"
       "orbstack"
