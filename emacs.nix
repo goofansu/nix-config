@@ -17,7 +17,7 @@
   home.packages = with pkgs; [
     graphviz # denote-explore
     mupdf-headless # doc-view
-    poppler_utils # doc-view
+    poppler-utils # doc-view
     zstd # undo-fu-session-compression
   ];
 
