@@ -56,7 +56,18 @@
       ".claude/*.local.json"
       "CLAUDE.local.md"
     ];
-    includes = [ { path = "~/.gitconfig_local"; } ];
+    includes = [
+      {
+        condition = "gitdir:~/work/";
+        contents = {
+          user = {
+            name = "James Su";
+            email = "james.su@managebac.com";
+            signingKey = "911B52D71F8AEBD9";
+          };
+        };
+      }
+    ];
   };
 
   programs.difftastic.git.enable = true;
