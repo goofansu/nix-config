@@ -15,40 +15,32 @@
   programs.git = {
     enable = true;
     settings = {
-      user = {
-        name = "Yejun Su";
-        email = "goofan.su@gmail.com";
+      advice = {
+        detachedHead = false;
       };
       alias = {
         br = "branch";
         ci = "commit";
         co = "checkout";
       };
-      extraConfig = {
-        init = {
-          defaultBranch = "main";
-        };
-        merge = {
-          conflictStyle = "diff3";
-        };
-        pull = {
-          rebase = true;
-        };
-        push = {
-          autoSetupRemote = true;
-        };
-        github = {
-          user = "goofansu";
-        };
-        advice = {
-          detachedHead = false;
-        };
-        sendemail = {
-          smtpserver = "smtp.gmail.com";
-          smtpuser = "goofan.su@gmail.com";
-          smtpencryption = "tls";
-          smtpserverport = 587;
-        };
+      github = {
+        user = "goofansu";
+      };
+      init = {
+        defaultBranch = "main";
+      };
+      merge = {
+        conflictStyle = "diff3";
+      };
+      pull = {
+        rebase = true;
+      };
+      push = {
+        autoSetupRemote = true;
+      };
+      user = {
+        name = "Yejun Su";
+        email = "goofan.su@gmail.com";
       };
     };
     signing = {
