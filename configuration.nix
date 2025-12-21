@@ -57,6 +57,7 @@
       "firefox"
       "ghostty"
       "google-chrome"
+      "livebook"
       "marked-app"
       "ngrok"
       "obs"
