@@ -21,6 +21,10 @@
         description = "Ask before removing a file";
         body = "command rm -i $argv";
       };
+      e = {
+        description = "Edit file using Emacs GUI";
+        body = "emacsclient -nc -s gui $argv";
+      };
       gco = {
         description = "Fuzzy find and checkout the selected pull request";
         body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh co $result";
