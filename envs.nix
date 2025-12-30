@@ -17,5 +17,6 @@
     "/opt/homebrew/sbin" # brew
     "${config.home.homeDirectory}/.local/bin" # uv tools
     "${config.home.homeDirectory}/.npm-global/bin" # npm tools
+    "${config.home.homeDirectory}/go/bin" # go tools
   ];
 }

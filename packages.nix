@@ -26,6 +26,7 @@ let
     ruby
     elixir
     nodejs
+    go
 
     # Python
     uv
