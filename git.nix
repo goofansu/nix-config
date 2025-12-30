@@ -52,9 +52,10 @@
       ".DS_Store"
       "*.log*"
       "node_modules"
-      ".elixir_ls"
-      ".claude/*.local.json"
-      "CLAUDE.local.md"
+      ".elixir_ls" # next-ls
+      ".claude/*.local.json" # local .claude/settings.json
+      "CLAUDE.local.md" # local CLAUDE.md
+      ".issues" # gh-issue-sync
     ];
     includes = [
       {
