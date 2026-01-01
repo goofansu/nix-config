@@ -21,11 +21,13 @@ let
     ffmpeg
     libwebp
     exiftool
+    oxipng
 
     # Runtimes
     ruby
     elixir
     nodejs
+    bun
     go
 
     # Python
