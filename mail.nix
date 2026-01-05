@@ -38,7 +38,8 @@ in
         maildir = {
           path = "Home";
         };
-      } // gmailSettings;
+      }
+      // gmailSettings;
       work = {
         address = "james.su@managebac.com";
         userName = "james.su@managebac.com";
@@ -47,7 +48,8 @@ in
         maildir = {
           path = "Work";
         };
-      } // gmailSettings;
+      }
+      // gmailSettings;
     };
   };
 
@@ -55,8 +57,17 @@ in
   programs.msmtp.enable = true;
   programs.notmuch = {
     enable = true;
+    new.tags = [
+      "unread"
+      "inbox"
+      "new"
+    ];
     hooks = {
       preNew = "${pkgs.isync}/bin/mbsync -a";
+      postNew = ''
+        notmuch tag +deleted -- tag:new and subject:"[Mandrill Alert] Webhook Failing"
+        notmuch tag -new tag:new
+      '';
     };
   };
 }
