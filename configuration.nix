@@ -54,23 +54,18 @@
       "alfred"
       "calibre"
       "cleanshot"
-      "firefox"
       "ghostty"
       "google-chrome"
-      "livebook"
       "marked-app"
       "ngrok"
-      "obs"
       "orbstack"
       "prince"
-      "rapidapi"
       "rectangle"
       "slack"
       "spotify"
       "tailscale-app"
       "zed"
       "zoom"
-      "zotero"
     ];
   };
 }
