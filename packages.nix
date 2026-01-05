@@ -36,7 +36,7 @@ let
 
     # Nix
     nixd # language server
-    nixfmt-rfc-style # formatter
+    nixfmt # formatter
     nix-prefetch-github
     prefetch-npm-deps
     nixpkgs-review
