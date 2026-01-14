@@ -22,6 +22,7 @@ let
     libwebp
     exiftool
     oxipng
+    marp-cli
 
     # Runtimes
     ruby
