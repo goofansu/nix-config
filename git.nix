@@ -101,9 +101,11 @@
         }
         {
           key = "G";
-          command = "gh pr view -w";
+          command = ''
+            gh search prs {{.SelectedLocalCommit.Sha}} --sort created --order asc --limit 1 --json number --jq ".[] | .number" | xargs gh pr view -w
+          '';
           context = "commits";
-          description = "Browse pull request of current branch";
+          description = "Browse pull request of selected commit";
         }
       ];
     };
