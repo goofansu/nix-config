@@ -22,7 +22,6 @@ let
     libwebp
     exiftool
     oxipng
-    marp-cli
 
     # Runtimes
     ruby
@@ -48,6 +47,7 @@ let
     duckdb
     ast-grep
     bws
+    cmake
   ];
 in
 {
