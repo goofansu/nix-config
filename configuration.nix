@@ -63,6 +63,7 @@
       "spotify"
       "tailscale-app"
       "zed"
+      "zen"
       "zoom"
     ];
   };
