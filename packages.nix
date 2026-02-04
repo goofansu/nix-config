@@ -12,6 +12,7 @@ let
 
     # Common utilities
     curl
+    cmake
     tree
     unar
     wget
@@ -45,9 +46,7 @@ let
   unstable-packages = with pkgs-unstable; [
     devenv
     duckdb
-    ast-grep
     bws
-    cmake
   ];
 in
 {
