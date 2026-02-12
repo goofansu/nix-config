@@ -5,11 +5,10 @@
   programs.fastfetch.enable = true;
   programs.fd.enable = true;
   programs.fzf.enable = true;
-  programs.htop.enable = true;
   programs.jq.enable = true;
+  programs.mpv.enable = true;
   programs.pandoc.enable = true;
   programs.ripgrep.enable = true;
-  programs.tealdeer.enable = true;
   programs.zoxide.enable = true;
 
   programs.direnv = {
