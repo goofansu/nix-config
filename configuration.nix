@@ -57,6 +57,7 @@
       "ghostty"
       "google-chrome"
       "marked-app"
+      "obs"
       "orbstack"
       "rectangle"
       "slack"
