@@ -16,6 +16,7 @@ let
     tree
     unar
     wget
+    qemu
 
     # Multimedia utilities
     imagemagick
@@ -47,6 +48,7 @@ let
     devenv
     duckdb
     bws
+    acli
   ];
 in
 {
