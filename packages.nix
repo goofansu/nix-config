@@ -42,6 +42,11 @@ let
     nix-prefetch-github
     prefetch-npm-deps
     nixpkgs-review
+
+    # gondoin
+    zig
+    lz4
+    e2fsprogs
   ];
 
   unstable-packages = with pkgs-unstable; [
