@@ -24,6 +24,7 @@ let
     libwebp
     exiftool
     oxipng
+    portaudio
 
     # Runtimes
     ruby
