@@ -55,7 +55,8 @@
       ".elixir_ls" # next-ls
       ".claude/*.local.json" # local .claude/settings.json
       "CLAUDE.local.md" # local CLAUDE.md
-      ".issues" # gh-issue-sync
+      ".issues" # gh-issue-sync directory
+      ".pi/todos" # pi todos directory
     ];
     includes = [
       {
