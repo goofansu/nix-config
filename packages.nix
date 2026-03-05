@@ -29,9 +29,12 @@ let
     # Runtimes
     ruby
     elixir
-    nodejs
-    bun
     go
+
+    # Node.js
+    nodejs
+    pnpm
+    bun
 
     # Python
     uv
