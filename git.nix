@@ -57,6 +57,7 @@
       "CLAUDE.local.md" # local CLAUDE.md
       ".issues" # gh-issue-sync directory
       ".pi/todos" # pi todos directory
+      ".pi/settings.json" # pi local settings
     ];
     includes = [
       {
