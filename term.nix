@@ -41,6 +41,10 @@
         description = "Fuzzy find and cd the selected git worktree";
         body = "git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf | awk '{print $1}' | read -l result; and cd $result";
       };
+      pi-one-shot = {
+        description = "Run a one-shot pi command (no session, mini model, thinking off)";
+        body = "pi -p --no-session --provider openai-codex --model gpt-5.1-codex-mini --thinking off $argv";
+      };
     };
   };
 
