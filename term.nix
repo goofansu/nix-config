@@ -58,8 +58,11 @@
       font-thicken = true;
       macos-option-as-alt = true;
       cursor-style-blink = false;
-      shell-integration-features = "no-cursor,sudo,title,ssh-env,ssh-terminfo";
+      shell-integration-features = "cursor,sudo,title,ssh-env,ssh-terminfo";
       command = "${pkgs.fish}/bin/fish";
+      window-inherit-working-directory = false;
+      split-inherit-working-directory = true;
+      tab-inherit-working-directory = true;
       keybind = [
         "global:cmd+ctrl+backquote=toggle_quick_terminal"
         "shift+enter=text:\\n" # newline
