@@ -32,7 +32,7 @@ let
     go
 
     # Node.js
-    nodejs
+    nodejs_24
     pnpm
     bun
 
