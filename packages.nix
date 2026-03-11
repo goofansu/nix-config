@@ -58,6 +58,7 @@ let
     duckdb
     bws
     acli
+    _1password-cli
   ];
 in
 {
