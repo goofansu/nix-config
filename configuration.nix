@@ -61,6 +61,7 @@
       "rectangle"
       "slack"
       "tailscale-app"
+      "visual-studio-code"
       "zed"
       "zen"
       "zoom"
