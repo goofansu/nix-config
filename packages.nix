@@ -17,6 +17,7 @@ let
     unar
     wget
     qemu
+    tmux
 
     # Multimedia utilities
     imagemagick
@@ -47,7 +48,7 @@ let
     prefetch-npm-deps
     nixpkgs-review
 
-    # gondoin
+    # gondolin (required to build custom images)
     zig
     lz4
     e2fsprogs
