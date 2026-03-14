@@ -60,6 +60,7 @@
       "orbstack"
       "rectangle"
       "slack"
+      "spotify"
       "tailscale-app"
       "visual-studio-code"
       "zed"
