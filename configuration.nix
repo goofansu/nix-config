@@ -52,6 +52,7 @@
     casks = [
       "1password"
       "alfred"
+      "claude"
       "cleanshot"
       "ghostty"
       "google-chrome"
@@ -60,7 +61,6 @@
       "orbstack"
       "rectangle"
       "slack"
-      "spotify"
       "tailscale-app"
       "visual-studio-code"
       "zed"
