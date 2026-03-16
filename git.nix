@@ -54,6 +54,7 @@
       "node_modules"
       ".elixir_ls" # next-ls
       ".claude/*.local.json" # local .claude/settings.json
+      ".claude/worktrees" # claude worktrees location
       "CLAUDE.local.md" # local CLAUDE.md
       ".issues" # gh-issue-sync directory
       ".pi/todos" # pi todos directory
