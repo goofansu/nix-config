@@ -42,6 +42,7 @@ let
     ruff
 
     # Nix
+    devenv
     nixd # language server
     nixfmt # formatter
     nix-prefetch-github
@@ -52,11 +53,12 @@ let
     zig
     lz4
     e2fsprogs
+
+    # Data analysis
+    duckdb
   ];
 
   unstable-packages = with pkgs-unstable; [
-    devenv
-    duckdb
     bws
     acli
     _1password-cli

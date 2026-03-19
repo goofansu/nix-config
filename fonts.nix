@@ -1,8 +1,8 @@
-{ pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
   fonts.fontconfig.enable = true;
-  home.packages = with pkgs-unstable; [
+  home.packages = with pkgs; [
     fontconfig
 
     # Fonts
