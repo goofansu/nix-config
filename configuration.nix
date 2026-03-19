@@ -18,10 +18,7 @@
       accept-flake-config = true;
 
       # Add myself to trusted-users to work with direnv
-      trusted-users = [
-        "root"
-        "james"
-      ];
+      trusted-users = [ "james" ];
     };
   };
 
