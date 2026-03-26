@@ -28,14 +28,8 @@ let
     portaudio
 
     # Runtimes
-    ruby
-    elixir
-    go
-
-    # Node.js
     nodejs_24
-    pnpm
-    bun
+    go
 
     # Python
     uv
