@@ -5,6 +5,7 @@
     enable = true;
     shellInit = ''
       set -U hydro_multiline true;
+      set -x RUBYOPT "-W0";
     '';
     plugins = with pkgs.fishPlugins; [
       {
