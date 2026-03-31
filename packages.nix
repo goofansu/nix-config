@@ -32,6 +32,7 @@ let
     go
 
     # Python
+    python3
     uv
     ruff
 
