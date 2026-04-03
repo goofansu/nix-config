@@ -27,9 +27,12 @@ let
     oxipng
     portaudio
 
-    # Runtimes
-    nodejs_24
+    # Go
     go
+
+    # Node.js
+    nodejs_24
+    pnpm
 
     # Python
     python3
