@@ -23,6 +23,7 @@
     ];
     extraLuaConfig = ''
       vim.opt.undofile = true
+      vim.opt.cmdheight = 0
       vim.opt.expandtab = true
       vim.opt.tabstop = 2
       vim.opt.softtabstop = 2
