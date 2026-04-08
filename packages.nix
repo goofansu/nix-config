@@ -17,7 +17,6 @@ let
     unar
     wget
     qemu
-    tmux
 
     # Multimedia utilities
     imagemagick
