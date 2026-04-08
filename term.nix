@@ -30,6 +30,10 @@
         description = "Attach to tmux, or start a new session if none is running";
         body = "tmux attach; or tmux";
       };
+      cx = {
+        description = "Run Claude without permission prompts";
+        body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --allow-dangerously-skip-permissions";
+      };
       gco = {
         description = "Fuzzy find and checkout the selected pull request";
         body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh co $result";
