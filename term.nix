@@ -251,7 +251,7 @@
       # Window navigation
       bind r command-prompt -I "#W" "rename-window -- '%%'"
       bind c new-window -c "#{pane_current_path}"
-      bind k kill-window
+      bind k confirm-before -p "Kill window #W? (y/n)" kill-window
 
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
@@ -271,7 +271,7 @@
       # Session controls
       bind R command-prompt -I "#S" "rename-session -- '%%'"
       bind C new-session -c "#{pane_current_path}"
-      bind K kill-session
+      bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
       bind N switch-client -n
 
