@@ -28,7 +28,7 @@
       };
       t = {
         description = "Attach to tmux, or start a new session if none is running";
-        body = "tmux attach; or tmux";
+        body = "tmux attach; or tmux new -s Work";
       };
       cx = {
         description = "Run Claude without permission prompts";
