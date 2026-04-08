@@ -11,6 +11,7 @@
     plugins = with pkgs.vimPlugins; [
       telescope-nvim
       telescope-fzf-native-nvim
+      lazygit-nvim
       (nvim-treesitter.withPlugins (
         plugins: with plugins; [
           markdown
@@ -37,6 +38,7 @@
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
       vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+      vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<cr>', { desc = 'LazyGit' })
 
       require('nvim-treesitter.configs').setup({
         auto_install = false,
