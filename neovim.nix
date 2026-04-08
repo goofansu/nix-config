@@ -36,6 +36,11 @@
       vim.g.mapleader = " "
       vim.g.maplocalleader = " "
 
+      vim.cmd.colorscheme('modus_vivendi')
+      vim.api.nvim_set_hl(0, 'NeoTreeNormal', { bg = '#000000' })
+      vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', { bg = '#000000' })
+      vim.api.nvim_set_hl(0, 'NeoTreeEndOfBuffer', { bg = '#000000' })
+
       local telescope = require('telescope')
       telescope.setup()
       telescope.load_extension('fzf')
@@ -61,8 +66,6 @@
           end
         end,
       })
-
-      vim.cmd.colorscheme('modus_vivendi')
 
       -- Lualine
       require('lualine').setup({ options = { theme = 'auto' } })
