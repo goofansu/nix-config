@@ -83,21 +83,21 @@
     settings = {
       gui = {
         theme = {
-          activeBorderColor = [ "#89b4fa" "bold" ];
-          inactiveBorderColor = [ "#a6adc8" ];
-          searchingActiveBorderColor = [ "#f9e2af" ];
-          optionsTextColor = [ "#89b4fa" ];
-          selectedLineBgColor = [ "#313244" ];
-          inactiveViewSelectedLineBgColor = [ "#6c7086" ];
-          cherryPickedCommitFgColor = [ "#89b4fa" ];
-          cherryPickedCommitBgColor = [ "#45475a" ];
-          markedBaseCommitFgColor = [ "#89b4fa" ];
-          markedBaseCommitBgColor = [ "#f9e2af" ];
-          unstagedChangesColor = [ "#f38ba8" ];
-          defaultFgColor = [ "#cdd6f4" ];
+          activeBorderColor = [ "#2fafff" "bold" ];
+          inactiveBorderColor = [ "#646464" ];
+          searchingActiveBorderColor = [ "#d0bc00" ];
+          optionsTextColor = [ "#2fafff" ];
+          selectedLineBgColor = [ "#303030" ];
+          inactiveViewSelectedLineBgColor = [ "#282828" ];
+          cherryPickedCommitFgColor = [ "#2fafff" ];
+          cherryPickedCommitBgColor = [ "#1640b0" ];
+          markedBaseCommitFgColor = [ "#2fafff" ];
+          markedBaseCommitBgColor = [ "#7a6100" ];
+          unstagedChangesColor = [ "#ff5f59" ];
+          defaultFgColor = [ "#ffffff" ];
         };
         authorColors = {
-          "*" = "#b4befe";
+          "*" = "#c6daff";
         };
       };
       git = {

@@ -12,8 +12,12 @@
       telescope-nvim
       telescope-fzf-native-nvim
       lazygit-nvim
-      catppuccin-nvim
+      modus-themes-nvim
       lualine-nvim
+      neo-tree-nvim
+      nui-nvim
+      nvim-web-devicons
+      plenary-nvim
       (nvim-treesitter.withPlugins (
         plugins: with plugins; [
           markdown
@@ -43,7 +47,22 @@
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
       vim.keymap.set('n', '<leader>gg', '<cmd>LazyGit<cr>', { desc = 'LazyGit' })
 
-      vim.cmd.colorscheme('catppuccin')
+      -- Neo-tree
+      require('neo-tree').setup({})
+      vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<cr>', { desc = 'Toggle file explorer' })
+      vim.api.nvim_create_autocmd('BufEnter', {
+        group = vim.api.nvim_create_augroup('Neotree_start_directory', { clear = true }),
+        once = true,
+        callback = function()
+          if package.loaded['neo-tree'] then return end
+          local stats = vim.uv.fs_stat(vim.fn.argv(0))
+          if stats and stats.type == 'directory' then
+            require('neo-tree')
+          end
+        end,
+      })
+
+      vim.cmd.colorscheme('modus_vivendi')
 
       -- Lualine
       require('lualine').setup({ options = { theme = 'auto' } })
