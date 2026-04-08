@@ -77,4 +77,39 @@
     enable = true;
     git.enable = true;
   };
+
+  programs.lazygit = {
+    enable = true;
+    settings = {
+      gui = {
+        theme = {
+          selectedLineBgColor = [ "#2f3849" ];
+        };
+      };
+      git = {
+        autoFetch = false;
+        pagers = [
+          {
+            externalDiffCommand = "difft --color=always --display=inline --background=dark";
+          }
+        ];
+      };
+      customCommands = [
+        {
+          key = "G";
+          command = "gh pr view -w {{.SelectedLocalBranch.Name}}";
+          context = "localBranches";
+          description = "Browse pull request of selected branch";
+        }
+        {
+          key = "G";
+          command = ''
+            gh search prs {{.SelectedLocalCommit.Sha}} --sort created --order asc --limit 1 --json number --jq ".[] | .number" | xargs gh pr view -w
+          '';
+          context = "commits";
+          description = "Browse pull request of selected commit";
+        }
+      ];
+    };
+  };
 }
