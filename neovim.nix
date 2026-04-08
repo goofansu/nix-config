@@ -17,7 +17,6 @@
       bufferline-nvim
       neo-tree-nvim
       nui-nvim
-      nvim-web-devicons
       plenary-nvim
       (nvim-treesitter.withPlugins (
         plugins: with plugins; [
