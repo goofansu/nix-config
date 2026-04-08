@@ -14,6 +14,7 @@
       lazygit-nvim
       modus-themes-nvim
       lualine-nvim
+      bufferline-nvim
       neo-tree-nvim
       nui-nvim
       nvim-web-devicons
@@ -66,6 +67,24 @@
           end
         end,
       })
+
+      -- Bufferline
+      require('bufferline').setup({
+        options = {
+          diagnostics = 'nvim_lsp',
+          always_show_bufferline = false,
+          offsets = {
+            {
+              filetype = 'neo-tree',
+              text = 'Neo-tree',
+              highlight = 'Directory',
+              text_align = 'left',
+            },
+          },
+        },
+      })
+      vim.keymap.set('n', '<S-h>', '<cmd>BufferLineCyclePrev<cr>', { desc = 'Prev buffer' })
+      vim.keymap.set('n', '<S-l>', '<cmd>BufferLineCycleNext<cr>', { desc = 'Next buffer' })
 
       -- Lualine
       require('lualine').setup({ options = { theme = 'auto' } })
