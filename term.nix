@@ -235,7 +235,10 @@
       set -g extended-keys-format csi-u
 
       # Reload config
-      bind q source-file ~/.config/tmux/tmux.conf \; display "Configuration reloaded"
+      bind C-r source-file ~/.config/tmux/tmux.conf \; display "Configuration reloaded"
+
+      # Select pane (restores tmux default)
+      bind q display-panes
 
       # Vi mode for copy
       bind -T copy-mode-vi v send -X begin-selection
