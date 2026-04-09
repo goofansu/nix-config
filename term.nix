@@ -271,8 +271,6 @@
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
 
-      bind -n M-Left  select-window -t -1
-      bind -n M-Right select-window -t +1
       bind -n M-S-Left  swap-window -t -1 \; select-window -t -1
       bind -n M-S-Right swap-window -t +1 \; select-window -t +1
 
@@ -282,9 +280,6 @@
       bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
       bind N switch-client -n
-
-      bind -n M-Up   switch-client -p
-      bind -n M-Down switch-client -n
 
       # General
       set -ag terminal-overrides ",*:RGB"
