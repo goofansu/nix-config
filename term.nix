@@ -237,9 +237,6 @@
       # Reload config
       bind C-r source-file ~/.config/tmux/tmux.conf \; display "Configuration reloaded"
 
-      # Select pane (restores tmux default)
-      bind q display-panes
-
       # Vi mode for copy
       bind -T copy-mode-vi v send -X begin-selection
       bind -T copy-mode-vi y send -X copy-selection-and-cancel
@@ -318,6 +315,14 @@
       set -g message-command-style "bg=default,fg=blue"
       set -g mode-style "bg=blue,fg=black"
       setw -g clock-mode-colour blue
+
+      # Fuzzy pane switcher
+      bind s run-shell "tmux list-panes -a -F '##{session_name}:##{window_index}.##{pane_index} [##{window_name}] ##{pane_current_command} ##{b:pane_current_path} ##{pane_title}' \
+        | fzf-tmux -p 90%,80% --reverse \
+          --preview 'tmux capture-pane -pt {1} -e 2>/dev/null || echo \"no preview\"' \
+          --preview-window 'right:60%' \
+        | cut -d' ' -f1 \
+        | xargs -I{} tmux switch-client -t {}"
     '';
   };
 }
