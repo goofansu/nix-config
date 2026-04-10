@@ -77,6 +77,7 @@
   programs.lazygit = {
     enable = true;
     settings = {
+      promptToReturnFromSubprocess = false;
       gui = {
         theme = {
           activeBorderColor = [
