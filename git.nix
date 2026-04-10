@@ -87,7 +87,7 @@
           searchingActiveBorderColor = [ "#d0bc00" ];
           optionsTextColor = [ "#2fafff" ];
           selectedLineBgColor = [ "#303030" ];
-          inactiveViewSelectedLineBgColor = [ "#282828" ];
+          inactiveViewSelectedLineBgColor = [ "#1e1e1e" ];
           cherryPickedCommitFgColor = [ "#2fafff" ];
           cherryPickedCommitBgColor = [ "#1640b0" ];
           markedBaseCommitFgColor = [ "#2fafff" ];
