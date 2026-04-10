@@ -73,11 +73,7 @@
     ];
   };
 
-  programs.difftastic = {
-    enable = true;
-    git.enable = true;
-  };
-
+  programs.delta.enable = true;
   programs.lazygit = {
     enable = true;
     settings = {
@@ -104,7 +100,7 @@
         autoFetch = false;
         pagers = [
           {
-            externalDiffCommand = "difft --color=always --display=inline --background=dark";
+            pager = "delta --dark --paging=never";
           }
         ];
       };
