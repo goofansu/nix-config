@@ -79,7 +79,10 @@
     settings = {
       gui = {
         theme = {
-          activeBorderColor = [ "#2fafff" "bold" ];
+          activeBorderColor = [
+            "#2fafff"
+            "bold"
+          ];
           inactiveBorderColor = [ "#646464" ];
           searchingActiveBorderColor = [ "#d0bc00" ];
           optionsTextColor = [ "#2fafff" ];
