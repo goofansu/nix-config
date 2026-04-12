@@ -112,7 +112,7 @@
           set ai $argv[1]
           set ai2 $argv[2]
 
-          set first_pane (tmux new-window -c $current_dir -P -F '#{pane_id}')
+          set first_pane $TMUX_PANE
           tmux rename-window -t $first_pane (basename $current_dir)
 
           set second_pane (tmux split-window -h -t $first_pane -c $current_dir -P -F '#{pane_id}')
@@ -126,6 +126,8 @@
           tmux select-layout -t $first_pane tiled
 
           tmux send-keys -t $ai_pane "$ai" Enter
+          tmux send-keys -t $first_pane clear Enter
+          tmux send-keys -t $second_pane clear Enter
           tmux select-pane -t $first_pane
         '';
       };
