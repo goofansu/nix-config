@@ -277,8 +277,8 @@
       bind -T copy-mode-vi y send -X copy-selection-and-cancel
 
       # Pane controls
-      bind h split-window -v -c "#{pane_current_path}"
-      bind v split-window -h -c "#{pane_current_path}"
+      bind h split-window -h -c "#{pane_current_path}"
+      bind v split-window -v -c "#{pane_current_path}"
       bind x kill-pane
 
       bind -n C-M-Left  select-pane -L
