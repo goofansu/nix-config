@@ -32,7 +32,7 @@
       };
       cx = {
         description = "Run Claude without permission prompts";
-        body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --allow-dangerously-skip-permissions";
+        body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions";
       };
       gco = {
         description = "Fuzzy find and checkout the selected pull request";
