@@ -46,6 +46,7 @@
   # Homebrew
   homebrew = {
     enable = true;
+    brews = [ "newrelic-cli" ];
     casks = [
       "1password"
       "alfred"
