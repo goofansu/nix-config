@@ -50,7 +50,7 @@
     casks = [
       "1password"
       "alfred"
-      "chatgpt"
+      "claude"
       "cleanshot"
       "codex-app"
       "ghostty"
