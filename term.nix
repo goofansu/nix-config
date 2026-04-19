@@ -96,41 +96,6 @@
           tmux select-pane -t $editor_pane
         '';
       };
-      ttl = {
-        description = "Tmux Tiled Layout: shells above, AI panes below";
-        body = ''
-          if test -z "$argv[1]"
-            echo "Usage: ttl <c|cx|codex|other_ai> [<second_ai>]"
-            return 1
-          end
-          if test -z "$TMUX"
-            echo "You must start tmux to use ttl."
-            return 1
-          end
-
-          set current_dir $PWD
-          set ai $argv[1]
-          set ai2 $argv[2]
-
-          set first_pane $TMUX_PANE
-          tmux rename-window -t $first_pane (basename $current_dir)
-
-          set second_pane (tmux split-window -h -t $first_pane -c $current_dir -P -F '#{pane_id}')
-          set ai_pane (tmux split-window -v -t $second_pane -c $current_dir -P -F '#{pane_id}')
-
-          if test -n "$ai2"
-            set ai2_pane (tmux split-window -h -t $ai_pane -c $current_dir -P -F '#{pane_id}')
-            tmux send-keys -t $ai2_pane "$ai2" Enter
-          end
-
-          tmux select-layout -t $first_pane tiled
-
-          tmux send-keys -t $ai_pane "$ai" Enter
-          tmux send-keys -t $first_pane clear Enter
-          tmux send-keys -t $second_pane clear Enter
-          tmux select-pane -t $first_pane
-        '';
-      };
       tdlm = {
         description = "Tmux Dev Layout per subdirectory";
         body = ''
