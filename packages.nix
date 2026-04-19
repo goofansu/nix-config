@@ -29,10 +29,6 @@ let
     # Go
     go
 
-    # Node.js
-    nodejs_24
-    pnpm
-
     # Python
     python3
     uv
@@ -50,15 +46,18 @@ let
     zig
     lz4
     e2fsprogs
-
-    # Data analysis
-    duckdb
   ];
 
   unstable-packages = with pkgs-unstable; [
-    bws
     acli
+
+    # Password managers
+    bws
     _1password-cli
+
+    # Node.js
+    nodejs_24
+    pnpm
   ];
 in
 {
