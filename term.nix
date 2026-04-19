@@ -58,7 +58,7 @@
         description = "Tmux Dev Layout: editor left, AI right, terminal bottom";
         body = ''
           if test -z "$argv[1]"
-            echo "Usage: tdl <c|cx|codex|other_ai> [<second_ai>]"
+            echo "Usage: tdl <pi|cx|codex|other_ai> [<second_ai>]"
             return 1
           end
           if test -z "$TMUX"
@@ -100,7 +100,7 @@
         description = "Tmux Dev Layout per subdirectory";
         body = ''
           if test -z "$argv[1]"
-            echo "Usage: tdlm <c|cx|codex|other_ai> [<second_ai>]"
+            echo "Usage: tdlm <pi|cx|codex|other_ai> [<second_ai>]"
             return 1
           end
           if test -z "$TMUX"
