@@ -58,6 +58,9 @@ let
     # Node.js
     nodejs_24
     pnpm
+
+    # Deploy
+    kamal
   ];
 in
 {
