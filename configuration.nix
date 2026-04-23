@@ -52,7 +52,6 @@
       "alfred"
       "claude"
       "cleanshot"
-      "codex-app"
       "ghostty"
       "google-chrome"
       "marked-app"
