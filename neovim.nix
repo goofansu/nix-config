@@ -18,12 +18,6 @@
       neo-tree-nvim
       nui-nvim
       plenary-nvim
-      (nvim-treesitter.withPlugins (
-        plugins: with plugins; [
-          markdown
-          markdown_inline
-        ]
-      ))
     ];
     extraLuaConfig = ''
       vim.opt.undofile = true
@@ -70,7 +64,6 @@
       -- Bufferline
       require('bufferline').setup({
         options = {
-          diagnostics = 'nvim_lsp',
           always_show_bufferline = false,
           offsets = {
             {
@@ -87,14 +80,6 @@
 
       -- Lualine
       require('lualine').setup({ options = { theme = 'auto' } })
-
-      require('nvim-treesitter.configs').setup({
-        auto_install = false,
-        sync_install = false,
-        highlight = {
-          enable = true
-        }
-      })
     '';
   };
 }
