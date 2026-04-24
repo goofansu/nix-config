@@ -55,7 +55,7 @@
         body = "pi -p --no-session --provider openai-codex --model gpt-5.1-codex-mini --thinking off $argv";
       };
       tdl = {
-        description = "Tmux Dev Layout: editor left, AI right, terminal bottom";
+        description = "Tmux Dev Layout: AI top, terminal bottom";
         body = ''
           if test -z "$argv[1]"
             echo "Usage: tdl <pi|cx|codex|other_ai> [<second_ai>]"
@@ -69,31 +69,25 @@
           set current_dir $PWD
           set ai $argv[1]
           set ai2 $argv[2]
-          set editor_pane $TMUX_PANE
+          set terminal_pane $TMUX_PANE
 
           # Name the current window after the base directory name
-          tmux rename-window -t $editor_pane (basename $current_dir)
+          tmux rename-window -t $terminal_pane (basename $current_dir)
 
-          # Split window vertically - top 85%, bottom 15%
-          tmux split-window -v -p 15 -t $editor_pane -c $current_dir
+          # Create AI pane above the terminal, taking 85% of the height
+          set ai_pane (tmux split-window -v -b -p 85 -t $terminal_pane -c $current_dir -P -F '#{pane_id}')
 
-          # Split editor pane horizontally - AI on right 30%
-          set ai_pane (tmux split-window -h -p 30 -t $editor_pane -c $current_dir -P -F '#{pane_id}')
-
-          # If second AI provided, split the AI pane vertically
+          # If second AI provided, split the AI pane horizontally (side by side)
           if test -n "$ai2"
-            set ai2_pane (tmux split-window -v -t $ai_pane -c $current_dir -P -F '#{pane_id}')
+            set ai2_pane (tmux split-window -h -p 50 -t $ai_pane -c $current_dir -P -F '#{pane_id}')
             tmux send-keys -t $ai2_pane "$ai2" Enter
           end
 
-          # Run AI in the right pane
+          # Run AI in the top pane
           tmux send-keys -t $ai_pane "$ai" Enter
 
-          # Run editor in the left pane
-          tmux send-keys -t $editor_pane "$EDITOR ." Enter
-
-          # Focus the editor pane
-          tmux select-pane -t $editor_pane
+          # Focus the AI pane
+          tmux select-pane -t $ai_pane
         '';
       };
       tdlm = {
