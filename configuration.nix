@@ -59,7 +59,6 @@
       "obs"
       "orbstack"
       "prince"
-      "raindropio"
       "rectangle"
       "slack"
       "tailscale-app"
