@@ -168,6 +168,7 @@
       theme = "modus-vivendi";
       font-size = 16;
       font-thicken = true;
+      font-family = "Aporetic Sans Mono";
       macos-option-as-alt = true;
       cursor-style-blink = false;
       shell-integration-features = "cursor,sudo,title,ssh-env,ssh-terminfo";
