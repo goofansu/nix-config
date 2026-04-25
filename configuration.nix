@@ -50,6 +50,7 @@
     casks = [
       "1password"
       "alfred"
+      "calibre"
       "claude"
       "cleanshot"
       "ghostty"
