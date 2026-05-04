@@ -55,7 +55,7 @@
         body = "pi -p --no-session --provider openai-codex --model gpt-5.1-codex-mini --thinking off $argv";
       };
       tdl = {
-        description = "Tmux Dev Layout: AI top, terminal bottom";
+        description = "Tmux Dev Layout: AI left, terminal right";
         body = ''
           if test -z "$argv[1]"
             echo "Usage: tdl <pi|cx|codex|other_ai> [<second_ai>]"
@@ -74,19 +74,19 @@
           # Name the current window after the base directory name
           tmux rename-window -t $terminal_pane (basename $current_dir)
 
-          # Create AI pane above the terminal, taking 85% of the height
-          set ai_pane (tmux split-window -v -b -p 85 -t $terminal_pane -c $current_dir -P -F '#{pane_id}')
+          # Create AI pane to the left of the terminal
+          set ai_pane (tmux split-window -h -b -p 50 -t $terminal_pane -c $current_dir -P -F '#{pane_id}')
 
-          # If second AI provided, split the AI pane horizontally (side by side)
+          # If second AI provided, split the AI column vertically
           if test -n "$ai2"
-            set ai2_pane (tmux split-window -h -p 50 -t $ai_pane -c $current_dir -P -F '#{pane_id}')
+            set ai2_pane (tmux split-window -v -p 50 -t $ai_pane -c $current_dir -P -F '#{pane_id}')
             tmux send-keys -t $ai2_pane "$ai2" Enter
           end
 
-          # Run AI in the top pane
+          # Run AI in the left/top-left pane
           tmux send-keys -t $ai_pane "$ai" Enter
 
-          # Focus the AI pane
+          # Focus the primary AI pane
           tmux select-pane -t $ai_pane
         '';
       };
