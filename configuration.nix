@@ -46,7 +46,10 @@
   # Homebrew
   homebrew = {
     enable = true;
-    brews = [ "newrelic-cli" ];
+    brews = [
+      "newrelic-cli"
+      "worktrunk"
+    ];
     casks = [
       "1password"
       "alfred"

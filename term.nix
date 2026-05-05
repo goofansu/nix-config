@@ -46,14 +46,6 @@
         description = "Fuzzy find and list commits of the selected git branch";
         body = "git br | fzf | awk '{print $1}' | read -l result; and git log --oneline --graph $result";
       };
-      gcd = {
-        description = "Fuzzy find and cd the selected git worktree";
-        body = "git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf | awk '{print $1}' | read -l result; and cd $result";
-      };
-      pi-one-shot = {
-        description = "Run a one-shot pi command (no session, mini model, thinking off)";
-        body = "pi -p --no-session --provider openai-codex --model gpt-5.1-codex-mini --thinking off $argv";
-      };
       tdl = {
         description = "Tmux Dev Layout: AI left, terminal right";
         body = ''
@@ -277,7 +269,7 @@
       bind N switch-client -n
 
       # General
-      set -ag terminal-overrides ",*:RGB"
+      set -as terminal-features ",*:RGB"
       set -g renumber-windows on
       set -g set-clipboard on
       set -g allow-passthrough on
