@@ -53,6 +53,10 @@
           end
         '';
       };
+      pi-mini = {
+        description = "Pi coding agent with a clean mind";
+        body = "pi -nt -ne -ns -np -nc $argv";
+      };
       gco = {
         description = "Fuzzy find and checkout the selected pull request";
         body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh co $result";
