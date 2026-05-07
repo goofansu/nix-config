@@ -34,6 +34,25 @@
         description = "Run Claude without permission prompts";
         body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
       };
+      cx-review = {
+        description = "Delegate a PR code review to Claude Code in a separate worktree";
+        body = ''
+          if test -z "$argv[1]"
+            echo "Usage: cx-review <pr-number> [session-name]"
+            return 1
+          end
+
+          set pr $argv[1]
+          set session $argv[2]
+          set command "wt switch pr:$pr -x cx -- '/review pr:$pr'"
+
+          if test -n "$session"
+            tmux new-window -n "cx-review-pr-$pr" -t "$session:" "$command"
+          else
+            tmux new-window -n "cx-review-pr-$pr" "$command"
+          end
+        '';
+      };
       gco = {
         description = "Fuzzy find and checkout the selected pull request";
         body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh co $result";
