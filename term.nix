@@ -44,7 +44,7 @@
 
           set pr $argv[1]
           set session $argv[2]
-          set command "wt switch pr:$pr -x cx -- '/review pr:$pr'"
+          set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using `gh pr checkout $pr --force`.'"
 
           if test -n "$session"
             tmux new-window -n "cx-review-pr-$pr" -t "$session:" "$command"
