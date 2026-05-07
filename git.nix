@@ -59,7 +59,6 @@
       ".issues" # gh-issue-sync directory
       ".pi" # local .pi directory
       ".superpowers" # superpowers
-      "docs/superpowers" # superpowers
     ];
     includes = [
       {
