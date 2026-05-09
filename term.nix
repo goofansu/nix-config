@@ -1,5 +1,41 @@
 { pkgs, ... }:
 
+let
+  tmux-session-picker = pkgs.writeShellApplication {
+    name = "tmux-session-picker";
+    runtimeInputs = with pkgs; [ zoxide fzf tmux coreutils ];
+    text = ''
+      dir=$(zoxide query --list | fzf --prompt='New session: ') || exit 0
+      session=$(basename "$dir" | tr '.:' '_')
+      tmux new-session -d -c "$dir" -s "$session" 2>/dev/null || true
+      tmux switch-client -t "$session"
+    '';
+  };
+
+  tmux-window-picker = pkgs.writeShellApplication {
+    name = "tmux-window-picker";
+    runtimeInputs = with pkgs; [ git fzf tmux gawk ];
+    text = ''
+      dir=$(git worktree list | awk '{print $1}' | fzf --prompt='New window: ') || exit 0
+      tmux new-window -c "$dir"
+    '';
+  };
+
+  tmux-pane-switcher = pkgs.writeShellApplication {
+    name = "tmux-pane-switcher";
+    runtimeInputs = with pkgs; [ fzf tmux coreutils ];
+    text = ''
+      target=$(
+        tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} [#{window_name}] #{pane_current_command} #{b:pane_current_path} #{pane_title}' \
+        | fzf --reverse \
+            --preview 'tmux capture-pane -pt {1} -e 2>/dev/null || echo "no preview"' \
+            --preview-window 'right:60%' \
+        | cut -d' ' -f1
+      ) || exit 0
+      tmux switch-client -t "$target"
+    '';
+  };
+in
 {
   programs.fish = {
     enable = true;
@@ -268,7 +304,7 @@
 
       # Window navigation
       bind r command-prompt -I "#W" "rename-window -- '%%'"
-      bind c display-popup -d "#{pane_current_path}" -E "git worktree list | awk '{print $1}' | fzf --prompt='New window: ' | xargs -r tmux new-window -c"
+      bind c display-popup -d "#{pane_current_path}" -E "${tmux-window-picker}/bin/tmux-window-picker"
       bind k confirm-before -p "Kill window #W? (y/n)" kill-window
 
       bind -n M-1 select-window -t 1
@@ -286,7 +322,7 @@
 
       # Session controls
       bind R command-prompt -I "#S" "rename-session -- '%%'"
-      bind C display-popup -d "#{pane_current_path}" -E "zoxide query --list | fzf --prompt='New session: ' | xargs -I{} sh -c 'tmux new-session -d -c \"{}\" -s \"$(basename \"{}\")\" -P -F \"#{session_name}\" | xargs tmux switch-client -t'"
+      bind C display-popup -E "${tmux-session-picker}/bin/tmux-session-picker"
       bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
       bind N switch-client -n
@@ -322,12 +358,7 @@
       setw -g clock-mode-colour blue
 
       # Fuzzy pane switcher
-      bind s run-shell "tmux list-panes -a -F '##{session_name}:##{window_index}.##{pane_index} [##{window_name}] ##{pane_current_command} ##{b:pane_current_path} ##{pane_title}' \
-        | fzf-tmux -p 90%,80% --reverse \
-          --preview 'tmux capture-pane -pt {1} -e 2>/dev/null || echo \"no preview\"' \
-          --preview-window 'right:60%' \
-        | cut -d' ' -f1 \
-        | xargs -I{} tmux switch-client -t {}"
+      bind s display-popup -w 90% -h 80% -E "${tmux-pane-switcher}/bin/tmux-pane-switcher"
     '';
   };
 }
