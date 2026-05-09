@@ -57,6 +57,10 @@ in
         description = "Attach to tmux, or start a new session if none is running";
         body = "tmux attach; or tmux new -s Work";
       };
+      jt = {
+        description = "Open a new tmux window to select a worktree";
+        body = "tmux new-window 'wt switch; exec fish'";
+      };
       cx = {
         description = "Run Claude without permission prompts";
         body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
