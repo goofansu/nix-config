@@ -81,6 +81,21 @@ in
         description = "Claude Code in Tmux";
         body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
       };
+      pi-mini = {
+        description = "Pi with a clean mind";
+        body = ''
+          pi \
+            -ne -ns -np -nc \
+            --no-session \
+            --offline \
+            --model openai-codex/gpt-5.5:low \
+            --extension ~/code/pi-stuff/extensions/web-search.ts \
+            --skill ~/code/pi-stuff/skills/summarize \
+            --tools read,grep,find,ls,bash,web-search \
+            $argv
+        '';
+
+      };
       t = {
         description = "Attach to Tmux, or start a new session if none is running";
         body = "tmux attach; or tmux new -s Work";
@@ -387,6 +402,8 @@ in
       bind s display-popup -w 90% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
+      bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
+      bind C-g display-popup -w 60% -h 80% -E "pi-mini --system-prompt 'Be concise, direct answer only, in the form of bullets.'"
     '';
   };
 }
