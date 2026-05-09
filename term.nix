@@ -65,11 +65,11 @@ in
         description = "Run Claude without permission prompts";
         body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
       };
-      cx-review = {
+      pr-review = {
         description = "Delegate a PR code review to Claude Code in a separate worktree";
         body = ''
           if test -z "$argv[1]"
-            echo "Usage: cx-review <pr-number> [session-name]"
+            echo "Usage: pr-review <pr-number> [session-name]"
             return 1
           end
 
@@ -78,9 +78,9 @@ in
           set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using `gh pr checkout $pr --force`.'"
 
           if test -n "$session"
-            tmux new-window -n "cx-review-pr-$pr" -t "$session:" "$command"
+            tmux new-window -n "pr-review-$pr" -t "$session:" "$command"
           else
-            tmux new-window -n "cx-review-pr-$pr" "$command"
+            tmux new-window -n "pr-review-$pr" "$command"
           end
         '';
       };
