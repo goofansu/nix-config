@@ -74,7 +74,7 @@ in
           end
 
           set pr $argv[1]
-          set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using `gh pr checkout $pr --force`.'"
+          set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using: gh pr checkout $pr --force.'"
           tmux new-window -n "pr-review-$pr" "$command"
         '';
       };
