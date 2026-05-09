@@ -3,7 +3,12 @@
 let
   tmux-pick-session = pkgs.writeShellApplication {
     name = "tmux-pick-session";
-    runtimeInputs = with pkgs; [ zoxide fzf tmux coreutils ];
+    runtimeInputs = with pkgs; [
+      zoxide
+      fzf
+      tmux
+      coreutils
+    ];
     text = ''
       dir=$(zoxide query --list | fzf --prompt='New session: ') || exit 0
       session=$(basename "$dir" | tr '.:' '_')
@@ -14,7 +19,13 @@ let
 
   tmux-pick-worktree = pkgs.writeShellApplication {
     name = "tmux-pick-worktree";
-    runtimeInputs = with pkgs; [ fzf tmux git gnugrep gnused ];
+    runtimeInputs = with pkgs; [
+      fzf
+      tmux
+      git
+      gnugrep
+      gnused
+    ];
     text = ''
       dir=$(git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf) || exit 0
       tmux new-window -c "$dir"
@@ -23,7 +34,11 @@ let
 
   tmux-pick-pane = pkgs.writeShellApplication {
     name = "tmux-pick-pane";
-    runtimeInputs = with pkgs; [ fzf tmux coreutils ];
+    runtimeInputs = with pkgs; [
+      fzf
+      tmux
+      coreutils
+    ];
     text = ''
       target=$(
         tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} [#{window_name}] #{pane_current_command} #{b:pane_current_path} #{pane_title}' \
