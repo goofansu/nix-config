@@ -53,21 +53,31 @@ in
         description = "Edit file using Emacs GUI";
         body = "emacsclient -nc -s gui $argv";
       };
+      cx = {
+        description = "Run Claude without permission prompts";
+        body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
+      };
       t = {
         description = "Attach to tmux, or start a new session if none is running";
         body = "tmux attach; or tmux new -s Work";
       };
       jt = {
-        description = "Open a new tmux window to select a worktree";
-        body = "tmux new-window 'wt switch; exec fish'";
-      };
-      cx = {
-        description = "Run Claude without permission prompts";
-        body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
+        description = "Fuzzy find and open a git worktree in a new tmux window";
+        body = ''
+          if test -z "$TMUX"
+            echo "You must start tmux to use jt."
+            return 1
+          end
+          git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf | read -l result; and tmux new-window -c $result
+        '';
       };
       pr-review = {
-        description = "Delegate a PR code review to Claude Code in a separate worktree";
+        description = "Review a PR using Claude Code in a new tmux window";
         body = ''
+          if test -z "$TMUX"
+            echo "You must start tmux to use pr-review."
+            return 1
+          end
           if test -z "$argv[1]"
             echo "Usage: pr-review <pr-number>"
             return 1
@@ -77,22 +87,6 @@ in
           set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using: gh pr checkout $pr --force.'"
           tmux new-window -n "pr-review-$pr" "$command"
         '';
-      };
-      pi-mini = {
-        description = "Pi coding agent with a clean mind";
-        body = "pi -nt -ne -ns -np -nc $argv";
-      };
-      gco = {
-        description = "Fuzzy find and checkout the selected pull request";
-        body = "gh pr list $argv | fzf | awk '{print $1}' | read -l result; and gh co $result";
-      };
-      gcb = {
-        description = "Fuzzy find and checkout the selected git branch";
-        body = "git br | fzf | awk '{print $1}' | read -l result; and git co $result";
-      };
-      gcl = {
-        description = "Fuzzy find and list commits of the selected git branch";
-        body = "git br | fzf | awk '{print $1}' | read -l result; and git log --oneline --graph $result";
       };
       tdl = {
         description = "Tmux Dev Layout: AI left, terminal right";
