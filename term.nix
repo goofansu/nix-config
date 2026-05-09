@@ -12,15 +12,6 @@ let
     '';
   };
 
-  tmux-window-picker = pkgs.writeShellApplication {
-    name = "tmux-window-picker";
-    runtimeInputs = with pkgs; [ git fzf tmux gawk ];
-    text = ''
-      dir=$(git worktree list | awk '{print $1}' | fzf --prompt='New window: ') || exit 0
-      tmux new-window -c "$dir"
-    '';
-  };
-
   tmux-pane-switcher = pkgs.writeShellApplication {
     name = "tmux-pane-switcher";
     runtimeInputs = with pkgs; [ fzf tmux coreutils ];
@@ -304,7 +295,7 @@ in
 
       # Window navigation
       bind r command-prompt -I "#W" "rename-window -- '%%'"
-      bind c display-popup -d "#{pane_current_path}" -E "${tmux-window-picker}/bin/tmux-window-picker"
+      bind c new-window -c "#{pane_current_path}"
       bind k confirm-before -p "Kill window #W? (y/n)" kill-window
 
       bind -n M-1 select-window -t 1
