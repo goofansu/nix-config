@@ -58,6 +58,7 @@
       "cleanshot"
       "ghostty"
       "google-chrome"
+      "linear"
       "marked-app"
       "ngrok"
       "obs"
