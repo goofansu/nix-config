@@ -69,19 +69,13 @@ in
         description = "Delegate a PR code review to Claude Code in a separate worktree";
         body = ''
           if test -z "$argv[1]"
-            echo "Usage: pr-review <pr-number> [session-name]"
+            echo "Usage: pr-review <pr-number>"
             return 1
           end
 
           set pr $argv[1]
-          set session $argv[2]
           set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using `gh pr checkout $pr --force`.'"
-
-          if test -n "$session"
-            tmux new-window -n "pr-review-$pr" -t "$session:" "$command"
-          else
-            tmux new-window -n "pr-review-$pr" "$command"
-          end
+          tmux new-window -n "pr-review-$pr" "$command"
         '';
       };
       pi-mini = {
