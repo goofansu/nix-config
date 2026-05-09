@@ -1,8 +1,8 @@
 { pkgs, ... }:
 
 let
-  tmux-session-picker = pkgs.writeShellApplication {
-    name = "tmux-session-picker";
+  tmux-pick-session = pkgs.writeShellApplication {
+    name = "tmux-pick-session";
     runtimeInputs = with pkgs; [ zoxide fzf tmux coreutils ];
     text = ''
       dir=$(zoxide query --list | fzf --prompt='New session: ') || exit 0
@@ -12,8 +12,17 @@ let
     '';
   };
 
-  tmux-pane-switcher = pkgs.writeShellApplication {
-    name = "tmux-pane-switcher";
+  tmux-pick-worktree = pkgs.writeShellApplication {
+    name = "tmux-pick-worktree";
+    runtimeInputs = with pkgs; [ fzf tmux git gnugrep gnused ];
+    text = ''
+      dir=$(git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf) || exit 0
+      tmux new-window -c "$dir"
+    '';
+  };
+
+  tmux-pick-pane = pkgs.writeShellApplication {
+    name = "tmux-pick-pane";
     runtimeInputs = with pkgs; [ fzf tmux coreutils ];
     text = ''
       target=$(
@@ -60,33 +69,6 @@ in
       t = {
         description = "Attach to tmux, or start a new session if none is running";
         body = "tmux attach; or tmux new -s Work";
-      };
-      jt = {
-        description = "Fuzzy find and open a git worktree in a new tmux window";
-        body = ''
-          if test -z "$TMUX"
-            echo "You must start tmux to use jt."
-            return 1
-          end
-          git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf | read -l result; and tmux new-window -c $result
-        '';
-      };
-      pr-review = {
-        description = "Review a PR using Claude Code in a new tmux window";
-        body = ''
-          if test -z "$TMUX"
-            echo "You must start tmux to use pr-review."
-            return 1
-          end
-          if test -z "$argv[1]"
-            echo "Usage: pr-review <pr-number>"
-            return 1
-          end
-
-          set pr $argv[1]
-          set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using: gh pr checkout $pr --force.'"
-          tmux new-window -n "pr-review-$pr" "$command"
-        '';
       };
       tdl = {
         description = "Tmux Dev Layout: AI left, terminal right";
@@ -189,6 +171,53 @@ in
           end
 
           tmux select-pane -t $panes[1]
+        '';
+      };
+      agent-bug-fix = {
+        description = "Fix a bug using Pi in a new tmux window";
+        body = ''
+          if test -z "$TMUX"
+            echo "You must start tmux to use agent-bug-fix."
+            return 1
+          end
+
+          if test -z "$argv[1]" -o -z "$argv[2]"
+            echo "Usage: agent-bug-fix <ticket> <branch> [base]"
+            return 1
+          end
+
+          set ticket $argv[1]
+          set branch $argv[2]
+          set base $argv[3]
+          set prompt "Fix the bug described in this ticket: $ticket. Start by reading the ticket to understand the issue, then implement a fix."
+
+          if test -n "$base"
+            set command "wt switch -c $branch -b $base -x pi -- '$prompt'"
+          else
+            set command "wt switch -c $branch -x pi -- '$prompt'"
+          end
+          tmux new-window "$command"
+        '';
+      };
+      agent-pr-review = {
+        description = "Review a PR using Claude Code in a new tmux window";
+        body = ''
+          if test -z "$TMUX"
+            echo "You must start tmux to use agent-pr-review."
+            return 1
+          end
+
+          if string match -qr '^\d+$' -- "$argv[1]"
+            set pr $argv[1]
+          else
+            set pr (gh pr list $argv | fzf | awk '{print $1}')
+            if test -z "$pr"
+              return 1
+            end
+          end
+
+          set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using: gh pr checkout $pr --force.'"
+          tmux new-window "$command"
         '';
       };
     };
@@ -305,7 +334,6 @@ in
 
       # Session controls
       bind R command-prompt -I "#S" "rename-session -- '%%'"
-      bind C display-popup -E "${tmux-session-picker}/bin/tmux-session-picker"
       bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
       bind N switch-client -n
@@ -340,8 +368,10 @@ in
       set -g mode-style "bg=blue,fg=black"
       setw -g clock-mode-colour blue
 
-      # Fuzzy pane switcher
-      bind s display-popup -w 90% -h 80% -E "${tmux-pane-switcher}/bin/tmux-pane-switcher"
+      # Popups
+      bind s display-popup -w 90% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
+      bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
+      bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
     '';
   };
 }
