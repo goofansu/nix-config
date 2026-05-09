@@ -78,11 +78,11 @@ in
         body = "emacsclient -nc -s gui $argv";
       };
       cx = {
-        description = "Run Claude without permission prompts";
+        description = "Claude Code in Tmux";
         body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
       };
       t = {
-        description = "Attach to tmux, or start a new session if none is running";
+        description = "Attach to Tmux, or start a new session if none is running";
         body = "tmux attach; or tmux new -s Work";
       };
       tdl = {
@@ -189,7 +189,7 @@ in
         '';
       };
       agent-bug-fix = {
-        description = "Fix a bug using Pi in a new tmux window";
+        description = "Fix a bug using Pi in a new Tmux window";
         body = ''
           if test -z "$TMUX"
             echo "You must start tmux to use agent-bug-fix."
@@ -215,7 +215,7 @@ in
         '';
       };
       agent-pr-review = {
-        description = "Review a PR using Claude Code in a new tmux window";
+        description = "Review a PR using Claude Code in a new Tmux window";
         body = ''
           if test -z "$TMUX"
             echo "You must start tmux to use agent-pr-review."
