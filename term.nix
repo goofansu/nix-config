@@ -22,13 +22,11 @@ let
     runtimeInputs = with pkgs; [
       fzf
       tmux
-      git
-      gnugrep
-      gnused
+      jq
     ];
     text = ''
-      dir=$(git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | fzf) || exit 0
-      tmux new-window -c "$dir"
+      branch=$(wt list --format json | jq -r '.[] | .branch' | fzf --prompt='New window: ') || exit 0
+      tmux new-window "wt switch $branch; exec fish"
     '';
   };
 
