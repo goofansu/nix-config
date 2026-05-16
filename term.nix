@@ -89,7 +89,7 @@ in
             --model openai-codex/gpt-5.5:low \
             --extension ~/code/pi-stuff/extensions/web-search.ts \
             --skill ~/code/pi-stuff/skills/summarize \
-            --tools read,grep,find,ls,bash,web-search \
+            --tools read,grep,find,ls,bash,web_search \
             $argv
         '';
 
