@@ -63,6 +63,7 @@
       "prince"
       "rectangle"
       "slack"
+      "tableplus"
       "tailscale-app"
       "zed"
       "zen"
