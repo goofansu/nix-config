@@ -57,6 +57,7 @@
       "cleanshot"
       "ghostty"
       "google-chrome"
+      "lm-studio"
       "marked-app"
       "ngrok"
       "orbstack"
