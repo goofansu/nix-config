@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 let
+  mbsync = "${pkgs.isync}/bin/mbsync";
+  pass = "${pkgs.pass}/bin/pass";
+
   gmailSettings = {
     imap = {
       host = "imap.gmail.com";
@@ -34,7 +37,7 @@ in
         address = "goofan.su@gmail.com";
         userName = "goofan.su@gmail.com";
         realName = "Yejun Su";
-        passwordCommand = "${pkgs.pass}/bin/pass goofan.su@gmail.com";
+        passwordCommand = "${pass} goofan.su@gmail.com";
         maildir = {
           path = "Home";
         };
@@ -44,7 +47,7 @@ in
         address = "james.su@managebac.com";
         userName = "james.su@managebac.com";
         realName = "James Su";
-        passwordCommand = "${pkgs.pass}/bin/pass james.su@managebac.com";
+        passwordCommand = "${pass} james.su@managebac.com";
         maildir = {
           path = "Work";
         };
@@ -63,7 +66,7 @@ in
       "new"
     ];
     hooks = {
-      preNew = "${pkgs.isync}/bin/mbsync -a";
+      preNew = "${mbsync} home && ${mbsync} work";
       postNew = ''
         notmuch tag +deleted -- tag:new and subject:"[Mandrill Alert] Webhook Failing"
         notmuch tag -new tag:new
