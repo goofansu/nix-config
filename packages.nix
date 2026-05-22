@@ -35,7 +35,6 @@ let
     ruff
 
     # Nix
-    devenv
     nixd # language server
     nixfmt # formatter
     nix-prefetch-github
@@ -59,7 +58,8 @@ let
     nodejs_24
     pnpm
 
-    # Deploy
+    # Development
+    devenv
     kamal
   ];
 in
