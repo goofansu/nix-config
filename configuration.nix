@@ -53,7 +53,6 @@
     casks = [
       "1password"
       "alfred"
-      "claude"
       "cleanshot"
       "ghostty"
       "google-chrome"
