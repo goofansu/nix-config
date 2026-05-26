@@ -6,15 +6,8 @@
 }:
 
 {
-  programs.emacs = {
-    enable = true;
-    extraPackages = epkgs: [
-      epkgs.jinx
-      epkgs.eglot
-    ];
-  };
-
   home.packages = with pkgs; [
+    emacs
     graphviz # denote-explore
     mupdf-headless # doc-view
     poppler-utils # doc-view
