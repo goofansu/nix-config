@@ -388,8 +388,8 @@ in
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
 
       # Fire and forget commands
-      bind b run-shell -b "cd #{q:pane_current_path} && wt browse"
-      bind C-b run-shell -b "cd #{q:pane_current_path} && wt chrome"
+      bind b run-shell -b "cd #{q:pane_current_path} && wt browse-local"
+      bind C-b run-shell -b "cd #{q:pane_current_path} && wt browse-remote"
     '';
   };
 }
