@@ -386,6 +386,7 @@ in
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
+      bind C-g display-popup -E "vi ~/.config/worktrunk/config.toml"
 
       # Fire and forget commands
       bind b run-shell -b "cd #{q:pane_current_path} && wt browse-local"
