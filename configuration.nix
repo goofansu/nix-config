@@ -54,6 +54,7 @@
       "1password"
       "alfred"
       "cleanshot"
+      "codex-app"
       "ghostty"
       "google-chrome"
       "lm-studio"
