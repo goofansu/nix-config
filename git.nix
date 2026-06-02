@@ -119,7 +119,7 @@
         {
           key = "G";
           command = ''
-            gh search prs {{.SelectedLocalCommit.Sha}} --sort created --order asc --limit 1 --json number --jq ".[] | .number" | xargs gh pr view -w
+            gh api repos/{owner}/{repo}/commits/{{.SelectedLocalCommit.Sha}}/pulls --jq ".[0].number" | xargs gh pr view -w
           '';
           context = "commits";
           description = "Browse pull request of selected commit";
