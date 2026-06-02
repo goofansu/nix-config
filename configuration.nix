@@ -6,7 +6,7 @@
 
   # Used for backwards compatibility of nix-darwin
   system = {
-    stateVersion = 5;
+    stateVersion = 7;
     primaryUser = "james";
   };
 

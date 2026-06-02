@@ -10,7 +10,7 @@ Reference: [installing nix-darwin](https://github.com/nix-darwin/nix-darwin?tab=
 
 ```shell
 git clone git@github.com:goofansu/nix-config.git ~/.config/nix-config
-sudo nix run --extra-experimental-features "nix-command flakes" nix-darwin/nix-darwin-25.11#darwin-rebuild -- switch --flake ~/.config/nix-config
+sudo nix run --extra-experimental-features "nix-command flakes" nix-darwin/nix-darwin-26.05#darwin-rebuild -- switch --flake ~/.config/nix-config
 ```
 
 ## Usage

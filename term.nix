@@ -50,6 +50,9 @@ let
   };
 in
 {
+  # Fish enables this for completions, but Home Manager 26.05 sets programs.man.package to null on Darwin.
+  programs.man.generateCaches = false;
+
   programs.fish = {
     enable = true;
     shellInit = ''
