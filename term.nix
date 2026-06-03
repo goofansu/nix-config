@@ -314,7 +314,6 @@ in
       # Vi mode for copy
       bind -T copy-mode-vi v send -X begin-selection
       bind -T copy-mode-vi y send -X copy-selection-and-cancel
-      bind -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection
 
       # Pane controls
       bind h split-window -v -c "#{pane_current_path}"
