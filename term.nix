@@ -208,9 +208,9 @@ in
           set prompt "Fix the bug described in this ticket: $ticket. Start by reading the ticket to understand the issue, then implement a fix."
 
           if test -n "$base"
-            set command "wt switch -c $branch -b $base -x pi -- '$prompt'"
+            set command "wt switch -c $branch -b $base -x cx -- '$prompt'"
           else
-            set command "wt switch -c $branch -x pi -- '$prompt'"
+            set command "wt switch -c $branch -x cx -- '$prompt'"
           end
           tmux new-window "$command"
         '';
