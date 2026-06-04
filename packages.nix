@@ -48,7 +48,10 @@ let
   ];
 
   unstable-packages = with pkgs-unstable; [
+    # Agent utilities
     acli
+    ast-grep
+    yq
 
     # Password managers
     bws
