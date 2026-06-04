@@ -29,11 +29,6 @@ let
     # Go
     go
 
-    # Python
-    python3
-    uv
-    ruff
-
     # Nix
     nixd # language server
     nixfmt # formatter
@@ -41,7 +36,16 @@ let
     prefetch-npm-deps
     nixpkgs-review
 
-    # gondolin (required to build custom images)
+    # Node.js
+    nodejs
+    pnpm
+
+    # Python
+    python3
+    uv
+    ruff
+
+    # Gondolin (required to build custom images)
     zig
     lz4
     e2fsprogs
@@ -53,15 +57,7 @@ let
     ast-grep
     yq
 
-    # Password managers
-    bws
-    _1password-cli
-
-    # Node.js
-    nodejs_24
-    pnpm
-
-    # Development
+    # Development utilities
     devenv
     kamal
   ];
