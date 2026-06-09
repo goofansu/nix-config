@@ -34,6 +34,7 @@
     settings = {
       filter_mode_shell_up_key_binding = "session";
       auto_sync = true;
+      store_failed = false;
     };
   };
 }
