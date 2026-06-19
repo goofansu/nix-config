@@ -55,7 +55,7 @@
       "node_modules"
       ".pi"
       ".codex"
-      ".issues"
+      ".claude"
     ];
     includes = [
       {
