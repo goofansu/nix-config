@@ -59,7 +59,6 @@
       "google-chrome"
       "linear"
       "lm-studio"
-      "marked-app"
       "ngrok"
       "orbstack"
       "prince"
