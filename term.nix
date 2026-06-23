@@ -78,6 +78,21 @@ in
         description = "Edit file using Emacs GUI";
         body = "emacsclient -nc -s gui $argv";
       };
+      gv = {
+        description = "Select uncommitted Git files with fzf and edit them in vi";
+        body = ''
+          set files (
+            begin
+              git diff --name-only
+              git diff --cached --name-only
+              git ls-files --others --exclude-standard
+            end | sort -u | fzf -m
+          )
+
+          test -n "$files"; or return 0
+          vi $files
+        '';
+      };
       cx = {
         description = "Claude Code in Tmux";
         body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
