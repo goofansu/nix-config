@@ -79,18 +79,29 @@ in
         body = "emacsclient -nc -s gui $argv";
       };
       gv = {
-        description = "Select uncommitted Git files with fzf and edit them in vi";
+        description = "Select uncommitted Git files with fzf and choose whether to view in vi or open";
         body = ''
-          set files (
+          set choice (
             begin
               git diff --name-only
               git diff --cached --name-only
               git ls-files --others --exclude-standard
-            end | sort -u | fzf -m
+            end | sort -u | fzf -m --expect=ctrl-o --header='Enter: vi | Ctrl-O: open'
           )
 
+          test -n "$choice"; or return 0
+
+          set key $choice[1]
+          set files $choice[2..-1]
+
           test -n "$files"; or return 0
-          vi $files
+
+          switch "$key"
+            case ctrl-o
+              open $files
+            case '*'
+              vi $files
+          end
         '';
       };
       cx = {
