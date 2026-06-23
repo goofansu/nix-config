@@ -228,27 +228,6 @@ in
           tmux new-window "$command"
         '';
       };
-      agent-pr-review = {
-        description = "Review a PR using Claude Code in a new Tmux window";
-        body = ''
-          if test -z "$TMUX"
-            echo "You must start tmux to use agent-pr-review."
-            return 1
-          end
-
-          if string match -qr '^\d+$' -- "$argv[1]"
-            set pr $argv[1]
-          else
-            set pr (gh pr list $argv | fzf | awk '{print $1}')
-            if test -z "$pr"
-              return 1
-            end
-          end
-
-          set command "wt switch pr:$pr -x cx -- '/review $pr. Force-reset to the latest PR head using: gh pr checkout $pr --force.'"
-          tmux new-window "$command"
-        '';
-      };
     };
   };
 
