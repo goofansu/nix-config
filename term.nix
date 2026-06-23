@@ -81,27 +81,14 @@ in
       gv = {
         description = "Select uncommitted Git files with fzf and choose whether to view in vi or open";
         body = ''
-          set choice (
-            begin
-              git diff --name-only
-              git diff --cached --name-only
-              git ls-files --others --exclude-standard
-            end | sort -u | fzf -m --expect=ctrl-o --header='Enter: vi | Ctrl-O: open'
-          )
-
-          test -n "$choice"; or return 0
-
-          set key $choice[1]
-          set files $choice[2..-1]
-
-          test -n "$files"; or return 0
-
-          switch "$key"
-            case ctrl-o
-              open $files
-            case '*'
-              vi $files
-          end
+          begin
+            git diff --name-only
+            git diff --cached --name-only
+            git ls-files --others --exclude-standard
+          end | sort -u | fzf -m \
+            --header='Enter: vi | Ctrl-O: open | Esc: quit' \
+            --bind='enter:execute(vi {+})' \
+            --bind='ctrl-o:execute(open {+})'
         '';
       };
       cx = {
