@@ -2,15 +2,15 @@
 
 function usage
     printf '%s\n' \
-        'gh claude - Agent helpers for GitHub issues and pull requests' \
+        'gh ai - Agent helpers for GitHub issues and pull requests' \
         '' \
         USAGE \
-        '  gh claude fix [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE]' \
-        '  gh claude import <url> [--prompt PROMPT]' \
-        '  gh claude review [pr-number | gh-pr-list filters...] [--prompt PROMPT]' \
-        '  gh claude triage [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--base BASE]' \
-        '  gh claude work [pr-number | gh-pr-list filters...] [--prompt PROMPT]' \
-        '  gh claude help' \
+        '  gh ai fix [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE] [--agent COMMAND]' \
+        '  gh ai import <url> [--prompt PROMPT] [--agent COMMAND]' \
+        '  gh ai review [pr-number | gh-pr-list filters...] [--prompt PROMPT] [--agent COMMAND]' \
+        '  gh ai triage [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--base BASE] [--agent COMMAND]' \
+        '  gh ai work [pr-number | gh-pr-list filters...] [--prompt PROMPT] [--agent COMMAND]' \
+        '  gh ai help' \
         '' \
         COMMANDS \
         '  fix     Fix an issue by number, or select one with fzf' \
@@ -20,6 +20,9 @@ function usage
         '  work    Continue work on a PR by number, or select one with fzf' \
         '  help    Show this help' \
         '' \
+        OPTIONS \
+        '  --agent COMMAND  Agent executable to run. Defaults to cx.' \
+        '' \
         'PROMPT VARIABLES' \
         '  import:      {url}' \
         '  review/work: {pr}' \
@@ -27,11 +30,11 @@ function usage
         '  triage:      {issue}, {base}' \
         '' \
         EXAMPLES \
-        "  gh claude fix 123 --prompt 'Fix issue {issue} on {branch} from {base}'" \
-        '  gh claude import https://example.com/ticket/123' \
-        "  gh claude review 456 --prompt '/review {pr}. Focus on regression risk'" \
-        '  gh claude triage --assignee @me' \
-        "  gh claude work --author octocat --prompt 'Continue PR {pr}'"
+        "  gh ai fix 123 --prompt 'Fix issue {issue} on {branch} from {base}'" \
+        '  gh ai import https://example.com/ticket/123' \
+        "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'" \
+        '  gh ai triage --assignee @me' \
+        "  gh ai work --author octocat --prompt 'Continue PR {pr}'"
 end
 
 function select_pr
@@ -74,7 +77,7 @@ end
 
 function open_tmux_window
     if not set -q TMUX
-        echo 'gh claude: must be run inside tmux to open a new window' >&2
+        echo 'gh ai: must be run inside tmux to open a new window' >&2
         exit 1
     end
 
@@ -86,6 +89,7 @@ function fix
     set -l branch ''
     set -l base ''
     set -l issue ''
+    set -l agent cx
     set -l issue_args
 
     while test (count $argv) -gt 0
@@ -93,7 +97,7 @@ function fix
             case --prompt
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh claude fix: --prompt requires a value' >&2
+                    echo 'gh ai fix: --prompt requires a value' >&2
                     exit 2
                 end
                 set custom_prompt $argv[1]
@@ -102,7 +106,7 @@ function fix
             case --branch
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh claude fix: --branch requires a value' >&2
+                    echo 'gh ai fix: --branch requires a value' >&2
                     exit 2
                 end
                 set branch $argv[1]
@@ -111,12 +115,21 @@ function fix
             case --base
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh claude fix: --base requires a value' >&2
+                    echo 'gh ai fix: --base requires a value' >&2
                     exit 2
                 end
                 set base $argv[1]
             case '--base=*'
                 set base (string replace -- '--base=' '' $argv[1])
+            case --agent
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo 'gh ai fix: --agent requires a value' >&2
+                    exit 2
+                end
+                set agent $argv[1]
+            case '--agent=*'
+                set agent (string replace -- '--agent=' '' $argv[1])
             case '*'
                 set -a issue_args $argv[1]
         end
@@ -126,7 +139,7 @@ function fix
     if test (count $issue_args) -gt 0; and is_number $issue_args[1]
         set issue $issue_args[1]
         if test (count $issue_args) -gt 1
-            echo 'gh claude fix: unexpected filters after direct issue number' >&2
+            echo 'gh ai fix: unexpected filters after direct issue number' >&2
             exit 2
         end
     else
@@ -146,7 +159,7 @@ function fix
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
-    set -l command "wt switch -c "(fish_quote "$branch")" -b "(fish_quote "$base")" -x cx -- "(fish_quote "$prompt")
+    set -l command "wt switch -c "(fish_quote "$branch")" -b "(fish_quote "$base")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -157,6 +170,7 @@ function run_issue_prompt
     set -l custom_prompt ''
     set -l base ''
     set -l issue ''
+    set -l agent cx
     set -l issue_args
 
     while test (count $argv) -gt 0
@@ -164,7 +178,7 @@ function run_issue_prompt
             case --prompt
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo "gh claude $command_name: --prompt requires a value" >&2
+                    echo "gh ai $command_name: --prompt requires a value" >&2
                     exit 2
                 end
                 set custom_prompt $argv[1]
@@ -173,12 +187,21 @@ function run_issue_prompt
             case --base
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo "gh claude $command_name: --base requires a value" >&2
+                    echo "gh ai $command_name: --base requires a value" >&2
                     exit 2
                 end
                 set base $argv[1]
             case '--base=*'
                 set base (string replace -- '--base=' '' $argv[1])
+            case --agent
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo "gh ai $command_name: --agent requires a value" >&2
+                    exit 2
+                end
+                set agent $argv[1]
+            case '--agent=*'
+                set agent (string replace -- '--agent=' '' $argv[1])
             case '*'
                 set -a issue_args $argv[1]
         end
@@ -188,7 +211,7 @@ function run_issue_prompt
     if test (count $issue_args) -gt 0; and is_number $issue_args[1]
         set issue $issue_args[1]
         if test (count $issue_args) -gt 1
-            echo "gh claude $command_name: unexpected filters after direct issue number" >&2
+            echo "gh ai $command_name: unexpected filters after direct issue number" >&2
             exit 2
         end
     else
@@ -207,7 +230,7 @@ function run_issue_prompt
     end
 
     set prompt (render_template "$prompt" issue "$issue" base "$base")
-    set -l command "wt switch "(fish_quote "$base")" -x cx -- "(fish_quote "$prompt")
+    set -l command "wt switch "(fish_quote "$base")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -227,6 +250,7 @@ end
 
 function import_url
     set -l custom_prompt ''
+    set -l agent cx
     set -l url ''
 
     while test (count $argv) -gt 0
@@ -234,15 +258,24 @@ function import_url
             case --prompt
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh claude import: --prompt requires a value' >&2
+                    echo 'gh ai import: --prompt requires a value' >&2
                     exit 2
                 end
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --agent
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo 'gh ai import: --agent requires a value' >&2
+                    exit 2
+                end
+                set agent $argv[1]
+            case '--agent=*'
+                set agent (string replace -- '--agent=' '' $argv[1])
             case '*'
                 if test -n "$url"
-                    echo 'gh claude import: expected exactly one URL' >&2
+                    echo 'gh ai import: expected exactly one URL' >&2
                     exit 2
                 end
                 set url $argv[1]
@@ -251,7 +284,7 @@ function import_url
     end
 
     if test -z "$url"
-        echo 'Usage: gh claude import <url> [--prompt PROMPT]' >&2
+        echo 'Usage: gh ai import <url> [--prompt PROMPT]' >&2
         exit 2
     end
 
@@ -263,7 +296,7 @@ function import_url
     end
 
     set prompt (render_template "$prompt" url "$url")
-    set -l command "cx -- "(fish_quote "$prompt")
+    set -l command (fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -272,6 +305,7 @@ function run_pr_agent
     set -e argv[1]
     set -l custom_prompt ''
     set -l pr ''
+    set -l agent cx
     set -l pr_args
 
     while test (count $argv) -gt 0
@@ -279,12 +313,21 @@ function run_pr_agent
             case --prompt
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh claude: --prompt requires a value' >&2
+                    echo 'gh ai: --prompt requires a value' >&2
                     exit 2
                 end
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --agent
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo 'gh ai: --agent requires a value' >&2
+                    exit 2
+                end
+                set agent $argv[1]
+            case '--agent=*'
+                set agent (string replace -- '--agent=' '' $argv[1])
             case '*'
                 set -a pr_args $argv[1]
         end
@@ -294,7 +337,7 @@ function run_pr_agent
     if test (count $pr_args) -gt 0; and is_number $pr_args[1]
         set pr $pr_args[1]
         if test (count $pr_args) -gt 1
-            echo 'gh claude: unexpected filters after direct PR number' >&2
+            echo 'gh ai: unexpected filters after direct PR number' >&2
             exit 2
         end
     else
@@ -311,7 +354,7 @@ function run_pr_agent
     end
 
     set prompt (render_template "$prompt" pr "$pr")
-    set -l command "wt switch "(fish_quote "pr:$pr")" -x cx -- "(fish_quote "$prompt")
+    set -l command "wt switch "(fish_quote "pr:$pr")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -344,7 +387,7 @@ switch $argv[1]
     case ''
         usage
     case '*'
-        echo "gh claude: unknown command '$argv[1]'" >&2
+        echo "gh ai: unknown command '$argv[1]'" >&2
         usage >&2
         exit 2
 end

@@ -81,7 +81,7 @@ STUB
 	chmod +x "$tmp/bin/git"
 }
 
-run_gh_claude() {
+run_gh_ai() {
 	local tmp="$1"
 	shift
 	PATH="$tmp/bin:$PATH" \
@@ -90,7 +90,7 @@ run_gh_claude() {
 		FZF_CALLED="$tmp/fzf-called" \
 		TMUX_CALLS="$tmp/tmux-calls" \
 		TMUX=1 \
-		fish "$repo_root/scripts/gh-claude.fish" "$@"
+		fish "$repo_root/scripts/gh-ai.fish" "$@"
 }
 
 test_fix_direct_number_skips_issue_picker() {
@@ -98,7 +98,7 @@ test_fix_direct_number_skips_issue_picker() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_claude "$tmp" fix 123
+	run_gh_ai "$tmp" fix 123
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
@@ -111,7 +111,7 @@ test_review_numeric_filter_still_uses_picker_when_not_first_arg() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_claude "$tmp" review --search 456
+	run_gh_ai "$tmp" review --search 456
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker for non-first numeric filter value"
 	grep -q '^pr list --search 456$' "$tmp/gh-calls" || fail "expected gh pr list to receive filters"
@@ -123,7 +123,7 @@ test_work_direct_number_skips_pr_picker() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_claude "$tmp" work 456 --prompt 'Continue {pr}'
+	run_gh_ai "$tmp" work 456 --prompt 'Continue {pr}'
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^pr list' "$tmp/gh-calls" || fail "did not expect gh pr list for direct PR number"
@@ -136,7 +136,7 @@ test_triage_direct_number_skips_issue_picker() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_claude "$tmp" triage 123 --prompt 'Triage {issue}'
+	run_gh_ai "$tmp" triage 123 --prompt 'Triage {issue}'
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
@@ -148,7 +148,7 @@ test_triage_defaults_base_to_current_branch_and_switches_worktree() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_claude "$tmp" triage 123 --prompt 'Triage {issue} on {base}'
+	run_gh_ai "$tmp" triage 123 --prompt 'Triage {issue} on {base}'
 
 	grep -q '^branch --show-current$' "$tmp/git-calls" || fail "expected current branch lookup"
 	assert_fish_parses_tmux_command "$tmp"
@@ -161,7 +161,7 @@ test_triage_base_option_overrides_current_branch() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_claude "$tmp" triage 123 --base main --prompt 'Triage {issue} on {base}'
+	run_gh_ai "$tmp" triage 123 --base main --prompt 'Triage {issue} on {base}'
 
 	[[ ! -e "$tmp/git-calls" ]] || ! grep -q '^branch --show-current$' "$tmp/git-calls" || fail "did not expect current branch lookup when --base is provided"
 	assert_fish_parses_tmux_command "$tmp"
@@ -174,15 +174,54 @@ test_triage_multiline_prompt_generates_fish_parseable_command() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_claude "$tmp" triage 123 --base main --prompt $'Line one {issue}\nLine two {base}'
+	run_gh_ai "$tmp" triage 123 --base main --prompt $'Line one {issue}\nLine two {base}'
 
 	assert_fish_parses_tmux_command "$tmp"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Line one"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Line two"
 }
 
+test_fix_agent_option_overrides_default_agent() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" fix 123 --agent claude --prompt 'Fix {issue}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b main -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Fix 123"
+}
+
+test_review_agent_equals_option_overrides_default_agent() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" review 456 --agent=pi --prompt 'Review {pr}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x pi --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Review 456"
+}
+
+test_import_agent_option_overrides_default_agent() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" import https://example.com/ticket/123 --agent claude --prompt 'Import {url}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Import https://example.com/ticket/123"
+}
+
 for test_name in \
 	test_fix_direct_number_skips_issue_picker \
+	test_fix_agent_option_overrides_default_agent \
+	test_review_agent_equals_option_overrides_default_agent \
+	test_import_agent_option_overrides_default_agent \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_work_direct_number_skips_pr_picker \
 	test_triage_direct_number_skips_issue_picker \

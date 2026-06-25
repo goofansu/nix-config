@@ -1,10 +1,10 @@
 { pkgs, pkgs-unstable, ... }:
 
 let
-  gh-claude = pkgs.stdenvNoCC.mkDerivation {
-    pname = "gh-claude";
+  gh-ai = pkgs.stdenvNoCC.mkDerivation {
+    pname = "gh-ai";
     version = "0-unstable";
-    src = ./scripts/gh-claude.fish;
+    src = ./scripts/gh-ai.fish;
     nativeBuildInputs = [
       pkgs.fish
       pkgs.makeWrapper
@@ -12,9 +12,9 @@ let
     dontUnpack = true;
     installPhase = ''
       runHook preInstall
-      install -Dm755 $src $out/bin/gh-claude
-      patchShebangs $out/bin/gh-claude
-      wrapProgram $out/bin/gh-claude \
+      install -Dm755 $src $out/bin/gh-ai
+      patchShebangs $out/bin/gh-ai
+      wrapProgram $out/bin/gh-ai \
         --prefix PATH : ${pkgs.lib.makeBinPath (with pkgs; [
           coreutils
           fish
@@ -33,7 +33,7 @@ in
   programs.gh = {
     enable = true;
     package = pkgs-unstable.gh;
-    extensions = [ gh-claude ];
+    extensions = [ gh-ai ];
     settings = {
       git_protocol = "ssh";
     };
