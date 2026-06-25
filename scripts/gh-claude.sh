@@ -8,6 +8,7 @@ usage() {
 		"  gh claude fix [gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE]" \
 		"  gh claude import <url> [--prompt PROMPT]" \
 		"  gh claude review [gh-pr-list filters...] [--prompt PROMPT]" \
+		"  gh claude triage [gh-issue-list filters...] [--prompt PROMPT]" \
 		"  gh claude work [gh-pr-list filters...] [--prompt PROMPT]" \
 		"  gh claude help" \
 		"" \
@@ -15,6 +16,7 @@ usage() {
 		"  fix     Select an issue with fzf and fix it in a new tmux window" \
 		"  import  Inspect a URL and create a GitHub issue" \
 		"  review  Select a PR with fzf and review it in a new tmux window" \
+		"  triage  Select an issue with fzf and gather implementation context" \
 		"  work    Select a PR with fzf and continue work in a new tmux window" \
 		"  help    Show this help" \
 		"" \
@@ -22,11 +24,13 @@ usage() {
 		"  import:      {url}" \
 		"  review/work: {pr}, {title}, {url}, {branch}" \
 		"  fix:         {issue}, {title}, {url}, {branch}, {base}" \
+		"  triage:      {issue}, {title}, {url}" \
 		"" \
 		"EXAMPLES" \
 		"  gh claude fix --assignee @me --prompt 'Fix {url} on {branch} from {base}'" \
 		"  gh claude import https://example.com/ticket/123" \
 		"  gh claude review --search bug --prompt '/review {pr}. Focus on regression risk in {branch}'" \
+		"  gh claude triage --assignee @me" \
 		"  gh claude work --author octocat --prompt 'Continue {url} on {branch}'"
 }
 
@@ -159,6 +163,73 @@ Start by reading the issue to understand the problem, then implement a fix."
 
 	printf -v command 'wt switch -c %q -b %q -x cx -- %q' "$branch" "$base" "$prompt"
 	open_tmux_window "$command"
+}
+
+run_issue_prompt() {
+	local command_name="$1"
+	local default_prompt="$2"
+	shift 2
+	local custom_prompt=""
+	local issue
+	local title
+	local url
+	local prompt
+	local command
+	local -a issue_args=()
+
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		--prompt)
+			shift
+			if [ "$#" -eq 0 ]; then
+				echo "gh claude $command_name: --prompt requires a value" >&2
+				exit 2
+			fi
+			custom_prompt="$1"
+			;;
+		--prompt=*)
+			custom_prompt="${1#--prompt=}"
+			;;
+		*)
+			issue_args+=("$1")
+			;;
+		esac
+		shift
+	done
+
+	issue=$(select_issue "${issue_args[@]}") || exit 0
+	[ -n "$issue" ] || exit 0
+
+	title=$(gh issue view "$issue" --json title --jq '.title')
+	url=$(gh issue view "$issue" --json url --jq '.url')
+
+	if [ -n "$custom_prompt" ]; then
+		prompt="$custom_prompt"
+	else
+		prompt="$default_prompt"
+	fi
+
+	prompt=$(render_template "$prompt" issue "$issue" title "$title" url "$url")
+
+	printf -v command 'cx -- %q' "$prompt"
+	open_tmux_window "$command"
+}
+
+triage() {
+	run_issue_prompt "triage" "Triage GitHub issue #{issue}: {title}
+
+{url}
+
+Gather enough context to make this issue ready for implementation. Read the issue, inspect the relevant code paths, identify missing information, likely root cause or affected components, risks, and a concrete implementation approach.
+
+Do not implement the fix. If the issue is ready, add a GitHub issue comment summarizing:
+- Problem understanding
+- Relevant files or code paths
+- Missing questions, if any
+- Proposed implementation approach
+- Suggested acceptance criteria or tests
+
+If it is not ready, comment with the specific missing information needed." "$@"
 }
 
 import_url() {
@@ -296,6 +367,10 @@ import)
 review)
 	shift
 	review "$@"
+	;;
+triage)
+	shift
+	triage "$@"
 	;;
 work)
 	shift
