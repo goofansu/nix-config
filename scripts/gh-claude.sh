@@ -8,7 +8,7 @@ usage() {
 		"  gh claude fix [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE]" \
 		"  gh claude import <url> [--prompt PROMPT]" \
 		"  gh claude review [pr-number | gh-pr-list filters...] [--prompt PROMPT]" \
-		"  gh claude triage [issue-number | gh-issue-list filters...] [--prompt PROMPT]" \
+		"  gh claude triage [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--base BASE]" \
 		"  gh claude work [pr-number | gh-pr-list filters...] [--prompt PROMPT]" \
 		"  gh claude help" \
 		"" \
@@ -24,7 +24,7 @@ usage() {
 		"  import:      {url}" \
 		"  review/work: {pr}" \
 		"  fix:         {issue}, {branch}, {base}" \
-		"  triage:      {issue}" \
+		"  triage:      {issue}, {base}" \
 		"" \
 		"EXAMPLES" \
 		"  gh claude fix 123 --prompt 'Fix issue {issue} on {branch} from {base}'" \
@@ -56,6 +56,10 @@ slugify() {
 
 default_branch() {
 	gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name'
+}
+
+current_branch() {
+	git branch --show-current
 }
 
 render_template() {
@@ -168,6 +172,7 @@ run_issue_prompt() {
 	local default_prompt="$2"
 	shift 2
 	local custom_prompt=""
+	local base=""
 	local issue
 	local prompt
 	local command
@@ -185,6 +190,17 @@ run_issue_prompt() {
 			;;
 		--prompt=*)
 			custom_prompt="${1#--prompt=}"
+			;;
+		--base)
+			shift
+			if [ "$#" -eq 0 ]; then
+				echo "gh claude $command_name: --base requires a value" >&2
+				exit 2
+			fi
+			base="$1"
+			;;
+		--base=*)
+			base="${1#--base=}"
 			;;
 		*)
 			issue_args+=("$1")
@@ -204,20 +220,24 @@ run_issue_prompt() {
 		[ -n "$issue" ] || exit 0
 	fi
 
+	if [ -z "$base" ]; then
+		base=$(current_branch)
+	fi
+
 	if [ -n "$custom_prompt" ]; then
 		prompt="$custom_prompt"
 	else
 		prompt="$default_prompt"
 	fi
 
-	prompt=$(render_template "$prompt" issue "$issue")
+	prompt=$(render_template "$prompt" issue "$issue" base "$base")
 
-	printf -v command 'cx -- %q' "$prompt"
+	printf -v command 'wt switch %q -x cx -- %q' "$base" "$prompt"
 	open_tmux_window "$command"
 }
 
 triage() {
-	run_issue_prompt "triage" "Triage GitHub issue #{issue}. Gather enough context to make this issue ready for implementation. Read the issue, inspect the relevant code paths, identify missing information, likely root cause or affected components, risks, and a concrete implementation approach.
+	run_issue_prompt "triage" "Triage GitHub issue #{issue} from base branch {base}. Gather enough context to make this issue ready for implementation. Read the issue, inspect the relevant code paths, identify missing information, likely root cause or affected components, risks, and a concrete implementation approach.
 
 Do not implement the fix. If the issue is ready, add a GitHub issue comment summarizing:
 - Problem understanding

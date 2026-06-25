@@ -58,6 +58,22 @@ set -euo pipefail
 printf '%s\n' "$*" >>"$TMUX_CALLS"
 STUB
 	chmod +x "$tmp/bin/tmux"
+
+	cat >"$tmp/bin/git" <<'STUB'
+#!/usr/bin/env bash
+set -euo pipefail
+printf '%s\n' "$*" >>"$GIT_CALLS"
+case "$*" in
+branch\ --show-current)
+	printf '%s\n' feature/current
+	;;
+*)
+	printf 'unexpected git call: %s\n' "$*" >&2
+	exit 1
+	;;
+esac
+STUB
+	chmod +x "$tmp/bin/git"
 }
 
 run_gh_claude() {
@@ -65,6 +81,7 @@ run_gh_claude() {
 	shift
 	PATH="$tmp/bin:$PATH" \
 		GH_CALLS="$tmp/gh-calls" \
+		GIT_CALLS="$tmp/git-calls" \
 		FZF_CALLED="$tmp/fzf-called" \
 		TMUX_CALLS="$tmp/tmux-calls" \
 		TMUX=1 \
@@ -121,11 +138,37 @@ test_triage_direct_number_skips_issue_picker() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "Triage\\ 123"
 }
 
+test_triage_defaults_base_to_current_branch_and_switches_worktree() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_claude "$tmp" triage 123 --prompt 'Triage {issue} on {base}'
+
+	grep -q '^branch --show-current$' "$tmp/git-calls" || fail "expected current branch lookup"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch feature/current -x cx --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Triage\\ 123\\ on\\ feature/current"
+}
+
+test_triage_base_option_overrides_current_branch() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_claude "$tmp" triage 123 --base main --prompt 'Triage {issue} on {base}'
+
+	[[ ! -e "$tmp/git-calls" ]] || ! grep -q '^branch --show-current$' "$tmp/git-calls" || fail "did not expect current branch lookup when --base is provided"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch main -x cx --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Triage\\ 123\\ on\\ main"
+}
+
 for test_name in \
 	test_fix_direct_number_skips_issue_picker \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_work_direct_number_skips_pr_picker \
-	test_triage_direct_number_skips_issue_picker; do
+	test_triage_direct_number_skips_issue_picker \
+	test_triage_defaults_base_to_current_branch_and_switches_worktree \
+	test_triage_base_option_overrides_current_branch; do
 	"$test_name"
 	echo "ok - $test_name"
 done
