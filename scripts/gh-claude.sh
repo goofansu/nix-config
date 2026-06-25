@@ -60,6 +60,15 @@ render_template() {
 	printf '%s' "$text"
 }
 
+open_tmux_window() {
+	if [ -z "${TMUX:-}" ]; then
+		echo "gh claude: must be run inside tmux to open a new window" >&2
+		exit 1
+	fi
+
+	tmux new-window "$1"
+}
+
 fix() {
 	local custom_prompt=""
 	local branch=""
@@ -145,14 +154,14 @@ Start by reading the issue to understand the problem, then implement a fix."
 	prompt=$(render_template "$prompt" issue "$issue" title "$title" url "$url" branch "$branch" base "$base")
 
 	printf -v command 'wt switch -c %q -b %q -x cx -- %q' "$branch" "$base" "$prompt"
-	tmux new-window "$command"
+	open_tmux_window "$command"
 }
 
 parse_pr_prompt_args() {
 	local prompt_var="$1"
 	local args_var="$2"
 	shift 2
-	local custom_prompt=""
+	local parsed_prompt=""
 	local -a parsed_args=()
 
 	while [ "$#" -gt 0 ]; do
@@ -163,10 +172,10 @@ parse_pr_prompt_args() {
 				echo "gh claude: --prompt requires a value" >&2
 				exit 2
 			fi
-			custom_prompt="$1"
+			parsed_prompt="$1"
 			;;
 		--prompt=*)
-			custom_prompt="${1#--prompt=}"
+			parsed_prompt="${1#--prompt=}"
 			;;
 		*)
 			parsed_args+=("$1")
@@ -175,7 +184,7 @@ parse_pr_prompt_args() {
 		shift
 	done
 
-	printf -v "$prompt_var" '%s' "$custom_prompt"
+	printf -v "$prompt_var" '%s' "$parsed_prompt"
 	eval "$args_var=(\"\${parsed_args[@]}\")"
 }
 
@@ -209,7 +218,7 @@ run_pr_agent() {
 	prompt=$(render_template "$prompt" pr "$pr" title "$title" url "$url" branch "$branch")
 
 	printf -v command 'wt switch %q -x cx -- %q' "pr:$pr" "$prompt"
-	tmux new-window "$command"
+	open_tmux_window "$command"
 }
 
 review() {
