@@ -5,19 +5,19 @@ usage() {
 		"gh claude - Agent helpers for GitHub issues and pull requests" \
 		"" \
 		"USAGE" \
-		"  gh claude fix [gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE]" \
+		"  gh claude fix [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE]" \
 		"  gh claude import <url> [--prompt PROMPT]" \
-		"  gh claude review [gh-pr-list filters...] [--prompt PROMPT]" \
-		"  gh claude triage [gh-issue-list filters...] [--prompt PROMPT]" \
-		"  gh claude work [gh-pr-list filters...] [--prompt PROMPT]" \
+		"  gh claude review [pr-number | gh-pr-list filters...] [--prompt PROMPT]" \
+		"  gh claude triage [issue-number | gh-issue-list filters...] [--prompt PROMPT]" \
+		"  gh claude work [pr-number | gh-pr-list filters...] [--prompt PROMPT]" \
 		"  gh claude help" \
 		"" \
 		"COMMANDS" \
-		"  fix     Select an issue with fzf and fix it in a new tmux window" \
+		"  fix     Fix an issue by number, or select one with fzf" \
 		"  import  Inspect a URL and create a GitHub issue" \
-		"  review  Select a PR with fzf and review it in a new tmux window" \
-		"  triage  Select an issue with fzf and gather implementation context" \
-		"  work    Select a PR with fzf and continue work in a new tmux window" \
+		"  review  Review a PR by number, or select one with fzf" \
+		"  triage  Triage an issue by number, or select one with fzf" \
+		"  work    Continue work on a PR by number, or select one with fzf" \
 		"  help    Show this help" \
 		"" \
 		"PROMPT VARIABLES" \
@@ -27,9 +27,9 @@ usage() {
 		"  triage:      {issue}" \
 		"" \
 		"EXAMPLES" \
-		"  gh claude fix --assignee @me --prompt 'Fix issue {issue} on {branch} from {base}'" \
+		"  gh claude fix 123 --prompt 'Fix issue {issue} on {branch} from {base}'" \
 		"  gh claude import https://example.com/ticket/123" \
-		"  gh claude review --search bug --prompt '/review {pr}. Focus on regression risk'" \
+		"  gh claude review 456 --prompt '/review {pr}. Focus on regression risk'" \
 		"  gh claude triage --assignee @me" \
 		"  gh claude work --author octocat --prompt 'Continue PR {pr}'"
 }
@@ -40,6 +40,10 @@ select_pr() {
 
 select_issue() {
 	gh issue list "$@" | fzf | awk '{print $1}' | sed 's/^#//'
+}
+
+is_number() {
+	[[ "$1" =~ ^[0-9]+$ ]]
 }
 
 slugify() {
@@ -128,8 +132,16 @@ fix() {
 		shift
 	done
 
-	issue=$(select_issue "${issue_args[@]}") || exit 0
-	[ -n "$issue" ] || exit 0
+	if [ "${#issue_args[@]}" -gt 0 ] && is_number "${issue_args[0]}"; then
+		issue="${issue_args[0]}"
+		if [ "${#issue_args[@]}" -gt 1 ]; then
+			echo "gh claude fix: unexpected filters after direct issue number" >&2
+			exit 2
+		fi
+	else
+		issue=$(select_issue "${issue_args[@]}") || exit 0
+		[ -n "$issue" ] || exit 0
+	fi
 
 	if [ -z "$branch" ]; then
 		branch="issue-$issue"
@@ -181,8 +193,16 @@ run_issue_prompt() {
 		shift
 	done
 
-	issue=$(select_issue "${issue_args[@]}") || exit 0
-	[ -n "$issue" ] || exit 0
+	if [ "${#issue_args[@]}" -gt 0 ] && is_number "${issue_args[0]}"; then
+		issue="${issue_args[0]}"
+		if [ "${#issue_args[@]}" -gt 1 ]; then
+			echo "gh claude $command_name: unexpected filters after direct issue number" >&2
+			exit 2
+		fi
+	else
+		issue=$(select_issue "${issue_args[@]}") || exit 0
+		[ -n "$issue" ] || exit 0
+	fi
 
 	if [ -n "$custom_prompt" ]; then
 		prompt="$custom_prompt"
@@ -298,8 +318,16 @@ run_pr_agent() {
 
 	parse_pr_prompt_args custom_prompt pr_args "$@"
 
-	pr=$(select_pr "${pr_args[@]}") || exit 0
-	[ -n "$pr" ] || exit 0
+	if [ "${#pr_args[@]}" -gt 0 ] && is_number "${pr_args[0]}"; then
+		pr="${pr_args[0]}"
+		if [ "${#pr_args[@]}" -gt 1 ]; then
+			echo "gh claude: unexpected filters after direct PR number" >&2
+			exit 2
+		fi
+	else
+		pr=$(select_pr "${pr_args[@]}") || exit 0
+		[ -n "$pr" ] || exit 0
+	fi
 
 	if [ -n "$custom_prompt" ]; then
 		prompt="$custom_prompt"
