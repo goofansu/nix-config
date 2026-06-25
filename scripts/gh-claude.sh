@@ -22,16 +22,16 @@ usage() {
 		"" \
 		"PROMPT VARIABLES" \
 		"  import:      {url}" \
-		"  review/work: {pr}, {title}, {url}, {branch}" \
-		"  fix:         {issue}, {title}, {url}, {branch}, {base}" \
-		"  triage:      {issue}, {title}, {url}" \
+		"  review/work: {pr}" \
+		"  fix:         {issue}, {branch}, {base}" \
+		"  triage:      {issue}" \
 		"" \
 		"EXAMPLES" \
-		"  gh claude fix --assignee @me --prompt 'Fix {url} on {branch} from {base}'" \
+		"  gh claude fix --assignee @me --prompt 'Fix issue {issue} on {branch} from {base}'" \
 		"  gh claude import https://example.com/ticket/123" \
-		"  gh claude review --search bug --prompt '/review {pr}. Focus on regression risk in {branch}'" \
+		"  gh claude review --search bug --prompt '/review {pr}. Focus on regression risk'" \
 		"  gh claude triage --assignee @me" \
-		"  gh claude work --author octocat --prompt 'Continue {url} on {branch}'"
+		"  gh claude work --author octocat --prompt 'Continue PR {pr}'"
 }
 
 select_pr() {
@@ -82,9 +82,6 @@ fix() {
 	local branch=""
 	local base=""
 	local issue
-	local title
-	local url
-	local slug
 	local prompt
 	local command
 	local -a issue_args=()
@@ -134,15 +131,8 @@ fix() {
 	issue=$(select_issue "${issue_args[@]}") || exit 0
 	[ -n "$issue" ] || exit 0
 
-	title=$(gh issue view "$issue" --json title --jq '.title')
-	url=$(gh issue view "$issue" --json url --jq '.url')
-
 	if [ -z "$branch" ]; then
-		slug=$(slugify "$title")
 		branch="issue-$issue"
-		if [ -n "$slug" ]; then
-			branch="$branch-$slug"
-		fi
 	fi
 
 	if [ -z "$base" ]; then
@@ -152,14 +142,10 @@ fix() {
 	if [ -n "$custom_prompt" ]; then
 		prompt="$custom_prompt"
 	else
-		prompt="Fix GitHub issue #{issue}: {title}
-
-{url}
-
-Start by reading the issue to understand the problem, then implement a fix."
+		prompt="Fix GitHub issue #{issue}. Start by reading the issue to understand the problem, then implement a fix."
 	fi
 
-	prompt=$(render_template "$prompt" issue "$issue" title "$title" url "$url" branch "$branch" base "$base")
+	prompt=$(render_template "$prompt" issue "$issue" branch "$branch" base "$base")
 
 	printf -v command 'wt switch -c %q -b %q -x cx -- %q' "$branch" "$base" "$prompt"
 	open_tmux_window "$command"
@@ -171,8 +157,6 @@ run_issue_prompt() {
 	shift 2
 	local custom_prompt=""
 	local issue
-	local title
-	local url
 	local prompt
 	local command
 	local -a issue_args=()
@@ -200,27 +184,20 @@ run_issue_prompt() {
 	issue=$(select_issue "${issue_args[@]}") || exit 0
 	[ -n "$issue" ] || exit 0
 
-	title=$(gh issue view "$issue" --json title --jq '.title')
-	url=$(gh issue view "$issue" --json url --jq '.url')
-
 	if [ -n "$custom_prompt" ]; then
 		prompt="$custom_prompt"
 	else
 		prompt="$default_prompt"
 	fi
 
-	prompt=$(render_template "$prompt" issue "$issue" title "$title" url "$url")
+	prompt=$(render_template "$prompt" issue "$issue")
 
 	printf -v command 'cx -- %q' "$prompt"
 	open_tmux_window "$command"
 }
 
 triage() {
-	run_issue_prompt "triage" "Triage GitHub issue #{issue}: {title}
-
-{url}
-
-Gather enough context to make this issue ready for implementation. Read the issue, inspect the relevant code paths, identify missing information, likely root cause or affected components, risks, and a concrete implementation approach.
+	run_issue_prompt "triage" "Triage GitHub issue #{issue}. Gather enough context to make this issue ready for implementation. Read the issue, inspect the relevant code paths, identify missing information, likely root cause or affected components, risks, and a concrete implementation approach.
 
 Do not implement the fix. If the issue is ready, add a GitHub issue comment summarizing:
 - Problem understanding
@@ -315,9 +292,6 @@ run_pr_agent() {
 	shift
 	local custom_prompt=""
 	local pr
-	local title
-	local url
-	local branch
 	local prompt
 	local command
 	local -a pr_args=()
@@ -327,17 +301,13 @@ run_pr_agent() {
 	pr=$(select_pr "${pr_args[@]}") || exit 0
 	[ -n "$pr" ] || exit 0
 
-	title=$(gh pr view "$pr" --json title --jq '.title')
-	url=$(gh pr view "$pr" --json url --jq '.url')
-	branch=$(gh pr view "$pr" --json headRefName --jq '.headRefName')
-
 	if [ -n "$custom_prompt" ]; then
 		prompt="$custom_prompt"
 	else
 		prompt="$default_prompt"
 	fi
 
-	prompt=$(render_template "$prompt" pr "$pr" title "$title" url "$url" branch "$branch")
+	prompt=$(render_template "$prompt" pr "$pr")
 
 	printf -v command 'wt switch %q -x cx -- %q' "pr:$pr" "$prompt"
 	open_tmux_window "$command"
@@ -348,11 +318,7 @@ review() {
 }
 
 work() {
-	run_pr_agent "Continue work on PR #{pr}: {title}
-
-{url}
-
-Start by reading the PR, checking the current branch state, and understanding remaining work before making changes." "$@"
+	run_pr_agent "Continue work on PR #{pr}. Start by reading the PR and checking the current branch state before making changes." "$@"
 }
 
 case "${1:-}" in
