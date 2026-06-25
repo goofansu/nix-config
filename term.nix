@@ -321,7 +321,7 @@ in
       bind N switch-client -n
 
       # General
-      set -as terminal-features ",*:RGB"
+      set -as terminal-features ",xterm*:extkeys,*:RGB"
       set -g renumber-windows on
       set -g set-clipboard on
       set -g allow-passthrough on
