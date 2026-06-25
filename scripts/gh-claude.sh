@@ -6,22 +6,26 @@ usage() {
 		"" \
 		"USAGE" \
 		"  gh claude fix [gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE]" \
+		"  gh claude import <url> [--prompt PROMPT]" \
 		"  gh claude review [gh-pr-list filters...] [--prompt PROMPT]" \
 		"  gh claude work [gh-pr-list filters...] [--prompt PROMPT]" \
 		"  gh claude help" \
 		"" \
 		"COMMANDS" \
 		"  fix     Select an issue with fzf and fix it in a new tmux window" \
+		"  import  Inspect a URL and create a GitHub issue" \
 		"  review  Select a PR with fzf and review it in a new tmux window" \
 		"  work    Select a PR with fzf and continue work in a new tmux window" \
 		"  help    Show this help" \
 		"" \
 		"PROMPT VARIABLES" \
+		"  import:      {url}" \
 		"  review/work: {pr}, {title}, {url}, {branch}" \
 		"  fix:         {issue}, {title}, {url}, {branch}, {base}" \
 		"" \
 		"EXAMPLES" \
 		"  gh claude fix --assignee @me --prompt 'Fix {url} on {branch} from {base}'" \
+		"  gh claude import https://example.com/ticket/123" \
 		"  gh claude review --search bug --prompt '/review {pr}. Focus on regression risk in {branch}'" \
 		"  gh claude work --author octocat --prompt 'Continue {url} on {branch}'"
 }
@@ -157,6 +161,53 @@ Start by reading the issue to understand the problem, then implement a fix."
 	open_tmux_window "$command"
 }
 
+import_url() {
+	local custom_prompt=""
+	local url=""
+	local prompt
+	local command
+
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		--prompt)
+			shift
+			if [ "$#" -eq 0 ]; then
+				echo "gh claude import: --prompt requires a value" >&2
+				exit 2
+			fi
+			custom_prompt="$1"
+			;;
+		--prompt=*)
+			custom_prompt="${1#--prompt=}"
+			;;
+		*)
+			if [ -n "$url" ]; then
+				echo "gh claude import: expected exactly one URL" >&2
+				exit 2
+			fi
+			url="$1"
+			;;
+		esac
+		shift
+	done
+
+	if [ -z "$url" ]; then
+		echo "Usage: gh claude import <url> [--prompt PROMPT]" >&2
+		exit 2
+	fi
+
+	if [ -n "$custom_prompt" ]; then
+		prompt="$custom_prompt"
+	else
+		prompt="Inspect this URL and create a GitHub issue for the actionable work it describes: {url}. Read the linked content and determine whether it describes a bug, feature request, task, or investigation. Then create a GitHub issue in this repository using gh issue create. The GitHub issue should include a concise title, source URL, summary, expected behavior or desired outcome, relevant context, suggested investigation or implementation notes, and acceptance criteria. If the URL does not contain enough information to create a useful issue, do not create an issue; report what information is missing."
+	fi
+
+	prompt=$(render_template "$prompt" url "$url")
+
+	printf -v command 'cx -- %q' "$prompt"
+	open_tmux_window "$command"
+}
+
 parse_pr_prompt_args() {
 	local prompt_var="$1"
 	local args_var="$2"
@@ -237,6 +288,10 @@ case "${1:-}" in
 fix)
 	shift
 	fix "$@"
+	;;
+import)
+	shift
+	import_url "$@"
 	;;
 review)
 	shift
