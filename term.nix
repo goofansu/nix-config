@@ -270,10 +270,6 @@ in
     extraConfig = ''
       bind C-Space send-prefix
 
-      # Pi (https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/tmux.md)
-      set -g extended-keys on
-      set -g extended-keys-format csi-u
-
       # Reload config
       bind C-r source-file ~/.config/tmux/tmux.conf \; display "Configuration reloaded"
 
@@ -321,10 +317,12 @@ in
       bind N switch-client -n
 
       # General
+      set -g allow-passthrough on
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
       set -as terminal-features ",xterm*:extkeys,*:RGB"
       set -g renumber-windows on
       set -g set-clipboard on
-      set -g allow-passthrough on
       set -g detach-on-destroy off
       setw -g pane-base-index 1
 
