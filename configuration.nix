@@ -58,7 +58,6 @@
       "codex-app"
       "ghostty"
       "google-chrome"
-      "linear"
       "lm-studio"
       "ngrok"
       "orbstack"
