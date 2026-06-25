@@ -1,104 +1,28 @@
 { pkgs, pkgs-unstable, ... }:
 
 let
-  gh-wt =
+  gh-claude =
     (pkgs.writeShellApplication {
-      name = "gh-wt";
+      name = "gh-claude";
       runtimeInputs = with pkgs; [
+        coreutils
         fzf
         gawk
+        gnused
         tmux
         pkgs-unstable.gh
       ];
-      text = ''
-        usage() {
-          cat <<'EOF'
-        gh wt - Worktrunk helpers for GitHub pull requests
-
-        USAGE
-          gh wt review [gh-pr-list filters...] [--prompt PROMPT]
-          gh wt help
-
-        COMMANDS
-          review  Select a PR with fzf and review it in a new tmux window
-          help    Show this help
-
-        EXAMPLES
-          gh wt review --search bug --prompt "focus on regression risk"
-        EOF
-        }
-
-        select_pr() {
-          gh pr list "$@" | fzf | awk '{print $1}'
-        }
-
-        review() {
-          local extra_prompt=""
-          local pr
-          local prompt
-          local command
-          local -a pr_args=()
-
-          while [ "$#" -gt 0 ]; do
-            case "$1" in
-              --prompt)
-                shift
-                if [ "$#" -eq 0 ]; then
-                  echo "gh wt review: --prompt requires a value" >&2
-                  exit 2
-                fi
-                extra_prompt="$1"
-                ;;
-              --prompt=*)
-                extra_prompt="''${1#--prompt=}"
-                ;;
-              *)
-                pr_args+=("$1")
-                ;;
-            esac
-            shift
-          done
-
-          pr=$(select_pr "''${pr_args[@]}") || exit 0
-          [ -n "$pr" ] || exit 0
-
-          prompt="/review $pr"
-          if [ -n "$extra_prompt" ]; then
-            prompt="$prompt $extra_prompt"
-          fi
-
-          printf -v command 'wt switch %q -x cx -- %q' "pr:$pr" "$prompt"
-          tmux new-window "$command"
-        }
-
-        case "''${1:-}" in
-          review)
-            shift
-            review "$@"
-            ;;
-          help|--help|-h)
-            usage
-            ;;
-          "")
-            usage
-            ;;
-          *)
-            echo "gh wt: unknown command '$1'" >&2
-            usage >&2
-            exit 2
-            ;;
-        esac
-      '';
+      text = builtins.readFile ./scripts/gh-claude.sh;
     }).overrideAttrs
       (_: {
-        pname = "gh-wt";
+        pname = "gh-claude";
       });
 in
 {
   programs.gh = {
     enable = true;
     package = pkgs-unstable.gh;
-    extensions = [ gh-wt ];
+    extensions = [ gh-claude ];
     settings = {
       git_protocol = "ssh";
     };

@@ -202,32 +202,6 @@ in
           tmux select-pane -t $panes[1]
         '';
       };
-      agent-bug-fix = {
-        description = "Fix a bug using Pi in a new Tmux window";
-        body = ''
-          if test -z "$TMUX"
-            echo "You must start tmux to use agent-bug-fix."
-            return 1
-          end
-
-          if test -z "$argv[1]" -o -z "$argv[2]"
-            echo "Usage: agent-bug-fix <ticket> <branch> [base]"
-            return 1
-          end
-
-          set ticket $argv[1]
-          set branch $argv[2]
-          set base $argv[3]
-          set prompt "Fix the bug described in this ticket: $ticket. Start by reading the ticket to understand the issue, then implement a fix."
-
-          if test -n "$base"
-            set command "wt switch -c $branch -b $base -x cx -- '$prompt'"
-          else
-            set command "wt switch -c $branch -x cx -- '$prompt'"
-          end
-          tmux new-window "$command"
-        '';
-      };
     };
   };
 
