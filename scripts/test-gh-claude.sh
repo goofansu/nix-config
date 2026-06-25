@@ -19,6 +19,11 @@ assert_file_missing() {
 	[[ ! -e "$path" ]] || fail "expected $path to be absent"
 }
 
+assert_fish_parses_tmux_command() {
+	local tmp="$1"
+	fish -n <"$tmp/tmux-calls" || fail "expected fish to parse tmux command"
+}
+
 with_stubs() {
 	local tmp="$1"
 	mkdir -p "$tmp/bin"
@@ -85,7 +90,7 @@ run_gh_claude() {
 		FZF_CALLED="$tmp/fzf-called" \
 		TMUX_CALLS="$tmp/tmux-calls" \
 		TMUX=1 \
-		bash "$repo_root/scripts/gh-claude.sh" "$@"
+		fish "$repo_root/scripts/gh-claude.fish" "$@"
 }
 
 test_fix_direct_number_skips_issue_picker() {
@@ -123,7 +128,7 @@ test_work_direct_number_skips_pr_picker() {
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^pr list' "$tmp/gh-calls" || fail "did not expect gh pr list for direct PR number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "pr:456"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Continue\\ 456"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Continue 456"
 }
 
 test_triage_direct_number_skips_issue_picker() {
@@ -135,7 +140,7 @@ test_triage_direct_number_skips_issue_picker() {
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Triage\\ 123"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123"
 }
 
 test_triage_defaults_base_to_current_branch_and_switches_worktree() {
@@ -146,8 +151,9 @@ test_triage_defaults_base_to_current_branch_and_switches_worktree() {
 	run_gh_claude "$tmp" triage 123 --prompt 'Triage {issue} on {base}'
 
 	grep -q '^branch --show-current$' "$tmp/git-calls" || fail "expected current branch lookup"
+	assert_fish_parses_tmux_command "$tmp"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch feature/current -x cx --"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Triage\\ 123\\ on\\ feature/current"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123 on feature/current"
 }
 
 test_triage_base_option_overrides_current_branch() {
@@ -158,8 +164,21 @@ test_triage_base_option_overrides_current_branch() {
 	run_gh_claude "$tmp" triage 123 --base main --prompt 'Triage {issue} on {base}'
 
 	[[ ! -e "$tmp/git-calls" ]] || ! grep -q '^branch --show-current$' "$tmp/git-calls" || fail "did not expect current branch lookup when --base is provided"
+	assert_fish_parses_tmux_command "$tmp"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch main -x cx --"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Triage\\ 123\\ on\\ main"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123 on main"
+}
+
+test_triage_multiline_prompt_generates_fish_parseable_command() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_claude "$tmp" triage 123 --base main --prompt $'Line one {issue}\nLine two {base}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Line one"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Line two"
 }
 
 for test_name in \
@@ -168,7 +187,8 @@ for test_name in \
 	test_work_direct_number_skips_pr_picker \
 	test_triage_direct_number_skips_issue_picker \
 	test_triage_defaults_base_to_current_branch_and_switches_worktree \
-	test_triage_base_option_overrides_current_branch; do
+	test_triage_base_option_overrides_current_branch \
+	test_triage_multiline_prompt_generates_fish_parseable_command; do
 	"$test_name"
 	echo "ok - $test_name"
 done

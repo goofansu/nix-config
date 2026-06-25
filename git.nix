@@ -1,22 +1,33 @@
 { pkgs, pkgs-unstable, ... }:
 
 let
-  gh-claude =
-    (pkgs.writeShellApplication {
-      name = "gh-claude";
-      runtimeInputs = with pkgs; [
-        coreutils
-        fzf
-        gawk
-        gnused
-        tmux
-        pkgs-unstable.gh
-      ];
-      text = builtins.readFile ./scripts/gh-claude.sh;
-    }).overrideAttrs
-      (_: {
-        pname = "gh-claude";
-      });
+  gh-claude = pkgs.stdenvNoCC.mkDerivation {
+    pname = "gh-claude";
+    version = "0-unstable";
+    src = ./scripts/gh-claude.fish;
+    nativeBuildInputs = [
+      pkgs.fish
+      pkgs.makeWrapper
+    ];
+    dontUnpack = true;
+    installPhase = ''
+      runHook preInstall
+      install -Dm755 $src $out/bin/gh-claude
+      patchShebangs $out/bin/gh-claude
+      wrapProgram $out/bin/gh-claude \
+        --prefix PATH : ${pkgs.lib.makeBinPath (with pkgs; [
+          coreutils
+          fish
+          fzf
+          gawk
+          git
+          gnused
+          tmux
+          pkgs-unstable.gh
+        ])}
+      runHook postInstall
+    '';
+  };
 in
 {
   programs.gh = {
