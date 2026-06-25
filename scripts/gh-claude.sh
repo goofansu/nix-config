@@ -7,20 +7,23 @@ usage() {
 		"USAGE" \
 		"  gh claude fix [gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE]" \
 		"  gh claude review [gh-pr-list filters...] [--prompt PROMPT]" \
+		"  gh claude work [gh-pr-list filters...] [--prompt PROMPT]" \
 		"  gh claude help" \
 		"" \
 		"COMMANDS" \
 		"  fix     Select an issue with fzf and fix it in a new tmux window" \
 		"  review  Select a PR with fzf and review it in a new tmux window" \
+		"  work    Select a PR with fzf and continue work in a new tmux window" \
 		"  help    Show this help" \
 		"" \
 		"PROMPT VARIABLES" \
-		"  review: {pr}, {title}, {url}, {branch}" \
-		"  fix:    {issue}, {title}, {url}, {branch}, {base}" \
+		"  review/work: {pr}, {title}, {url}, {branch}" \
+		"  fix:         {issue}, {title}, {url}, {branch}, {base}" \
 		"" \
 		"EXAMPLES" \
 		"  gh claude fix --assignee @me --prompt 'Fix {url} on {branch} from {base}'" \
-		"  gh claude review --search bug --prompt '/review {pr}. Focus on regression risk in {branch}'"
+		"  gh claude review --search bug --prompt '/review {pr}. Focus on regression risk in {branch}'" \
+		"  gh claude work --author octocat --prompt 'Continue {url} on {branch}'"
 }
 
 select_pr() {
@@ -145,7 +148,40 @@ Start by reading the issue to understand the problem, then implement a fix."
 	tmux new-window "$command"
 }
 
-review() {
+parse_pr_prompt_args() {
+	local prompt_var="$1"
+	local args_var="$2"
+	shift 2
+	local custom_prompt=""
+	local -a parsed_args=()
+
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
+		--prompt)
+			shift
+			if [ "$#" -eq 0 ]; then
+				echo "gh claude: --prompt requires a value" >&2
+				exit 2
+			fi
+			custom_prompt="$1"
+			;;
+		--prompt=*)
+			custom_prompt="${1#--prompt=}"
+			;;
+		*)
+			parsed_args+=("$1")
+			;;
+		esac
+		shift
+	done
+
+	printf -v "$prompt_var" '%s' "$custom_prompt"
+	eval "$args_var=(\"\${parsed_args[@]}\")"
+}
+
+run_pr_agent() {
+	local default_prompt="$1"
+	shift
 	local custom_prompt=""
 	local pr
 	local title
@@ -155,25 +191,7 @@ review() {
 	local command
 	local -a pr_args=()
 
-	while [ "$#" -gt 0 ]; do
-		case "$1" in
-		--prompt)
-			shift
-			if [ "$#" -eq 0 ]; then
-				echo "gh claude review: --prompt requires a value" >&2
-				exit 2
-			fi
-			custom_prompt="$1"
-			;;
-		--prompt=*)
-			custom_prompt="${1#--prompt=}"
-			;;
-		*)
-			pr_args+=("$1")
-			;;
-		esac
-		shift
-	done
+	parse_pr_prompt_args custom_prompt pr_args "$@"
 
 	pr=$(select_pr "${pr_args[@]}") || exit 0
 	[ -n "$pr" ] || exit 0
@@ -185,13 +203,25 @@ review() {
 	if [ -n "$custom_prompt" ]; then
 		prompt="$custom_prompt"
 	else
-		prompt="/review {pr}"
+		prompt="$default_prompt"
 	fi
 
 	prompt=$(render_template "$prompt" pr "$pr" title "$title" url "$url" branch "$branch")
 
 	printf -v command 'wt switch %q -x cx -- %q' "pr:$pr" "$prompt"
 	tmux new-window "$command"
+}
+
+review() {
+	run_pr_agent "/review {pr}" "$@"
+}
+
+work() {
+	run_pr_agent "Continue work on PR #{pr}: {title}
+
+{url}
+
+Start by reading the PR, checking the current branch state, and understanding remaining work before making changes." "$@"
 }
 
 case "${1:-}" in
@@ -202,6 +232,10 @@ fix)
 review)
 	shift
 	review "$@"
+	;;
+work)
+	shift
+	work "$@"
 	;;
 help | --help | -h)
 	usage
