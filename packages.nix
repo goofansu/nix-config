@@ -45,6 +45,10 @@ let
     uv
     ruff
 
+    # Shell
+    shellcheck
+    shfmt
+
     # Gondolin (required to build custom images)
     zig
     lz4
