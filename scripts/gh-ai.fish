@@ -27,10 +27,10 @@ function usage
         '' \
         'COMMAND FLAGS' \
         '  fix:' \
-        '    --base BASE      Base branch. Omitted by default.' \
-        '    --branch BRANCH  Worktree branch to create. Defaults to issue-<number>.' \
+        '    --base BASE      Branch to start the fix from. Defaults to default branch.' \
+        '    --branch BRANCH  Branch to create for the fix. Defaults to issue-<number>.' \
         '  triage:' \
-        '    --base BRANCH    Base branch. Defaults to current branch.' \
+        '    --base BASE      Branch to inspect. Defaults to default branch.' \
         '' \
         'PROMPT VARIABLES' \
         '  import:      {url}' \
@@ -56,10 +56,6 @@ end
 
 function is_number
     test (count $argv) -gt 0; and string match -rq '^[0-9]+$' -- $argv[1]
-end
-
-function current_branch
-    git branch --show-current
 end
 
 function render_template
@@ -154,6 +150,7 @@ function fix
     end
 
     test -n "$branch"; or set branch issue-$issue
+    test -n "$base"; or set base ^
 
     set -l prompt
     if test -n "$custom_prompt"
@@ -163,11 +160,7 @@ function fix
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
-    set -l command "wt switch -c "(fish_quote "$branch")
-    if test -n "$base"
-        set command "$command -b "(fish_quote "$base")
-    end
-    set command "$command -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
+    set -l command "wt switch -c "(fish_quote "$branch")" -b "(fish_quote "$base")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -228,7 +221,7 @@ function run_issue_prompt
         test -n "$issue"; or exit 0
     end
 
-    test -n "$base"; or set base (current_branch)
+    test -n "$base"; or set base ^
 
     set -l prompt
     if test -n "$custom_prompt"

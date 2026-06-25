@@ -40,10 +40,10 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
 	assert_contains "$output" '  fix:'
-	assert_contains "$output" '    --base BASE      Base branch. Omitted by default.'
-	assert_contains "$output" '    --branch BRANCH  Worktree branch to create. Defaults to issue-<number>.'
+	assert_contains "$output" '    --base BASE      Branch to start the fix from. Defaults to default branch.'
+	assert_contains "$output" '    --branch BRANCH  Branch to create for the fix. Defaults to issue-<number>.'
 	assert_contains "$output" '  triage:'
-	assert_contains "$output" '    --base BRANCH    Base branch. Defaults to current branch.'
+	assert_contains "$output" '    --base BASE      Branch to inspect. Defaults to default branch.'
 }
 
 with_stubs() {
@@ -165,17 +165,17 @@ test_triage_direct_number_skips_issue_picker() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123"
 }
 
-test_triage_defaults_base_to_current_branch_and_switches_worktree() {
+test_triage_defaults_base_to_default_branch_shortcut_and_switches_worktree() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
 	run_gh_ai "$tmp" triage 123 --prompt 'Triage {issue} on {base}'
 
-	grep -q '^branch --show-current$' "$tmp/git-calls" || fail "expected current branch lookup"
+	[[ ! -e "$tmp/git-calls" ]] || ! grep -q '^branch --show-current$' "$tmp/git-calls" || fail "did not expect current branch lookup"
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch feature/current -x cx --"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123 on feature/current"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch ^ -x cx --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123 on ^"
 }
 
 test_triage_base_option_overrides_current_branch() {
@@ -211,7 +211,7 @@ test_fix_agent_option_overrides_default_agent() {
 	run_gh_ai "$tmp" fix 123 --agent claude --prompt 'Fix {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b ^ -x claude --"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Fix 123"
 }
 
@@ -248,7 +248,7 @@ for test_name in \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_work_direct_number_skips_pr_picker \
 	test_triage_direct_number_skips_issue_picker \
-	test_triage_defaults_base_to_current_branch_and_switches_worktree \
+	test_triage_defaults_base_to_default_branch_shortcut_and_switches_worktree \
 	test_triage_base_option_overrides_current_branch \
 	test_triage_multiline_prompt_generates_fish_parseable_command; do
 	"$test_name"
