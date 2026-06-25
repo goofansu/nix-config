@@ -24,6 +24,28 @@ assert_fish_parses_tmux_command() {
 	fish -n <"$tmp/tmux-calls" || fail "expected fish to parse tmux command"
 }
 
+test_help_uses_gh_style_usage_and_flags() {
+	local output
+	output=$(fish "$repo_root/scripts/gh-ai.fish" help)
+
+	assert_contains "$output" 'USAGE'
+	assert_contains "$output" '  gh ai <command> [flags]'
+	assert_contains "$output" '  fix [issue-number | gh-issue-list filters...]'
+	assert_contains "$output" '  import <url>'
+	assert_contains "$output" '  review [pr-number | gh-pr-list filters...]'
+	assert_contains "$output" '  triage [issue-number | gh-issue-list filters...]'
+	assert_contains "$output" '  work [pr-number | gh-pr-list filters...]'
+	assert_contains "$output" 'GLOBAL FLAGS'
+	assert_contains "$output" '  --agent COMMAND  Agent executable to run. Defaults to cx.'
+	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
+	assert_contains "$output" 'COMMAND FLAGS'
+	assert_contains "$output" '  fix:'
+	assert_contains "$output" '    --base BASE      Base branch. Omitted by default.'
+	assert_contains "$output" '    --branch BRANCH  Worktree branch to create. Defaults to issue-<number>.'
+	assert_contains "$output" '  triage:'
+	assert_contains "$output" '    --base BRANCH    Base branch. Defaults to current branch.'
+}
+
 with_stubs() {
 	local tmp="$1"
 	mkdir -p "$tmp/bin"
@@ -189,7 +211,7 @@ test_fix_agent_option_overrides_default_agent() {
 	run_gh_ai "$tmp" fix 123 --agent claude --prompt 'Fix {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b main -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -x claude --"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Fix 123"
 }
 
@@ -218,6 +240,7 @@ test_import_agent_option_overrides_default_agent() {
 }
 
 for test_name in \
+	test_help_uses_gh_style_usage_and_flags \
 	test_fix_direct_number_skips_issue_picker \
 	test_fix_agent_option_overrides_default_agent \
 	test_review_agent_equals_option_overrides_default_agent \

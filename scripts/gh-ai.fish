@@ -5,23 +5,32 @@ function usage
         'gh ai - Agent helpers for GitHub issues and pull requests' \
         '' \
         USAGE \
-        '  gh ai fix [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--branch BRANCH] [--base BASE] [--agent COMMAND]' \
-        '  gh ai import <url> [--prompt PROMPT] [--agent COMMAND]' \
-        '  gh ai review [pr-number | gh-pr-list filters...] [--prompt PROMPT] [--agent COMMAND]' \
-        '  gh ai triage [issue-number | gh-issue-list filters...] [--prompt PROMPT] [--base BASE] [--agent COMMAND]' \
-        '  gh ai work [pr-number | gh-pr-list filters...] [--prompt PROMPT] [--agent COMMAND]' \
-        '  gh ai help' \
+        '  gh ai <command> [flags]' \
         '' \
         COMMANDS \
-        '  fix     Fix an issue by number, or select one with fzf' \
-        '  import  Inspect a URL and create a GitHub issue' \
-        '  review  Review a PR by number, or select one with fzf' \
-        '  triage  Triage an issue by number, or select one with fzf' \
-        '  work    Continue work on a PR by number, or select one with fzf' \
-        '  help    Show this help' \
+        '  fix [issue-number | gh-issue-list filters...]' \
+        '      Fix an issue by number, or select one with fzf' \
+        '  import <url>' \
+        '      Inspect a URL and create a GitHub issue' \
+        '  review [pr-number | gh-pr-list filters...]' \
+        '      Review a PR by number, or select one with fzf' \
+        '  triage [issue-number | gh-issue-list filters...]' \
+        '      Triage an issue by number, or select one with fzf' \
+        '  work [pr-number | gh-pr-list filters...]' \
+        '      Continue work on a PR by number, or select one with fzf' \
+        '  help' \
+        '      Show this help' \
         '' \
-        OPTIONS \
+        'GLOBAL FLAGS' \
         '  --agent COMMAND  Agent executable to run. Defaults to cx.' \
+        '  --prompt PROMPT  Custom prompt template for the agent.' \
+        '' \
+        'COMMAND FLAGS' \
+        '  fix:' \
+        '    --base BASE      Base branch. Omitted by default.' \
+        '    --branch BRANCH  Worktree branch to create. Defaults to issue-<number>.' \
+        '  triage:' \
+        '    --base BRANCH    Base branch. Defaults to current branch.' \
         '' \
         'PROMPT VARIABLES' \
         '  import:      {url}' \
@@ -47,10 +56,6 @@ end
 
 function is_number
     test (count $argv) -gt 0; and string match -rq '^[0-9]+$' -- $argv[1]
-end
-
-function default_branch
-    gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name'
 end
 
 function current_branch
@@ -149,7 +154,6 @@ function fix
     end
 
     test -n "$branch"; or set branch issue-$issue
-    test -n "$base"; or set base (default_branch)
 
     set -l prompt
     if test -n "$custom_prompt"
@@ -159,7 +163,11 @@ function fix
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
-    set -l command "wt switch -c "(fish_quote "$branch")" -b "(fish_quote "$base")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
+    set -l command "wt switch -c "(fish_quote "$branch")
+    if test -n "$base"
+        set command "$command -b "(fish_quote "$base")
+    end
+    set command "$command -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
