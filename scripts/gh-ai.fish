@@ -14,8 +14,6 @@ function usage
         '      Inspect a URL and create a GitHub issue' \
         '  review [pr-number | gh-pr-list filters...]' \
         '      Review a PR by number, or select one with fzf' \
-        '  triage [issue-number | gh-issue-list filters...]' \
-        '      Triage an issue by number, or select one with fzf' \
         '  work [pr-number | gh-pr-list filters...]' \
         '      Continue work on a PR by number, or select one with fzf' \
         '  help' \
@@ -29,20 +27,16 @@ function usage
         '  fix:' \
         '    --base BASE      Branch to start the fix from. Defaults to default branch.' \
         '    --branch BRANCH  Branch to create for the fix. Defaults to issue-<number>.' \
-        '  triage:' \
-        '    --base BASE      Branch to inspect. Defaults to default branch.' \
         '' \
         'PROMPT VARIABLES' \
         '  import:      {url}' \
         '  review/work: {pr}' \
         '  fix:         {issue}, {branch}, {base}' \
-        '  triage:      {issue}, {base}' \
         '' \
         EXAMPLES \
         "  gh ai fix 123 --prompt 'Fix issue {issue} on {branch} from {base}'" \
         '  gh ai import https://example.com/ticket/123' \
         "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'" \
-        '  gh ai triage --assignee @me' \
         "  gh ai work --author octocat --prompt 'Continue PR {pr}'"
 end
 
@@ -162,91 +156,6 @@ function fix
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
     set -l command "wt switch -c "(fish_quote "$branch")" -b "(fish_quote "$base")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
-end
-
-function run_issue_prompt
-    set -l command_name $argv[1]
-    set -l default_prompt $argv[2]
-    set -e argv[1..2]
-    set -l custom_prompt ''
-    set -l base ''
-    set -l issue ''
-    set -l agent cx
-    set -l issue_args
-
-    while test (count $argv) -gt 0
-        switch $argv[1]
-            case --prompt
-                set -e argv[1]
-                if test (count $argv) -eq 0
-                    echo "gh ai $command_name: --prompt requires a value" >&2
-                    exit 2
-                end
-                set custom_prompt $argv[1]
-            case '--prompt=*'
-                set custom_prompt (string replace -- '--prompt=' '' $argv[1])
-            case --base
-                set -e argv[1]
-                if test (count $argv) -eq 0
-                    echo "gh ai $command_name: --base requires a value" >&2
-                    exit 2
-                end
-                set base $argv[1]
-            case '--base=*'
-                set base (string replace -- '--base=' '' $argv[1])
-            case --agent
-                set -e argv[1]
-                if test (count $argv) -eq 0
-                    echo "gh ai $command_name: --agent requires a value" >&2
-                    exit 2
-                end
-                set agent $argv[1]
-            case '--agent=*'
-                set agent (string replace -- '--agent=' '' $argv[1])
-            case '*'
-                set -a issue_args $argv[1]
-        end
-        set -e argv[1]
-    end
-
-    if test (count $issue_args) -gt 0; and is_number $issue_args[1]
-        set issue $issue_args[1]
-        if test (count $issue_args) -gt 1
-            echo "gh ai $command_name: unexpected filters after direct issue number" >&2
-            exit 2
-        end
-    else
-        set issue (select_issue $issue_args)
-        or exit 0
-        test -n "$issue"; or exit 0
-    end
-
-    test -n "$base"; or set base ^
-
-    set -l prompt
-    if test -n "$custom_prompt"
-        set prompt $custom_prompt
-    else
-        set prompt $default_prompt
-    end
-
-    set prompt (render_template "$prompt" issue "$issue" base "$base")
-    set -l command "wt switch "(fish_quote "$base")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
-    open_tmux_window "$command"
-end
-
-function triage
-    set -l default_prompt 'Triage GitHub issue #{issue} from base branch {base}. Gather enough context to make this issue ready for implementation. Read the issue, inspect the relevant code paths, identify missing information, likely root cause or affected components, risks, and a concrete implementation approach.
-
-Do not implement the fix. If the issue is ready, add a GitHub issue comment summarizing:
-- Problem understanding
-- Relevant files or code paths
-- Missing questions, if any
-- Proposed implementation approach
-- Suggested acceptance criteria or tests
-
-If it is not ready, comment with the specific missing information needed.'
-    run_issue_prompt triage "$default_prompt" $argv
 end
 
 function import_url
@@ -377,9 +286,6 @@ switch $argv[1]
     case review
         set -e argv[1]
         review $argv
-    case triage
-        set -e argv[1]
-        triage $argv
     case work
         set -e argv[1]
         work $argv
