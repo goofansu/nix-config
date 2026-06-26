@@ -15,16 +15,21 @@ let
       install -Dm755 $src $out/bin/gh-ai
       patchShebangs $out/bin/gh-ai
       wrapProgram $out/bin/gh-ai \
-        --prefix PATH : ${pkgs.lib.makeBinPath (with pkgs; [
-          coreutils
-          fish
-          fzf
-          gawk
-          git
-          gnused
-          tmux
-          pkgs-unstable.gh
-        ])}
+        --prefix PATH : ${
+          pkgs.lib.makeBinPath (
+            with pkgs;
+            [
+              coreutils
+              fish
+              fzf
+              gawk
+              git
+              gnused
+              tmux
+              pkgs-unstable.gh
+            ]
+          )
+        }
       runHook postInstall
     '';
   };
@@ -36,6 +41,9 @@ in
     extensions = [ gh-ai ];
     settings = {
       git_protocol = "ssh";
+      aliases = {
+        triaged = "issue list --state open --assignee @me --search '(label:needs-triage OR label:needs-info OR label:ready-for-agent OR label:ready-for-human OR label:wontfix)'";
+      };
     };
   };
 
