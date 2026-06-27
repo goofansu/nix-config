@@ -90,6 +90,7 @@ in
       ".pi"
       ".codex"
       ".claude"
+      ".superpowers"
     ];
     includes = [
       {
