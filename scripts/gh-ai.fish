@@ -8,14 +8,14 @@ function usage
         '  gh ai <command> [flags]' \
         '' \
         COMMANDS \
-        '  fix [issue-number | gh-issue-list filters...]' \
-        '      Fix an issue by number, or select one with fzf' \
         '  import <url>' \
         '      Inspect a URL and create a GitHub issue' \
         '  review [pr-number | gh-pr-list filters...]' \
         '      Review a PR by number, or select one with fzf' \
-        '  work [pr-number | gh-pr-list filters...]' \
+        '  resume [pr-number | gh-pr-list filters...]' \
         '      Continue work on a PR by number, or select one with fzf' \
+        '  work [issue-number]' \
+        '      Work on an issue by number, or select one with fzf' \
         '  help' \
         '      Show this help' \
         '' \
@@ -24,28 +24,29 @@ function usage
         '  --prompt PROMPT  Custom prompt template for the agent.' \
         '' \
         'COMMAND FLAGS' \
-        '  fix:' \
-        '    --base BASE      Branch to start the fix from. Defaults to default branch.' \
-        '    --branch BRANCH  Branch to create for the fix. Defaults to issue-<number>.' \
+        '  work:' \
+        '    --base BASE      Branch to start the work from. Defaults to default branch.' \
+        '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.' \
         '' \
         'PROMPT VARIABLES' \
-        '  import:      {url}' \
-        '  review/work: {pr}' \
-        '  fix:         {issue}, {branch}, {base}' \
+        '  import: {url}' \
+        '  review: {pr}' \
+        '  resume: {pr}' \
+        '  work:   {issue}, {branch}, {base}' \
         '' \
         EXAMPLES \
-        "  gh ai fix 123 --prompt 'Fix issue {issue} on {branch} from {base}'" \
+        "  gh ai work 123 --prompt 'Work issue {issue} on {branch} from {base}'" \
         '  gh ai import https://example.com/ticket/123' \
         "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'" \
-        "  gh ai work --author octocat --prompt 'Continue PR {pr}'"
+        "  gh ai resume --author octocat --prompt 'Continue PR {pr}'"
 end
 
 function select_pr
     gh pr list $argv | fzf | awk '{print $1}'
 end
 
-function select_issue
-    gh issue list $argv | fzf | awk '{print $1}' | sed 's/^#//'
+function select_triaged_issue
+    gh triaged | fzf | awk '{print $1}' | sed 's/^#//'
 end
 
 function is_number
@@ -79,7 +80,7 @@ function open_tmux_window
     tmux new-window $argv[1]
 end
 
-function fix
+function work
     set -l custom_prompt ''
     set -l branch ''
     set -l base ''
@@ -92,7 +93,7 @@ function fix
             case --prompt
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai fix: --prompt requires a value' >&2
+                    echo 'gh ai work: --prompt requires a value' >&2
                     exit 2
                 end
                 set custom_prompt $argv[1]
@@ -101,7 +102,7 @@ function fix
             case --branch
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai fix: --branch requires a value' >&2
+                    echo 'gh ai work: --branch requires a value' >&2
                     exit 2
                 end
                 set branch $argv[1]
@@ -110,7 +111,7 @@ function fix
             case --base
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai fix: --base requires a value' >&2
+                    echo 'gh ai work: --base requires a value' >&2
                     exit 2
                 end
                 set base $argv[1]
@@ -119,7 +120,7 @@ function fix
             case --agent
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai fix: --agent requires a value' >&2
+                    echo 'gh ai work: --agent requires a value' >&2
                     exit 2
                 end
                 set agent $argv[1]
@@ -134,11 +135,15 @@ function fix
     if test (count $issue_args) -gt 0; and is_number $issue_args[1]
         set issue $issue_args[1]
         if test (count $issue_args) -gt 1
-            echo 'gh ai fix: unexpected filters after direct issue number' >&2
+            echo 'gh ai work: unexpected arguments after direct issue number' >&2
             exit 2
         end
     else
-        set issue (select_issue $issue_args)
+        if test (count $issue_args) -gt 0
+            echo 'gh ai work: expected an issue number or no arguments' >&2
+            exit 2
+        end
+        set issue (select_triaged_issue)
         or exit 0
         test -n "$issue"; or exit 0
     end
@@ -150,7 +155,7 @@ function fix
     if test -n "$custom_prompt"
         set prompt $custom_prompt
     else
-        set prompt 'Fix GitHub issue #{issue}. Start by reading the issue to understand the problem, then implement a fix.'
+        set prompt 'Work on GitHub issue #{issue}. Start by reading the issue to understand the problem, then implement the requested change. Use branch {branch} from base {base}.'
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
@@ -272,20 +277,20 @@ function review
     run_pr_agent '/review {pr}' $argv
 end
 
-function work
-    run_pr_agent 'Continue work on PR #{pr}. Start by reading the PR and checking the current branch state before making changes.' $argv
+function resume
+    run_pr_agent 'Resume work on PR #{pr}. Start by reading the PR and checking the current branch state before making changes.' $argv
 end
 
 switch $argv[1]
-    case fix
-        set -e argv[1]
-        fix $argv
     case import
         set -e argv[1]
         import_url $argv
     case review
         set -e argv[1]
         review $argv
+    case resume
+        set -e argv[1]
+        resume $argv
     case work
         set -e argv[1]
         work $argv

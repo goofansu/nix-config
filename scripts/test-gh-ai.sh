@@ -30,20 +30,17 @@ test_help_uses_gh_style_usage_and_flags() {
 
 	assert_contains "$output" 'USAGE'
 	assert_contains "$output" '  gh ai <command> [flags]'
-	assert_contains "$output" '  fix [issue-number | gh-issue-list filters...]'
 	assert_contains "$output" '  import <url>'
 	assert_contains "$output" '  review [pr-number | gh-pr-list filters...]'
-	assert_contains "$output" '  triage [issue-number | gh-issue-list filters...]'
-	assert_contains "$output" '  work [pr-number | gh-pr-list filters...]'
+	assert_contains "$output" '  resume [pr-number | gh-pr-list filters...]'
+	assert_contains "$output" '  work [issue-number]'
 	assert_contains "$output" 'GLOBAL FLAGS'
 	assert_contains "$output" '  --agent COMMAND  Agent executable to run. Defaults to cx.'
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
-	assert_contains "$output" '  fix:'
-	assert_contains "$output" '    --base BASE      Branch to start the fix from. Defaults to default branch.'
-	assert_contains "$output" '    --branch BRANCH  Branch to create for the fix. Defaults to issue-<number>.'
-	assert_contains "$output" '  triage:'
-	assert_contains "$output" '    --base BASE      Branch to inspect. Defaults to default branch.'
+	assert_contains "$output" '  work:'
+	assert_contains "$output" '    --base BASE      Branch to start the work from. Defaults to default branch.'
+	assert_contains "$output" '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.'
 }
 
 with_stubs() {
@@ -53,12 +50,15 @@ with_stubs() {
 #!/usr/bin/env bash
 set -euo pipefail
 printf '%s\n' "$*" >>"$GH_CALLS"
-case "$1 $2" in
+case "${1-} ${2-}" in
 repo\ view)
 	printf '%s\n' main
 	;;
 issue\ list)
 	printf '%s\n' '#999	Selected issue'
+	;;
+triaged\ )
+	printf '%s\n' '999	Selected triaged issue'
 	;;
 pr\ list)
 	printf '%s\n' '888	Selected PR'
@@ -115,17 +115,30 @@ run_gh_ai() {
 		fish "$repo_root/scripts/gh-ai.fish" "$@"
 }
 
-test_fix_direct_number_skips_issue_picker() {
+test_work_direct_number_skips_triaged_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" fix 123
+	run_gh_ai "$tmp" work 123
 
 	assert_file_missing "$tmp/fzf-called"
-	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
+	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^triaged$' "$tmp/gh-calls" || fail "did not expect gh triaged for direct issue number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "issue-123"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#123"
+}
+
+test_work_without_number_uses_triaged_picker() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" work
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	grep -q '^triaged$' "$tmp/gh-calls" || fail "expected gh triaged"
+	assert_contains "$(cat "$tmp/tmux-calls")" "issue-999"
+	assert_contains "$(cat "$tmp/tmux-calls")" "#999"
 }
 
 test_review_numeric_filter_still_uses_picker_when_not_first_arg() {
@@ -140,79 +153,29 @@ test_review_numeric_filter_still_uses_picker_when_not_first_arg() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "pr:888"
 }
 
-test_work_direct_number_skips_pr_picker() {
+test_resume_direct_number_skips_pr_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" work 456 --prompt 'Continue {pr}'
+	run_gh_ai "$tmp" resume 456 --prompt 'Resume {pr}'
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^pr list' "$tmp/gh-calls" || fail "did not expect gh pr list for direct PR number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "pr:456"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Continue 456"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
 }
 
-test_triage_direct_number_skips_issue_picker() {
+test_work_agent_option_overrides_default_agent() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" triage 123 --prompt 'Triage {issue}'
-
-	assert_file_missing "$tmp/fzf-called"
-	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123"
-}
-
-test_triage_defaults_base_to_default_branch_shortcut_and_switches_worktree() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage 123 --prompt 'Triage {issue} on {base}'
-
-	[[ ! -e "$tmp/git-calls" ]] || ! grep -q '^branch --show-current$' "$tmp/git-calls" || fail "did not expect current branch lookup"
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch ^ -x cx --"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123 on ^"
-}
-
-test_triage_base_option_overrides_current_branch() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage 123 --base main --prompt 'Triage {issue} on {base}'
-
-	[[ ! -e "$tmp/git-calls" ]] || ! grep -q '^branch --show-current$' "$tmp/git-calls" || fail "did not expect current branch lookup when --base is provided"
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch main -x cx --"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Triage 123 on main"
-}
-
-test_triage_multiline_prompt_generates_fish_parseable_command() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage 123 --base main --prompt $'Line one {issue}\nLine two {base}'
-
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Line one"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Line two"
-}
-
-test_fix_agent_option_overrides_default_agent() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" fix 123 --agent claude --prompt 'Fix {issue}'
+	run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b ^ -x claude --"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Fix 123"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
 test_review_agent_equals_option_overrides_default_agent() {
@@ -241,16 +204,13 @@ test_import_agent_option_overrides_default_agent() {
 
 for test_name in \
 	test_help_uses_gh_style_usage_and_flags \
-	test_fix_direct_number_skips_issue_picker \
-	test_fix_agent_option_overrides_default_agent \
+	test_work_direct_number_skips_triaged_picker \
+	test_work_without_number_uses_triaged_picker \
+	test_work_agent_option_overrides_default_agent \
 	test_review_agent_equals_option_overrides_default_agent \
 	test_import_agent_option_overrides_default_agent \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
-	test_work_direct_number_skips_pr_picker \
-	test_triage_direct_number_skips_issue_picker \
-	test_triage_defaults_base_to_default_branch_shortcut_and_switches_worktree \
-	test_triage_base_option_overrides_current_branch \
-	test_triage_multiline_prompt_generates_fish_parseable_command; do
+	test_resume_direct_number_skips_pr_picker; do
 	"$test_name"
 	echo "ok - $test_name"
 done
