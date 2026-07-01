@@ -39,14 +39,16 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '  import <url>'
 	assert_contains "$output" '  review [pr-number | gh-pr-list filters...]'
 	assert_contains "$output" '  resume [pr-number | gh-pr-list filters...]'
+	assert_contains "$output" '  triage [issue-number]'
 	assert_contains "$output" '  work [issue-number]'
 	assert_contains "$output" 'GLOBAL FLAGS'
 	assert_contains "$output" '  --agent COMMAND  Agent executable to run. Defaults to cx.'
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
-	assert_contains "$output" '  work:'
+	assert_contains "$output" '  work, triage:'
 	assert_contains "$output" '    --base BASE      Branch to start the work from. Omit to use the default branch.'
 	assert_contains "$output" '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.'
+	assert_contains "$output" '  triage: {issue}'
 	assert_contains "$output" '  work:   {issue}'
 	assert_not_contains "$output" '  work:   {issue}, {branch}, {base}'
 	assert_not_contains "$output" "Work issue {issue} on {branch} from {base}"
@@ -59,17 +61,20 @@ with_stubs() {
 #!/usr/bin/env bash
 set -euo pipefail
 printf '%s\n' "$*" >>"$GH_CALLS"
-case "${1-} ${2-}" in
+case "$*" in
 repo\ view)
 	printf '%s\n' main
+	;;
+issue\ list\ --author\ @me)
+	printf '%s\n' '777	Selected authored issue'
 	;;
 issue\ list)
 	printf '%s\n' '#999	Selected issue'
 	;;
-triaged\ )
-	printf '%s\n' '999	Selected triaged issue'
+ready-for-agent)
+	printf '%s\n' '999	Selected ready-for-agent issue'
 	;;
-pr\ list)
+pr\ list*)
 	printf '%s\n' '888	Selected PR'
 	;;
 *)
@@ -124,7 +129,7 @@ run_gh_ai() {
 		fish "$repo_root/scripts/gh-ai.fish" "$@"
 }
 
-test_work_direct_number_skips_triaged_picker() {
+test_work_direct_number_skips_ready_for_agent_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
@@ -132,13 +137,13 @@ test_work_direct_number_skips_triaged_picker() {
 	run_gh_ai "$tmp" work 123
 
 	assert_file_missing "$tmp/fzf-called"
-	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^triaged$' "$tmp/gh-calls" || fail "did not expect gh triaged for direct issue number"
+	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^ready-for-agent$' "$tmp/gh-calls" || fail "did not expect gh ready-for-agent for direct issue number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "issue-123"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#123"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Closes #123"
 }
 
-test_work_without_number_uses_triaged_picker() {
+test_work_without_number_uses_ready_for_agent_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
@@ -146,7 +151,7 @@ test_work_without_number_uses_triaged_picker() {
 	run_gh_ai "$tmp" work
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
-	grep -q '^triaged$' "$tmp/gh-calls" || fail "expected gh triaged"
+	grep -q '^ready-for-agent$' "$tmp/gh-calls" || fail "expected gh ready-for-agent"
 	assert_contains "$(cat "$tmp/tmux-calls")" "issue-999"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#999"
 }
@@ -201,6 +206,32 @@ test_work_base_option_adds_base_flag() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
+test_triage_direct_number_uses_triage_prompt_and_work_options() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" triage 123 --base main --agent claude
+
+	assert_file_missing "$tmp/fzf-called"
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b main -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
+}
+
+test_triage_without_number_uses_authored_issue_picker() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" triage
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	grep -q '^issue list --author @me$' "$tmp/gh-calls" || fail "expected gh issue list --author @me"
+	assert_contains "$(cat "$tmp/tmux-calls")" "issue-777"
+	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 777"
+}
+
 test_review_agent_equals_option_overrides_default_agent() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -227,10 +258,12 @@ test_import_agent_option_overrides_default_agent() {
 
 for test_name in \
 	test_help_uses_gh_style_usage_and_flags \
-	test_work_direct_number_skips_triaged_picker \
-	test_work_without_number_uses_triaged_picker \
+	test_work_direct_number_skips_ready_for_agent_picker \
+	test_work_without_number_uses_ready_for_agent_picker \
 	test_work_agent_option_overrides_default_agent \
 	test_work_base_option_adds_base_flag \
+	test_triage_direct_number_uses_triage_prompt_and_work_options \
+	test_triage_without_number_uses_authored_issue_picker \
 	test_review_agent_equals_option_overrides_default_agent \
 	test_import_agent_option_overrides_default_agent \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \

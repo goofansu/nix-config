@@ -14,6 +14,8 @@ function usage
         '      Review a PR by number, or select one with fzf' \
         '  resume [pr-number | gh-pr-list filters...]' \
         '      Continue work on a PR by number, or select one with fzf' \
+        '  triage [issue-number]' \
+        '      Triage an issue by number, or select one of your issues with fzf' \
         '  work [issue-number]' \
         '      Work on an issue by number, or select one with fzf' \
         '  help' \
@@ -24,7 +26,7 @@ function usage
         '  --prompt PROMPT  Custom prompt template for the agent.' \
         '' \
         'COMMAND FLAGS' \
-        '  work:' \
+        '  work, triage:' \
         '    --base BASE      Branch to start the work from. Omit to use the default branch.' \
         '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.' \
         '' \
@@ -32,10 +34,12 @@ function usage
         '  import: {url}' \
         '  review: {pr}' \
         '  resume: {pr}' \
+        '  triage: {issue}' \
         '  work:   {issue}' \
         '' \
         EXAMPLES \
         "  gh ai work 123 --prompt 'Work issue {issue}'" \
+        "  gh ai triage 123 --prompt '/triage {issue}'" \
         '  gh ai import https://example.com/ticket/123' \
         "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'" \
         "  gh ai resume --author octocat --prompt 'Continue PR {pr}'"
@@ -47,6 +51,10 @@ end
 
 function select_ready_for_agent_issue
     gh ready-for-agent | fzf | awk '{print $1}' | sed 's/^#//'
+end
+
+function select_authored_issue
+    gh issue list --author '@me' | fzf | awk '{print $1}' | sed 's/^#//'
 end
 
 function is_number
@@ -80,7 +88,12 @@ function open_tmux_window
     tmux new-window $argv[1]
 end
 
-function work
+function run_issue_agent
+    set -l command_name $argv[1]
+    set -l picker_function $argv[2]
+    set -l default_prompt $argv[3]
+    set -e argv[1..3]
+
     set -l custom_prompt ''
     set -l branch ''
     set -l base ''
@@ -93,7 +106,7 @@ function work
             case --prompt
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai work: --prompt requires a value' >&2
+                    echo "gh ai $command_name: --prompt requires a value" >&2
                     exit 2
                 end
                 set custom_prompt $argv[1]
@@ -102,7 +115,7 @@ function work
             case --branch
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai work: --branch requires a value' >&2
+                    echo "gh ai $command_name: --branch requires a value" >&2
                     exit 2
                 end
                 set branch $argv[1]
@@ -111,7 +124,7 @@ function work
             case --base
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai work: --base requires a value' >&2
+                    echo "gh ai $command_name: --base requires a value" >&2
                     exit 2
                 end
                 set base $argv[1]
@@ -120,7 +133,7 @@ function work
             case --agent
                 set -e argv[1]
                 if test (count $argv) -eq 0
-                    echo 'gh ai work: --agent requires a value' >&2
+                    echo "gh ai $command_name: --agent requires a value" >&2
                     exit 2
                 end
                 set agent $argv[1]
@@ -135,15 +148,15 @@ function work
     if test (count $issue_args) -gt 0; and is_number $issue_args[1]
         set issue $issue_args[1]
         if test (count $issue_args) -gt 1
-            echo 'gh ai work: unexpected arguments after direct issue number' >&2
+            echo "gh ai $command_name: unexpected arguments after direct issue number" >&2
             exit 2
         end
     else
         if test (count $issue_args) -gt 0
-            echo 'gh ai work: expected an issue number or no arguments' >&2
+            echo "gh ai $command_name: expected an issue number or no arguments" >&2
             exit 2
         end
-        set issue (select_ready_for_agent_issue)
+        set issue ($picker_function)
         or exit 0
         test -n "$issue"; or exit 0
     end
@@ -154,7 +167,7 @@ function work
     if test -n "$custom_prompt"
         set prompt $custom_prompt
     else
-        set prompt 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change. When you open the PR, include a Closes #{issue} line in the PR body.'
+        set prompt $default_prompt
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
@@ -164,6 +177,14 @@ function work
     end
     set command "$command -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
+end
+
+function work
+    run_issue_agent work select_ready_for_agent_issue 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change. When you open the PR, include a Closes #{issue} line in the PR body.' $argv
+end
+
+function triage
+    run_issue_agent triage select_authored_issue '/triage {issue}' $argv
 end
 
 function import_url
@@ -294,6 +315,9 @@ switch $argv[1]
     case resume
         set -e argv[1]
         resume $argv
+    case triage
+        set -e argv[1]
+        triage $argv
     case work
         set -e argv[1]
         work $argv
