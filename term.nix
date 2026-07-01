@@ -57,10 +57,25 @@ let
       coreutils
     ];
     text = ''
-      selected=$(gh issue list --author @me | fzf) || exit 0
+      selected=$(gh issue list --assignee "@me" | fzf --prompt='Issue: ') || exit 0
       issue=$(printf '%s\n' "$selected" | cut -f1)
       test -n "$issue" || exit 0
       printf '%s' "$issue" | /usr/bin/pbcopy
+    '';
+  };
+
+  gh-pr-picker = pkgs.writeShellApplication {
+    name = "gh-pr-picker";
+    runtimeInputs = with pkgs; [
+      gh
+      fzf
+      coreutils
+    ];
+    text = ''
+      selected=$(gh pr list --author "@me" | fzf --prompt='PR: ') || exit 0
+      pr=$(printf '%s\n' "$selected" | cut -f1)
+      test -n "$pr" || exit 0
+      printf '%s' "$pr" | /usr/bin/pbcopy
     '';
   };
 in
@@ -368,6 +383,7 @@ in
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
       bind C-i display-popup -d "#{pane_current_path}" -E "${gh-issue-picker}/bin/gh-issue-picker"
+      bind C-p display-popup -d "#{pane_current_path}" -E "${gh-pr-picker}/bin/gh-pr-picker"
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
       bind C-g display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
