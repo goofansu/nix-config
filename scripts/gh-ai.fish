@@ -45,8 +45,8 @@ function select_pr
     gh pr list $argv | fzf | awk '{print $1}'
 end
 
-function select_triaged_issue
-    gh triaged | fzf | awk '{print $1}' | sed 's/^#//'
+function select_ready_for_agent_issue
+    gh ready-for-agent | fzf | awk '{print $1}' | sed 's/^#//'
 end
 
 function is_number
@@ -143,7 +143,7 @@ function work
             echo 'gh ai work: expected an issue number or no arguments' >&2
             exit 2
         end
-        set issue (select_triaged_issue)
+        set issue (select_ready_for_agent_issue)
         or exit 0
         test -n "$issue"; or exit 0
     end

@@ -42,7 +42,7 @@ in
     settings = {
       git_protocol = "ssh";
       aliases = {
-        triaged = "issue list --state open --assignee @me --search '(label:needs-triage OR label:needs-info OR label:ready-for-agent OR label:ready-for-human OR label:wontfix)'";
+        ready-for-agent = "issue list --state open --assignee @me --label ready-for-agent";
       };
     };
   };
