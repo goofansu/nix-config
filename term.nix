@@ -48,6 +48,21 @@ let
       tmux switch-client -t "$target"
     '';
   };
+
+  gh-issue-picker = pkgs.writeShellApplication {
+    name = "gh-issue-picker";
+    runtimeInputs = with pkgs; [
+      gh
+      fzf
+      coreutils
+    ];
+    text = ''
+      selected=$(gh issue list --author @me | fzf) || exit 0
+      issue=$(printf '%s\n' "$selected" | cut -f1)
+      test -n "$issue" || exit 0
+      printf '%s' "$issue" | /usr/bin/pbcopy
+    '';
+  };
 in
 {
   # Fish enables this for completions, but Home Manager 26.05 sets programs.man.package to null on Darwin.
@@ -352,6 +367,7 @@ in
       bind s display-popup -w 90% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
+      bind C-i display-popup -d "#{pane_current_path}" -E "${gh-issue-picker}/bin/gh-issue-picker"
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
       bind C-g display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
