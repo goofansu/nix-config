@@ -57,7 +57,7 @@ let
       coreutils
     ];
     text = ''
-      selected=$(gh issue list --assignee "@me" | fzf --prompt='Issue: ') || exit 0
+      selected=$(gh issue list --author "@me" | fzf --prompt='Issue: ') || exit 0
       issue=$(printf '%s\n' "$selected" | cut -f1)
       test -n "$issue" || exit 0
       printf '%s' "$issue" | /usr/bin/pbcopy
