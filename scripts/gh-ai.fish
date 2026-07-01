@@ -25,17 +25,17 @@ function usage
         '' \
         'COMMAND FLAGS' \
         '  work:' \
-        '    --base BASE      Branch to start the work from. Defaults to default branch.' \
+        '    --base BASE      Branch to start the work from. Omit to use the default branch.' \
         '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.' \
         '' \
         'PROMPT VARIABLES' \
         '  import: {url}' \
         '  review: {pr}' \
         '  resume: {pr}' \
-        '  work:   {issue}, {branch}, {base}' \
+        '  work:   {issue}' \
         '' \
         EXAMPLES \
-        "  gh ai work 123 --prompt 'Work issue {issue} on {branch} from {base}'" \
+        "  gh ai work 123 --prompt 'Work issue {issue}'" \
         '  gh ai import https://example.com/ticket/123' \
         "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'" \
         "  gh ai resume --author octocat --prompt 'Continue PR {pr}'"
@@ -149,17 +149,20 @@ function work
     end
 
     test -n "$branch"; or set branch issue-$issue
-    test -n "$base"; or set base ^
 
     set -l prompt
     if test -n "$custom_prompt"
         set prompt $custom_prompt
     else
-        set prompt 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change on branch {branch} from {base}.'
+        set prompt 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change. When you open the PR, include a Closes #{issue} line in the PR body.'
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
-    set -l command "wt switch -c "(fish_quote "$branch")" -b "(fish_quote "$base")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
+    set -l command "wt switch -c "(fish_quote "$branch")
+    if test -n "$base"
+        set command "$command -b "(fish_quote "$base")
+    end
+    set command "$command -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 

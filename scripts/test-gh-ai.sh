@@ -14,6 +14,12 @@ assert_contains() {
 	[[ "$haystack" == *"$needle"* ]] || fail "expected output to contain '$needle', got: $haystack"
 }
 
+assert_not_contains() {
+	local haystack="$1"
+	local needle="$2"
+	[[ "$haystack" != *"$needle"* ]] || fail "expected output not to contain '$needle', got: $haystack"
+}
+
 assert_file_missing() {
 	local path="$1"
 	[[ ! -e "$path" ]] || fail "expected $path to be absent"
@@ -39,8 +45,11 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
 	assert_contains "$output" '  work:'
-	assert_contains "$output" '    --base BASE      Branch to start the work from. Defaults to default branch.'
+	assert_contains "$output" '    --base BASE      Branch to start the work from. Omit to use the default branch.'
 	assert_contains "$output" '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.'
+	assert_contains "$output" '  work:   {issue}'
+	assert_not_contains "$output" '  work:   {issue}, {branch}, {base}'
+	assert_not_contains "$output" "Work issue {issue} on {branch} from {base}"
 }
 
 with_stubs() {
@@ -126,6 +135,7 @@ test_work_direct_number_skips_triaged_picker() {
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^triaged$' "$tmp/gh-calls" || fail "did not expect gh triaged for direct issue number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "issue-123"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#123"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Closes #123"
 }
 
 test_work_without_number_uses_triaged_picker() {
@@ -174,7 +184,20 @@ test_work_agent_option_overrides_default_agent() {
 	run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b ^ -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -x claude --"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" " -b "
+	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
+}
+
+test_work_base_option_adds_base_flag() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" work 123 --base main --agent claude --prompt 'Work {issue}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b main -x claude --"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
@@ -207,6 +230,7 @@ for test_name in \
 	test_work_direct_number_skips_triaged_picker \
 	test_work_without_number_uses_triaged_picker \
 	test_work_agent_option_overrides_default_agent \
+	test_work_base_option_adds_base_flag \
 	test_review_agent_equals_option_overrides_default_agent \
 	test_import_agent_option_overrides_default_agent \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
