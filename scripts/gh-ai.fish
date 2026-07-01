@@ -155,7 +155,7 @@ function work
     if test -n "$custom_prompt"
         set prompt $custom_prompt
     else
-        set prompt 'Work on GitHub issue #{issue}. Start by reading the issue to understand the problem, then implement the requested change. Use branch {branch} from base {base}.'
+        set prompt 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change on branch {branch} from {base}.'
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
