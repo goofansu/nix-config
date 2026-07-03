@@ -28,7 +28,7 @@ function usage
         'COMMAND FLAGS' \
         '  work, triage:' \
         '    --base BASE      Branch to start the work from. Omit to use the default branch.' \
-        '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.' \
+        '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>-<title-slug>.' \
         '' \
         'PROMPT VARIABLES' \
         '  import: {url}' \
@@ -165,7 +165,19 @@ function run_issue_agent
         test -n "$issue"; or exit 0
     end
 
-    test -n "$branch"; or set branch issue-$issue
+    if test -z "$branch"
+        set -l slug (gh issue view $issue --json title -q .title 2>/dev/null \
+            | string lower \
+            | string replace -ra '[^a-z0-9]+' '-' \
+            | string trim -c '-' \
+            | string sub -l 50 \
+            | string trim -c '-')
+        if test -n "$slug"
+            set branch issue-$issue-$slug
+        else
+            set branch issue-$issue
+        end
+    end
 
     set -l prompt
     if test -n "$custom_prompt"
