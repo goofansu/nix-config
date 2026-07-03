@@ -47,7 +47,7 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" 'COMMAND FLAGS'
 	assert_contains "$output" '  work, triage:'
 	assert_contains "$output" '    --base BASE      Branch to start the work from. Omit to use the default branch.'
-	assert_contains "$output" '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>.'
+	assert_contains "$output" '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>-<title-slug>.'
 	assert_contains "$output" '  triage: {issue}'
 	assert_contains "$output" '  work:   {issue}'
 	assert_not_contains "$output" '  work:   {issue}, {branch}, {base}'
@@ -70,6 +70,9 @@ issue\ list\ --author\ @me)
 	;;
 issue\ list)
 	printf '%s\n' '#999	Selected issue'
+	;;
+issue\ view\ *\ --json\ title\ -q\ .title)
+	printf '%s\n' 'Fix Fancy Bug!'
 	;;
 ready-for-agent)
 	printf '%s\n' '999	Selected ready-for-agent issue'
@@ -195,9 +198,21 @@ test_work_agent_option_overrides_default_agent() {
 	run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x claude --name 'Fix Fancy Bug!' --"
 	assert_not_contains "$(cat "$tmp/tmux-calls")" " -b "
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
+}
+
+test_triage_pi_agent_passes_issue_title_as_name() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" triage 123 --agent pi
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x pi --name 'Fix Fancy Bug!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
 }
 
 test_work_base_option_adds_base_flag() {
@@ -208,7 +223,7 @@ test_work_base_option_adds_base_flag() {
 	run_gh_ai "$tmp" work 123 --base main --agent claude --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b main -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude --name 'Fix Fancy Bug!' --"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
@@ -217,12 +232,12 @@ test_work_existing_issue_branch_switches_without_create() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	EXISTING_BRANCH=issue-123 run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
+	EXISTING_BRANCH=issue-123-fix-fancy-bug run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/git-calls")" "show-ref --verify --quiet refs/heads/issue-123"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123 -x claude --"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123"
+	assert_contains "$(cat "$tmp/git-calls")" "show-ref --verify --quiet refs/heads/issue-123-fix-fancy-bug"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123-fix-fancy-bug -x claude --name 'Fix Fancy Bug!' --"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
@@ -235,7 +250,7 @@ test_triage_direct_number_uses_triage_prompt_and_work_options() {
 
 	assert_file_missing "$tmp/fzf-called"
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123 -b main -x claude --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude --name 'Fix Fancy Bug!' --"
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
 }
 
@@ -281,6 +296,7 @@ for test_name in \
 	test_work_direct_number_skips_ready_for_agent_picker \
 	test_work_without_number_uses_ready_for_agent_picker \
 	test_work_agent_option_overrides_default_agent \
+	test_triage_pi_agent_passes_issue_title_as_name \
 	test_work_base_option_adds_base_flag \
 	test_work_existing_issue_branch_switches_without_create \
 	test_triage_direct_number_uses_triage_prompt_and_work_options \

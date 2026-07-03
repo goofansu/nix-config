@@ -165,8 +165,10 @@ function run_issue_agent
         test -n "$issue"; or exit 0
     end
 
+    set -l issue_title (gh issue view $issue --json title -q .title 2>/dev/null)
+
     if test -z "$branch"
-        set -l slug (gh issue view $issue --json title -q .title 2>/dev/null \
+        set -l slug (printf '%s\n' "$issue_title" \
             | string lower \
             | string replace -ra '[^a-z0-9]+' '-' \
             | string trim -c '-' \
@@ -196,7 +198,15 @@ function run_issue_agent
             set command "$command -b "(fish_quote "$base")
         end
     end
-    set command "$command -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
+    set -l agent_options ''
+    switch $agent
+        case claude pi
+            if test -n "$issue_title"
+                set agent_options " --name "(fish_quote "$issue_title")
+            end
+    end
+
+    set command "$command -x "(fish_quote "$agent")"$agent_options -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
