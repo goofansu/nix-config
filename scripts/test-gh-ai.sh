@@ -108,6 +108,11 @@ case "$*" in
 branch\ --show-current)
 	printf '%s\n' feature/current
 	;;
+show-ref\ --verify\ --quiet\ refs/heads/*)
+	args=$*
+	branch=${args#show-ref --verify --quiet refs/heads/}
+	[[ "${EXISTING_BRANCH:-}" == "$branch" ]]
+	;;
 *)
 	printf 'unexpected git call: %s\n' "$*" >&2
 	exit 1
@@ -125,6 +130,7 @@ run_gh_ai() {
 		GIT_CALLS="$tmp/git-calls" \
 		FZF_CALLED="$tmp/fzf-called" \
 		TMUX_CALLS="$tmp/tmux-calls" \
+		EXISTING_BRANCH="${EXISTING_BRANCH:-}" \
 		TMUX=1 \
 		fish "$repo_root/scripts/gh-ai.fish" "$@"
 }
@@ -206,6 +212,20 @@ test_work_base_option_adds_base_flag() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
+test_work_existing_issue_branch_switches_without_create() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	EXISTING_BRANCH=issue-123 run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/git-calls")" "show-ref --verify --quiet refs/heads/issue-123"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123 -x claude --"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
+}
+
 test_triage_direct_number_uses_triage_prompt_and_work_options() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -262,6 +282,7 @@ for test_name in \
 	test_work_without_number_uses_ready_for_agent_picker \
 	test_work_agent_option_overrides_default_agent \
 	test_work_base_option_adds_base_flag \
+	test_work_existing_issue_branch_switches_without_create \
 	test_triage_direct_number_uses_triage_prompt_and_work_options \
 	test_triage_without_number_uses_authored_issue_picker \
 	test_review_agent_equals_option_overrides_default_agent \

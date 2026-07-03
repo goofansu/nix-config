@@ -88,6 +88,10 @@ function open_tmux_window
     tmux new-window $argv[1]
 end
 
+function local_branch_exists
+    git show-ref --verify --quiet refs/heads/$argv[1] 2>/dev/null
+end
+
 function run_issue_agent
     set -l command_name $argv[1]
     set -l picker_function $argv[2]
@@ -171,9 +175,14 @@ function run_issue_agent
     end
 
     set prompt (render_template "$prompt" issue "$issue" branch "$branch" base "$base")
-    set -l command "wt switch -c "(fish_quote "$branch")
-    if test -n "$base"
-        set command "$command -b "(fish_quote "$base")
+    set -l command
+    if local_branch_exists "$branch"
+        set command "wt switch "(fish_quote "$branch")
+    else
+        set command "wt switch -c "(fish_quote "$branch")
+        if test -n "$base"
+            set command "$command -b "(fish_quote "$base")
+        end
     end
     set command "$command -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
     open_tmux_window "$command"
