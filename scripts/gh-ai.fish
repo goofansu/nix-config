@@ -316,6 +316,8 @@ function run_pr_agent
         test -n "$pr"; or exit 0
     end
 
+    set -l pr_title (gh pr view $pr --json title -q .title 2>/dev/null)
+
     set -l prompt
     if test -n "$custom_prompt"
         set prompt $custom_prompt
@@ -324,7 +326,15 @@ function run_pr_agent
     end
 
     set prompt (render_template "$prompt" pr "$pr")
-    set -l command "wt switch "(fish_quote "pr:$pr")" -x "(fish_quote "$agent")" -- "(fish_quote "$prompt")
+    set -l agent_options ''
+    switch $agent
+        case claude pi
+            if test -n "$pr_title"
+                set agent_options " --name "(fish_quote "$pr_title")
+            end
+    end
+
+    set -l command "wt switch "(fish_quote "pr:$pr")" -x "(fish_quote "$agent")"$agent_options -- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 

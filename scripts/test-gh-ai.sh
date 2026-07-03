@@ -80,6 +80,9 @@ ready-for-agent)
 pr\ list*)
 	printf '%s\n' '888	Selected PR'
 	;;
+pr\ view\ *\ --json\ title\ -q\ .title)
+	printf '%s\n' 'Improve PR Flow!'
+	;;
 *)
 	printf 'unexpected gh call: %s\n' "$*" >&2
 	exit 1
@@ -275,8 +278,20 @@ test_review_agent_equals_option_overrides_default_agent() {
 	run_gh_ai "$tmp" review 456 --agent=pi --prompt 'Review {pr}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x pi --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x pi --name 'Improve PR Flow!' --"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Review 456"
+}
+
+test_resume_claude_agent_passes_pr_title_as_name() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" resume 456 --agent claude --prompt 'Resume {pr}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x claude --name 'Improve PR Flow!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
 }
 
 test_import_agent_option_overrides_default_agent() {
@@ -302,6 +317,7 @@ for test_name in \
 	test_triage_direct_number_uses_triage_prompt_and_work_options \
 	test_triage_without_number_uses_authored_issue_picker \
 	test_review_agent_equals_option_overrides_default_agent \
+	test_resume_claude_agent_passes_pr_title_as_name \
 	test_import_agent_option_overrides_default_agent \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_resume_direct_number_skips_pr_picker; do
