@@ -92,6 +92,18 @@ function local_branch_exists
     git show-ref --verify --quiet refs/heads/$argv[1] 2>/dev/null
 end
 
+function agent_name_options
+    set -l agent $argv[1]
+    set -l name $argv[2]
+
+    switch $agent
+        case claude pi
+            if test -n "$name"
+                printf ' --name %s' (fish_quote "$name")
+            end
+    end
+end
+
 function run_issue_agent
     set -l command_name $argv[1]
     set -l picker_function $argv[2]
@@ -198,13 +210,7 @@ function run_issue_agent
             set command "$command -b "(fish_quote "$base")
         end
     end
-    set -l agent_options ''
-    switch $agent
-        case claude pi
-            if test -n "$issue_title"
-                set agent_options " --name "(fish_quote "$issue_title")
-            end
-    end
+    set -l agent_options (agent_name_options "$agent" "$issue_title")
 
     set command "$command -x "(fish_quote "$agent")"$agent_options -- "(fish_quote "$prompt")
     open_tmux_window "$command"
@@ -326,13 +332,7 @@ function run_pr_agent
     end
 
     set prompt (render_template "$prompt" pr "$pr")
-    set -l agent_options ''
-    switch $agent
-        case claude pi
-            if test -n "$pr_title"
-                set agent_options " --name "(fish_quote "$pr_title")
-            end
-    end
+    set -l agent_options (agent_name_options "$agent" "$pr_title")
 
     set -l command "wt switch "(fish_quote "pr:$pr")" -x "(fish_quote "$agent")"$agent_options -- "(fish_quote "$prompt")
     open_tmux_window "$command"
