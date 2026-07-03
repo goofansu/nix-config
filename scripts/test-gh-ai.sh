@@ -150,7 +150,7 @@ test_work_direct_number_skips_ready_for_agent_picker() {
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^ready-for-agent$' "$tmp/gh-calls" || fail "did not expect gh ready-for-agent for direct issue number"
-	assert_contains "$(cat "$tmp/tmux-calls")" "issue-123"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x cx -- --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#123"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Closes #123"
 }
@@ -164,7 +164,7 @@ test_work_without_number_uses_ready_for_agent_picker() {
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
 	grep -q '^ready-for-agent$' "$tmp/gh-calls" || fail "expected gh ready-for-agent"
-	assert_contains "$(cat "$tmp/tmux-calls")" "issue-999"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-999-fix-fancy-bug -x cx -- --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#999"
 }
 
@@ -177,7 +177,7 @@ test_review_numeric_filter_still_uses_picker_when_not_first_arg() {
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker for non-first numeric filter value"
 	grep -q '^pr list --search 456$' "$tmp/gh-calls" || fail "expected gh pr list to receive filters"
-	assert_contains "$(cat "$tmp/tmux-calls")" "pr:888"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:888 -x cx -- --name 'Improve PR Flow!'"
 }
 
 test_resume_direct_number_skips_pr_picker() {
@@ -189,7 +189,7 @@ test_resume_direct_number_skips_pr_picker() {
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^pr list' "$tmp/gh-calls" || fail "did not expect gh pr list for direct PR number"
-	assert_contains "$(cat "$tmp/tmux-calls")" "pr:456"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- --name 'Improve PR Flow!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
 }
 
@@ -201,7 +201,7 @@ test_work_agent_option_overrides_default_agent() {
 	run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x claude --name 'Fix Fancy Bug!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x claude -- --name 'Fix Fancy Bug!'"
 	assert_not_contains "$(cat "$tmp/tmux-calls")" " -b "
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
@@ -214,7 +214,7 @@ test_triage_pi_agent_passes_issue_title_as_name() {
 	run_gh_ai "$tmp" triage 123 --agent pi
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x pi --name 'Fix Fancy Bug!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x pi -- --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
 }
 
@@ -226,7 +226,7 @@ test_work_base_option_adds_base_flag() {
 	run_gh_ai "$tmp" work 123 --base main --agent claude --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude --name 'Fix Fancy Bug!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude -- --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
@@ -239,7 +239,7 @@ test_work_existing_issue_branch_switches_without_create() {
 
 	assert_fish_parses_tmux_command "$tmp"
 	assert_contains "$(cat "$tmp/git-calls")" "show-ref --verify --quiet refs/heads/issue-123-fix-fancy-bug"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123-fix-fancy-bug -x claude --name 'Fix Fancy Bug!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123-fix-fancy-bug -x claude -- --name 'Fix Fancy Bug!'"
 	assert_not_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
@@ -253,7 +253,7 @@ test_triage_direct_number_uses_triage_prompt_and_work_options() {
 
 	assert_file_missing "$tmp/fzf-called"
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude --name 'Fix Fancy Bug!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude -- --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
 }
 
@@ -278,7 +278,7 @@ test_review_agent_equals_option_overrides_default_agent() {
 	run_gh_ai "$tmp" review 456 --agent=pi --prompt 'Review {pr}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x pi --name 'Improve PR Flow!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x pi -- --name 'Improve PR Flow!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Review 456"
 }
 
@@ -290,7 +290,7 @@ test_resume_claude_agent_passes_pr_title_as_name() {
 	run_gh_ai "$tmp" resume 456 --agent claude --prompt 'Resume {pr}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x claude --name 'Improve PR Flow!' --"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x claude -- --name 'Improve PR Flow!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
 }
 

@@ -93,14 +93,10 @@ function local_branch_exists
 end
 
 function agent_name_options
-    set -l agent $argv[1]
-    set -l name $argv[2]
+    set -l name $argv[1]
 
-    switch $agent
-        case claude pi
-            if test -n "$name"
-                printf ' --name %s' (fish_quote "$name")
-            end
+    if test -n "$name"
+        printf '--name %s ' (fish_quote "$name")
     end
 end
 
@@ -210,9 +206,9 @@ function run_issue_agent
             set command "$command -b "(fish_quote "$base")
         end
     end
-    set -l agent_options (agent_name_options "$agent" "$issue_title")
+    set -l agent_options (agent_name_options "$issue_title")
 
-    set command "$command -x "(fish_quote "$agent")"$agent_options -- "(fish_quote "$prompt")
+    set command "$command -x "(fish_quote "$agent")" -- $agent_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -332,9 +328,9 @@ function run_pr_agent
     end
 
     set prompt (render_template "$prompt" pr "$pr")
-    set -l agent_options (agent_name_options "$agent" "$pr_title")
+    set -l agent_options (agent_name_options "$pr_title")
 
-    set -l command "wt switch "(fish_quote "pr:$pr")" -x "(fish_quote "$agent")"$agent_options -- "(fish_quote "$prompt")
+    set -l command "wt switch "(fish_quote "pr:$pr")" -x "(fish_quote "$agent")" -- $agent_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
