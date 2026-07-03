@@ -4,6 +4,8 @@
   # Create fish configs that loads the nix-darwin environment
   programs.fish.enable = true;
 
+  environment.shells = [ pkgs.fish ];
+
   # Used for backwards compatibility of nix-darwin
   system = {
     stateVersion = 7;
