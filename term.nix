@@ -57,10 +57,14 @@ let
       coreutils
     ];
     text = ''
-      selected=$(gh issue list --author "@me" | fzf --prompt='Issue: ') || exit 0
-      issue=$(printf '%s\n' "$selected" | cut -f1)
-      test -n "$issue" || exit 0
-      printf '%s' "$issue" | /usr/bin/pbcopy
+      gh issue list --author "@me" | fzf \
+        --prompt='Issue: ' \
+        --header='enter: copy | ctrl-o: open | ctrl-r: triage | ctrl-w: work' \
+        --bind 'enter:execute-silent(printf "%s" {1} | /usr/bin/pbcopy)+abort' \
+        --bind 'ctrl-o:execute(gh issue view -w {1})+abort' \
+        --bind 'ctrl-r:execute(gh ai triage {1})+abort' \
+        --bind 'ctrl-w:execute(gh ai work {1})+abort' \
+        >/dev/null
     '';
   };
 
@@ -72,10 +76,14 @@ let
       coreutils
     ];
     text = ''
-      selected=$(gh pr list --author "@me" | fzf --prompt='PR: ') || exit 0
-      pr=$(printf '%s\n' "$selected" | cut -f1)
-      test -n "$pr" || exit 0
-      printf '%s' "$pr" | /usr/bin/pbcopy
+      gh pr list --author "@me" | fzf \
+        --prompt='PR: ' \
+        --header='enter: copy | ctrl-o: open | ctrl-r: review | ctrl-w: resume' \
+        --bind 'enter:execute-silent(printf "%s" {1} | /usr/bin/pbcopy)+abort' \
+        --bind 'ctrl-o:execute(gh pr view -w {1})+abort' \
+        --bind 'ctrl-r:execute(gh ai review {1})+abort' \
+        --bind 'ctrl-w:execute(gh ai resume {1})+abort' \
+        >/dev/null
     '';
   };
 in
