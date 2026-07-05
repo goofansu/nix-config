@@ -58,8 +58,7 @@ let
   unstable-packages = with pkgs-unstable; [
     # Agent utilities
     acli
-    ast-grep
-    yq
+    fabric-ai
 
     # Development utilities
     devenv
