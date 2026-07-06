@@ -111,7 +111,7 @@ let
       coreutils
     ];
     text = ''
-      gh pr list --author "@me" | fzf \
+      gh pr list --search 'author:@me OR review-requested:@me' | fzf \
         --prompt='PR: ' \
         --header='enter: copy | ctrl-o: open | ctrl-r: review | ctrl-w: resume' \
         --bind 'enter:execute-silent(printf "%s" {1} | /usr/bin/pbcopy)+abort' \
