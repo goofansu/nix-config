@@ -49,6 +49,41 @@ let
     '';
   };
 
+  tmux-promote-window = pkgs.writeShellApplication {
+    name = "tmux-promote-window";
+    runtimeInputs = with pkgs; [
+      tmux
+      coreutils
+      gawk
+    ];
+    text = ''
+      source_window=$1
+      raw_name=$2
+      start_dir=$3
+      session_name=$(printf "%s" "$raw_name" | tr ".:" "__")
+      current_session=$(tmux display-message -p -t "$source_window" '#{session_name}')
+
+      if [ "$current_session" = "$session_name" ]; then
+        exit 0
+      fi
+
+      if tmux has-session -t "=$session_name" 2>/dev/null; then
+        target_session=$(tmux list-sessions -F '#{session_name}	#{session_id}' | awk -F '	' -v name="$session_name" '$1 == name { print $2; exit }')
+        if [ -z "$target_session" ]; then
+          exit 1
+        fi
+        tmux move-window -s "$source_window" -t "$target_session:"
+      else
+        created=$(tmux new-session -d -P -F '#{session_id} #{window_id}' -s "$session_name" -c "$start_dir")
+        target_session=''${created%% *}
+        placeholder=''${created#* }
+        tmux move-window -k -s "$source_window" -t "$placeholder"
+      fi
+
+      tmux switch-client -t "$target_session" \; select-window -t "$source_window"
+    '';
+  };
+
   gh-issue-picker = pkgs.writeShellApplication {
     name = "gh-issue-picker";
     runtimeInputs = with pkgs; [
@@ -353,6 +388,7 @@ in
 
       # Session controls
       bind R command-prompt -I "#S" "rename-session -- '%%'"
+      bind S run-shell "${tmux-promote-window}/bin/tmux-promote-window #{window_id} #{q:window_name} #{q:pane_current_path}"
       bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
       bind N switch-client -n
