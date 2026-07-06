@@ -345,6 +345,9 @@ in
       bind -n M-8 select-window -t 8
       bind -n M-9 select-window -t 9
 
+      bind -n S-Left previous-window
+      bind -n S-Right next-window
+
       bind -n M-S-Left  swap-window -t -1 \; select-window -t -1
       bind -n M-S-Right swap-window -t +1 \; select-window -t +1
 
