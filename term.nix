@@ -406,7 +406,7 @@ in
       # Status bar
       set -g status-position top
       set -g status-interval 5
-      set -g status-left-length 30
+      set -g status-left-length 0
       set -g status-right-length 50
       set -g window-status-separator ""
       setw -g automatic-rename on
