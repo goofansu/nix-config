@@ -278,7 +278,7 @@ function import_url
 
     set prompt (render_template "$prompt" url "$url")
     set -l agent_options (agent_options "$agent" '')
-    set -l command (fish_quote "$agent")" -- $agent_options"(fish_quote "$prompt")
+    set -l command (fish_quote "$agent")" $agent_options-- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 

@@ -307,7 +307,7 @@ test_import_default_cx_gets_remote_control() {
 	run_gh_ai "$tmp" import https://example.com/ticket/123 --prompt 'Import {url}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "cx -- --remote-control 'Import https://example.com/ticket/123'"
+	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control -- 'Import https://example.com/ticket/123'"
 }
 
 test_import_agent_option_overrides_default_agent() {
