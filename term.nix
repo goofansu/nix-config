@@ -439,6 +439,7 @@ in
       # Fire and forget commands
       bind b run-shell -b "cd #{q:pane_current_path} && wt browse-local"
       bind C-b run-shell -b "cd #{q:pane_current_path} && wt browse-remote"
+      bind B run-shell -b "cd #{q:pane_current_path} && wt br | /usr/bin/pbcopy && tmux display-message 'Branch copied'"
     '';
   };
 }
