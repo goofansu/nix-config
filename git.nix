@@ -35,18 +35,6 @@ let
   };
 in
 {
-  programs.gh = {
-    enable = true;
-    package = pkgs-unstable.gh;
-    extensions = [ gh-ai ];
-    settings = {
-      git_protocol = "ssh";
-      aliases = {
-        ready-for-agent = "issue list --state open --assignee @me --label ready-for-agent";
-      };
-    };
-  };
-
   programs.git = {
     enable = true;
     settings = {
@@ -104,6 +92,23 @@ in
         };
       }
     ];
+  };
+
+  programs.gh = {
+    enable = true;
+    package = pkgs-unstable.gh;
+    extensions = [ gh-ai ];
+    settings = {
+      git_protocol = "ssh";
+      aliases = {
+        ready-for-agent = "issue list --state open --assignee @me --label ready-for-agent";
+      };
+    };
+  };
+
+  programs.gh-dash = {
+    enable = true;
+    package = pkgs-unstable.gh-dash;
   };
 
   programs.delta.enable = true;
