@@ -388,7 +388,8 @@ in
 
       # Session controls
       bind R command-prompt -I "#S" "rename-session -- '%%'"
-      bind S run-shell "${tmux-promote-window}/bin/tmux-promote-window #{window_id} #{q:window_name} #{q:pane_current_path}"
+      bind C-s run-shell "${tmux-promote-window}/bin/tmux-promote-window #{window_id} #{q:window_name} #{q:pane_current_path}"
+      bind S run-shell "tmux display-message -p '#S' | pbcopy && tmux display-message 'Session name copied'"
       bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
       bind N switch-client -n
@@ -432,7 +433,8 @@ in
       bind C-i display-popup -d "#{pane_current_path}" -E "${gh-issue-picker}/bin/gh-issue-picker"
       bind C-p display-popup -d "#{pane_current_path}" -E "${gh-pr-picker}/bin/gh-pr-picker"
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
-      bind C-g display-popup -d "~/.config/worktrunk" -E "vi config.toml"
+      bind C-g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "gh dash"
+      bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
       bind C-a display-popup -d "~/.pi/agent" -E "vi AGENTS.md"
 
