@@ -109,6 +109,24 @@ in
   programs.gh-dash = {
     enable = true;
     package = pkgs-unstable.gh-dash;
+    settings.issuesSections = [
+      {
+        title = "My Issues";
+        filters = "is:open author:@me";
+      }
+      {
+        title = "Triaged";
+        filters = "is:open assignee:@me label:ready-for-agent";
+      }
+      {
+        title = "Assigned";
+        filters = "is:open assignee:@me";
+      }
+      {
+        title = "Involved";
+        filters = "is:open involves:@me -author:@me";
+      }
+    ];
     settings.keybindings = {
       issues = [
         {
