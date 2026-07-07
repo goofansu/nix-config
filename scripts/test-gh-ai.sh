@@ -42,7 +42,6 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '  triage [issue-number]'
 	assert_contains "$output" '  work [issue-number]'
 	assert_contains "$output" 'GLOBAL FLAGS'
-	assert_contains "$output" '  --agent COMMAND  Agent executable to run. Defaults to cx.'
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
 	assert_contains "$output" '  work, triage:'
@@ -193,30 +192,15 @@ test_resume_direct_number_skips_pr_picker() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
 }
 
-test_other_agent_gets_no_agent_specific_options() {
+test_triage_passes_issue_title_as_name_with_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
+	run_gh_ai "$tmp" triage 123
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x claude -- 'Work 123'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--name 'Fix Fancy Bug!'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" " -b "
-	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
-}
-
-test_triage_pi_agent_passes_issue_title_as_name() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage 123 --agent pi
-
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x pi -- --name 'Fix Fancy Bug!'"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
 }
 
@@ -225,10 +209,10 @@ test_work_base_option_adds_base_flag() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" work 123 --base main --agent claude --prompt 'Work {issue}'
+	run_gh_ai "$tmp" work 123 --base main --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude -- 'Work 123'"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x cx -- --remote-control --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
 
@@ -237,11 +221,11 @@ test_work_existing_issue_branch_switches_without_create() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	EXISTING_BRANCH=issue-123-fix-fancy-bug run_gh_ai "$tmp" work 123 --agent claude --prompt 'Work {issue}'
+	EXISTING_BRANCH=issue-123-fix-fancy-bug run_gh_ai "$tmp" work 123 --prompt 'Work {issue}'
 
 	assert_fish_parses_tmux_command "$tmp"
 	assert_contains "$(cat "$tmp/git-calls")" "show-ref --verify --quiet refs/heads/issue-123-fix-fancy-bug"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123-fix-fancy-bug -x claude -- 'Work 123'"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
 	assert_not_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
 }
@@ -251,11 +235,11 @@ test_triage_direct_number_uses_triage_prompt_and_work_options() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" triage 123 --base main --agent claude
+	run_gh_ai "$tmp" triage 123 --base main
 
 	assert_file_missing "$tmp/fzf-called"
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x claude -- '/triage 123'"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x cx -- --remote-control --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
 }
 
@@ -272,30 +256,27 @@ test_triage_without_number_uses_authored_issue_picker() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 777"
 }
 
-test_pi_agent_gets_name_without_remote_control() {
+test_review_passes_pr_title_as_name_with_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" review 456 --agent=pi --prompt 'Review {pr}'
+	run_gh_ai "$tmp" review 456 --prompt 'Review {pr}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x pi -- --name 'Improve PR Flow!'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- --remote-control --name 'Improve PR Flow!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Review 456"
 }
 
-test_resume_other_agent_gets_no_agent_specific_options() {
+test_resume_passes_pr_title_as_name_with_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" resume 456 --agent claude --prompt 'Resume {pr}'
+	run_gh_ai "$tmp" resume 456 --prompt 'Resume {pr}'
 
 	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x claude -- 'Resume 456'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--name 'Improve PR Flow!'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- --remote-control --name 'Improve PR Flow!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
 }
 
@@ -310,33 +291,18 @@ test_import_default_cx_gets_remote_control() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control -- 'Import https://example.com/ticket/123'"
 }
 
-test_import_agent_option_overrides_default_agent() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" import https://example.com/ticket/123 --agent claude --prompt 'Import {url}'
-
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "claude --"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Import https://example.com/ticket/123"
-}
-
 for test_name in \
 	test_help_uses_gh_style_usage_and_flags \
 	test_work_direct_number_skips_ready_for_agent_picker \
 	test_work_without_number_uses_ready_for_agent_picker \
-	test_other_agent_gets_no_agent_specific_options \
-	test_triage_pi_agent_passes_issue_title_as_name \
+	test_triage_passes_issue_title_as_name_with_remote_control \
 	test_work_base_option_adds_base_flag \
 	test_work_existing_issue_branch_switches_without_create \
 	test_triage_direct_number_uses_triage_prompt_and_work_options \
 	test_triage_without_number_uses_authored_issue_picker \
-	test_pi_agent_gets_name_without_remote_control \
-	test_resume_other_agent_gets_no_agent_specific_options \
+	test_review_passes_pr_title_as_name_with_remote_control \
+	test_resume_passes_pr_title_as_name_with_remote_control \
 	test_import_default_cx_gets_remote_control \
-	test_import_agent_option_overrides_default_agent \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_resume_direct_number_skips_pr_picker; do
 	"$test_name"

@@ -22,7 +22,6 @@ function usage
         '      Show this help' \
         '' \
         'GLOBAL FLAGS' \
-        '  --agent COMMAND  Agent executable to run. Defaults to cx.' \
         '  --prompt PROMPT  Custom prompt template for the agent.' \
         '' \
         'COMMAND FLAGS' \
@@ -93,19 +92,11 @@ function local_branch_exists
 end
 
 function agent_options
-    set -l agent $argv[1]
-    set -l name $argv[2]
+    set -l name $argv[1]
 
-    switch $agent
-        case cx
-            printf '%s ' --remote-control
-            if test -n "$name"
-                printf '%s %s ' --name (fish_quote "$name")
-            end
-        case pi
-            if test -n "$name"
-                printf '%s %s ' --name (fish_quote "$name")
-            end
+    printf '%s ' --remote-control
+    if test -n "$name"
+        printf '%s %s ' --name (fish_quote "$name")
     end
 end
 
@@ -119,7 +110,6 @@ function run_issue_agent
     set -l branch ''
     set -l base ''
     set -l issue ''
-    set -l agent cx
     set -l issue_args
 
     while test (count $argv) -gt 0
@@ -151,15 +141,6 @@ function run_issue_agent
                 set base $argv[1]
             case '--base=*'
                 set base (string replace -- '--base=' '' $argv[1])
-            case --agent
-                set -e argv[1]
-                if test (count $argv) -eq 0
-                    echo "gh ai $command_name: --agent requires a value" >&2
-                    exit 2
-                end
-                set agent $argv[1]
-            case '--agent=*'
-                set agent (string replace -- '--agent=' '' $argv[1])
             case '*'
                 set -a issue_args $argv[1]
         end
@@ -215,9 +196,9 @@ function run_issue_agent
             set command "$command -b "(fish_quote "$base")
         end
     end
-    set -l agent_options (agent_options "$agent" "$issue_title")
+    set -l agent_options (agent_options "$issue_title")
 
-    set command "$command -x "(fish_quote "$agent")" -- $agent_options"(fish_quote "$prompt")
+    set command "$command -x cx -- $agent_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -231,7 +212,6 @@ end
 
 function import_url
     set -l custom_prompt ''
-    set -l agent cx
     set -l url ''
 
     while test (count $argv) -gt 0
@@ -245,15 +225,6 @@ function import_url
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
-            case --agent
-                set -e argv[1]
-                if test (count $argv) -eq 0
-                    echo 'gh ai import: --agent requires a value' >&2
-                    exit 2
-                end
-                set agent $argv[1]
-            case '--agent=*'
-                set agent (string replace -- '--agent=' '' $argv[1])
             case '*'
                 if test -n "$url"
                     echo 'gh ai import: expected exactly one URL' >&2
@@ -277,8 +248,8 @@ function import_url
     end
 
     set prompt (render_template "$prompt" url "$url")
-    set -l agent_options (agent_options "$agent" '')
-    set -l command (fish_quote "$agent")" $agent_options-- "(fish_quote "$prompt")
+    set -l agent_options (agent_options '')
+    set -l command "cx $agent_options-- "(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -287,7 +258,6 @@ function run_pr_agent
     set -e argv[1]
     set -l custom_prompt ''
     set -l pr ''
-    set -l agent cx
     set -l pr_args
 
     while test (count $argv) -gt 0
@@ -301,15 +271,6 @@ function run_pr_agent
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
-            case --agent
-                set -e argv[1]
-                if test (count $argv) -eq 0
-                    echo 'gh ai: --agent requires a value' >&2
-                    exit 2
-                end
-                set agent $argv[1]
-            case '--agent=*'
-                set agent (string replace -- '--agent=' '' $argv[1])
             case '*'
                 set -a pr_args $argv[1]
         end
@@ -338,9 +299,9 @@ function run_pr_agent
     end
 
     set prompt (render_template "$prompt" pr "$pr")
-    set -l agent_options (agent_options "$agent" "$pr_title")
+    set -l agent_options (agent_options "$pr_title")
 
-    set -l command "wt switch "(fish_quote "pr:$pr")" -x "(fish_quote "$agent")" -- $agent_options"(fish_quote "$prompt")
+    set -l command "wt switch "(fish_quote "pr:$pr")" -x cx -- $agent_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
