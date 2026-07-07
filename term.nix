@@ -407,8 +407,7 @@ in
 
       # Session controls
       bind R command-prompt -I "#S" "rename-session -- '%%'"
-      bind C-s run-shell "${tmux-promote-window}/bin/tmux-promote-window #{window_id} #{q:window_name} #{q:pane_current_path}"
-      bind S run-shell "tmux display-message -p '#S' | pbcopy && tmux display-message 'Session name copied'"
+      bind S run-shell "${tmux-promote-window}/bin/tmux-promote-window #{window_id} #{q:window_name} #{q:pane_current_path}"
       bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
       bind N switch-client -n
@@ -447,8 +446,8 @@ in
 
       # Popups
       bind s display-popup -w 90% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
-      bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
+      bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
       bind C-i display-popup -d "#{pane_current_path}" -E "${gh-issue-picker}/bin/gh-issue-picker"
       bind C-p display-popup -d "#{pane_current_path}" -E "${gh-pr-picker}/bin/gh-pr-picker"
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
