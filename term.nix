@@ -30,6 +30,25 @@ let
     '';
   };
 
+  tmux-move-to-session = pkgs.writeShellApplication {
+    name = "tmux-move-to-session";
+    runtimeInputs = with pkgs; [
+      fzf
+      tmux
+      coreutils
+    ];
+    text = ''
+      current=$(tmux display-message -p '#S')
+      target=$(
+        tmux list-sessions -F '#S' \
+          | grep -vx "$current" \
+          | fzf --prompt='Move window to session: '
+      ) || exit 0
+      [ -n "$target" ] && tmux move-window -t "$target:" \
+        && tmux switch-client -t "$target:"
+    '';
+  };
+
   tmux-pick-pane = pkgs.writeShellApplication {
     name = "tmux-pick-pane";
     runtimeInputs = with pkgs; [
@@ -437,6 +456,7 @@ in
       bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
       bind C-a display-popup -d "~/.pi/agent" -E "vi AGENTS.md"
+      bind M display-popup -E "${tmux-move-to-session}/bin/tmux-move-to-session"
 
       # Fire and forget commands
       bind b run-shell -b "cd #{q:pane_current_path} && wt browse-local"
