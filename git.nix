@@ -109,6 +109,32 @@ in
   programs.gh-dash = {
     enable = true;
     package = pkgs-unstable.gh-dash;
+    settings.keybindings = {
+      issues = [
+        {
+          key = "t";
+          name = "triage";
+          command = "gh ai triage {{.IssueNumber}}";
+        }
+        {
+          key = "w";
+          name = "work";
+          command = "gh ai work {{.IssueNumber}}";
+        }
+      ];
+      prs = [
+        {
+          key = "v";
+          name = "review";
+          command = "gh ai review {{.PrNumber}}";
+        }
+        {
+          key = "w";
+          name = "resume";
+          command = "gh ai resume {{.PrNumber}}";
+        }
+      ];
+    };
   };
 
   programs.delta.enable = true;

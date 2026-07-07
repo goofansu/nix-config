@@ -103,43 +103,6 @@ let
     '';
   };
 
-  gh-issue-picker = pkgs.writeShellApplication {
-    name = "gh-issue-picker";
-    runtimeInputs = with pkgs; [
-      gh
-      fzf
-      coreutils
-    ];
-    text = ''
-      gh issue list --author "@me" | fzf \
-        --prompt='Issue: ' \
-        --header='enter: copy | ctrl-o: open | ctrl-r: triage | ctrl-w: work' \
-        --bind 'enter:execute-silent(printf "%s" {1} | /usr/bin/pbcopy)+abort' \
-        --bind 'ctrl-o:execute(gh issue view -w {1})+abort' \
-        --bind 'ctrl-r:execute(gh ai triage {1})+abort' \
-        --bind 'ctrl-w:execute(gh ai work {1})+abort' \
-        >/dev/null
-    '';
-  };
-
-  gh-pr-picker = pkgs.writeShellApplication {
-    name = "gh-pr-picker";
-    runtimeInputs = with pkgs; [
-      gh
-      fzf
-      coreutils
-    ];
-    text = ''
-      gh pr list --search 'author:@me OR review-requested:@me' | fzf \
-        --prompt='PR: ' \
-        --header='enter: copy | ctrl-o: open | ctrl-r: review | ctrl-w: resume' \
-        --bind 'enter:execute-silent(printf "%s" {1} | /usr/bin/pbcopy)+abort' \
-        --bind 'ctrl-o:execute(gh pr view -w {1})+abort' \
-        --bind 'ctrl-r:execute(gh ai review {1})+abort' \
-        --bind 'ctrl-w:execute(gh ai resume {1})+abort' \
-        >/dev/null
-    '';
-  };
 in
 {
   # Fish enables this for completions, but Home Manager 26.05 sets programs.man.package to null on Darwin.
@@ -448,8 +411,6 @@ in
       bind s display-popup -w 90% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
-      bind C-i display-popup -d "#{pane_current_path}" -E "${gh-issue-picker}/bin/gh-issue-picker"
-      bind C-p display-popup -d "#{pane_current_path}" -E "${gh-pr-picker}/bin/gh-pr-picker"
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
       bind C-g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "gh dash"
       bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
