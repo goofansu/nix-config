@@ -130,24 +130,24 @@ in
     settings.keybindings = {
       issues = [
         {
-          key = "t";
+          key = "ctrl+r";
           name = "triage";
           command = "gh ai triage {{.IssueNumber}}";
         }
         {
-          key = "w";
+          key = "ctrl+w";
           name = "work";
           command = "gh ai work {{.IssueNumber}}";
         }
       ];
       prs = [
         {
-          key = "v";
+          key = "ctrl+r";
           name = "review";
           command = "gh ai review {{.PrNumber}}";
         }
         {
-          key = "w";
+          key = "ctrl+w";
           name = "resume";
           command = "gh ai resume {{.PrNumber}}";
         }
