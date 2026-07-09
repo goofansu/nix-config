@@ -145,7 +145,7 @@ in
     settings.keybindings = {
       issues = [
         {
-          key = "ctrl+r";
+          key = "ctrl+p";
           name = "plan";
           command = "gh ai plan {{.IssueNumber}}";
         }
