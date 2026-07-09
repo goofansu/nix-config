@@ -21,7 +21,7 @@ function usage
         '  help' \
         '      Show this help' \
         '' \
-        'GLOBAL FLAGS' \
+        'COMMON FLAGS' \
         '  --prompt PROMPT  Custom prompt template for the agent.' \
         '' \
         'COMMAND FLAGS' \
@@ -373,6 +373,12 @@ function run_pr_agent
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --branch '--branch=*'
+                echo 'gh ai: --branch is not supported' >&2
+                exit 2
+            case --base '--base=*'
+                echo 'gh ai: --base is not supported' >&2
+                exit 2
             case '*'
                 set -a pr_args $argv[1]
         end

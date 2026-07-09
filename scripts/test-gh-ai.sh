@@ -54,7 +54,7 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_before "$output" '  plan [issue-number | gh issue list filters...]' '  implement [issue-number | gh issue list filters...]'
 	assert_before "$output" '  implement [issue-number | gh issue list filters...]' '  implement --pr [pr-number | gh pr list filters...]'
 	assert_before "$output" '  implement --pr [pr-number | gh pr list filters...]' '  review [pr-number | gh pr list filters...]'
-	assert_contains "$output" 'GLOBAL FLAGS'
+	assert_contains "$output" 'COMMON FLAGS'
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
 	assert_contains "$output" '  implement:'
@@ -349,6 +349,23 @@ test_review_passes_pr_title_as_name_with_remote_control() {
 	assert_contains "$(cat "$tmp/tmux-calls")" 'Review 456'
 }
 
+test_review_rejects_branch_options() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	if run_gh_ai "$tmp" review 456 --base main 2>"$tmp/stderr-base"; then
+		fail 'expected review --base to fail'
+	fi
+	if run_gh_ai "$tmp" review 456 --branch=issue-456 2>"$tmp/stderr-branch"; then
+		fail 'expected review --branch= to fail'
+	fi
+
+	assert_contains "$(cat "$tmp/stderr-base")" 'gh ai: --base is not supported'
+	assert_contains "$(cat "$tmp/stderr-branch")" 'gh ai: --branch is not supported'
+	assert_file_missing "$tmp/tmux-calls"
+}
+
 test_implement_pr_direct_number_skips_pr_picker() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -472,6 +489,7 @@ for test_name in \
 	test_implement_issue_existing_branch_switches_without_create \
 	test_implement_issue_filter_uses_issue_picker_with_filters \
 	test_review_passes_pr_title_as_name_with_remote_control \
+	test_review_rejects_branch_options \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_implement_pr_direct_number_skips_pr_picker \
 	test_implement_pr_flag_after_number_skips_pr_picker \
