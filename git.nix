@@ -158,8 +158,7 @@ in
           key = "ctrl+b";
           name = "implement from base";
           command = ''
-            base=$(git branch --format='%(refname:short)' | fzf --prompt='Base branch: ') &&
-            gh ai implement {{.IssueNumber}} --base "$base"
+            set base (git branch --format="%(refname:short)" | fzf --prompt="Base branch: "); and gh ai implement {{.IssueNumber}} --base "$base"
           '';
         }
       ];
