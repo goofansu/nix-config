@@ -109,6 +109,20 @@ in
   programs.gh-dash = {
     enable = true;
     package = pkgs-unstable.gh-dash;
+    settings.prSections = [
+      {
+        title = "My Pull Requests";
+        filters = "is:open author:@me";
+      }
+      {
+        title = "Needs My Review";
+        filters = "is:open review-requested:@me";
+      }
+      {
+        title = "Involved";
+        filters = "is:open involves:@me -author:@me";
+      }
+    ];
     settings.issuesSections = [
       {
         title = "My Issues";
