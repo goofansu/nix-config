@@ -37,10 +37,10 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" 'USAGE'
 	assert_contains "$output" '  gh ai <command> [flags]'
 	assert_contains "$output" '  import <url>'
-	assert_contains "$output" '  review [pr-number | gh-pr-list filters...]'
-	assert_contains "$output" '  resume [pr-number | gh-pr-list filters...]'
-	assert_contains "$output" '  triage [issue-number]'
-	assert_contains "$output" '  work [issue-number]'
+	assert_contains "$output" '  review [pr-number | gh pr list filters...]'
+	assert_contains "$output" '  resume [pr-number | gh pr list filters...]'
+	assert_contains "$output" '  triage [issue-number | gh issue list filters...]'
+	assert_contains "$output" '  work [issue-number | gh issue list filters...]'
 	assert_contains "$output" 'GLOBAL FLAGS'
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
@@ -64,10 +64,13 @@ case "$*" in
 repo\ view)
 	printf '%s\n' main
 	;;
-issue\ list\ --author\ @me)
+issue\ list\ *--author\ @me*)
 	printf '%s\n' '777	Selected authored issue'
 	;;
-issue\ list)
+issue\ list\ *--label\ ready-for-agent*)
+	printf '%s\n' '999	Selected filtered issue'
+	;;
+issue\ list*)
 	printf '%s\n' '#999	Selected issue'
 	;;
 issue\ view\ *\ --json\ title\ -q\ .title)
@@ -77,7 +80,7 @@ ready-for-agent)
 	printf '%s\n' '999	Selected ready-for-agent issue'
 	;;
 pr\ list*)
-	printf '%s\n' '888	Selected PR'
+	printf '%s\n' '#888	Selected PR'
 	;;
 pr\ view\ *\ --json\ title\ -q\ .title)
 	printf '%s\n' 'Improve PR Flow!'
@@ -140,7 +143,7 @@ run_gh_ai() {
 		fish "$repo_root/scripts/gh-ai.fish" "$@"
 }
 
-test_work_direct_number_skips_ready_for_agent_picker() {
+test_work_direct_number_skips_issue_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
@@ -148,13 +151,13 @@ test_work_direct_number_skips_ready_for_agent_picker() {
 	run_gh_ai "$tmp" work 123
 
 	assert_file_missing "$tmp/fzf-called"
-	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^ready-for-agent$' "$tmp/gh-calls" || fail "did not expect gh ready-for-agent for direct issue number"
+	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#123"
 	assert_contains "$(cat "$tmp/tmux-calls")" "Closes #123"
 }
 
-test_work_without_number_uses_ready_for_agent_picker() {
+test_work_without_number_uses_issue_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
@@ -162,7 +165,7 @@ test_work_without_number_uses_ready_for_agent_picker() {
 	run_gh_ai "$tmp" work
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
-	grep -q '^ready-for-agent$' "$tmp/gh-calls" || fail "expected gh ready-for-agent"
+	assert_contains "$(cat "$tmp/gh-calls")" "issue list --json number,title,author,updatedAt --template"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-999-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" "#999"
 }
@@ -175,7 +178,7 @@ test_review_numeric_filter_still_uses_picker_when_not_first_arg() {
 	run_gh_ai "$tmp" review --search 456
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker for non-first numeric filter value"
-	grep -q '^pr list --search 456$' "$tmp/gh-calls" || fail "expected gh pr list to receive filters"
+	assert_contains "$(cat "$tmp/gh-calls")" "pr list --search 456 --json number,title,author,updatedAt --template"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:888 -x cx -- --remote-control --name 'Improve PR Flow!'"
 }
 
@@ -243,7 +246,7 @@ test_triage_direct_number_uses_triage_prompt_and_work_options() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
 }
 
-test_triage_without_number_uses_authored_issue_picker() {
+test_triage_without_number_uses_issue_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
@@ -251,9 +254,35 @@ test_triage_without_number_uses_authored_issue_picker() {
 	run_gh_ai "$tmp" triage
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
-	grep -q '^issue list --author @me$' "$tmp/gh-calls" || fail "expected gh issue list --author @me"
+	assert_contains "$(cat "$tmp/gh-calls")" "issue list --json number,title,author,updatedAt --template"
+	assert_contains "$(cat "$tmp/tmux-calls")" "issue-999"
+	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 999"
+}
+
+test_triage_issue_filter_uses_issue_picker_with_filters() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" triage --author @me
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "issue list --author @me --json number,title,author,updatedAt --template"
 	assert_contains "$(cat "$tmp/tmux-calls")" "issue-777"
 	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 777"
+}
+
+test_work_issue_filter_uses_issue_picker_with_filters() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" work --label ready-for-agent
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "issue list --label ready-for-agent --json number,title,author,updatedAt --template"
+	assert_contains "$(cat "$tmp/tmux-calls")" "issue-999"
+	assert_contains "$(cat "$tmp/tmux-calls")" "#999"
 }
 
 test_review_passes_pr_title_as_name_with_remote_control() {
@@ -293,13 +322,15 @@ test_import_default_cx_gets_remote_control() {
 
 for test_name in \
 	test_help_uses_gh_style_usage_and_flags \
-	test_work_direct_number_skips_ready_for_agent_picker \
-	test_work_without_number_uses_ready_for_agent_picker \
+	test_work_direct_number_skips_issue_picker \
+	test_work_without_number_uses_issue_picker \
 	test_triage_passes_issue_title_as_name_with_remote_control \
 	test_work_base_option_adds_base_flag \
 	test_work_existing_issue_branch_switches_without_create \
 	test_triage_direct_number_uses_triage_prompt_and_work_options \
-	test_triage_without_number_uses_authored_issue_picker \
+	test_triage_without_number_uses_issue_picker \
+	test_triage_issue_filter_uses_issue_picker_with_filters \
+	test_work_issue_filter_uses_issue_picker_with_filters \
 	test_review_passes_pr_title_as_name_with_remote_control \
 	test_resume_passes_pr_title_as_name_with_remote_control \
 	test_import_default_cx_gets_remote_control \

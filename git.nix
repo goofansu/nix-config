@@ -100,9 +100,6 @@ in
     extensions = [ gh-ai ];
     settings = {
       git_protocol = "ssh";
-      aliases = {
-        ready-for-agent = "issue list --state open --assignee @me --label ready-for-agent";
-      };
     };
   };
 

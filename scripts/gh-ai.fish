@@ -10,13 +10,13 @@ function usage
         COMMANDS \
         '  import <url>' \
         '      Inspect a URL and create a GitHub issue' \
-        '  review [pr-number | gh-pr-list filters...]' \
+        '  review [pr-number | gh pr list filters...]' \
         '      Review a PR by number, or select one with fzf' \
-        '  resume [pr-number | gh-pr-list filters...]' \
+        '  resume [pr-number | gh pr list filters...]' \
         '      Continue work on a PR by number, or select one with fzf' \
-        '  triage [issue-number]' \
-        '      Triage an issue by number, or select one of your issues with fzf' \
-        '  work [issue-number]' \
+        '  triage [issue-number | gh issue list filters...]' \
+        '      Triage an issue by number, or select one with fzf' \
+        '  work [issue-number | gh issue list filters...]' \
         '      Work on an issue by number, or select one with fzf' \
         '  help' \
         '      Show this help' \
@@ -45,15 +45,21 @@ function usage
 end
 
 function select_pr
-    gh pr list $argv | fzf | awk '{print $1}'
+    gh pr list $argv \
+        --json number,title,author,updatedAt \
+        --template '{{range .}}{{tablerow (printf "#%v" .number | color "green") .title .author.login (timeago .updatedAt)}}{{end}}{{tablerender}}' \
+        | fzf --ansi \
+        | awk '{print $1}' \
+        | sed 's/^#//'
 end
 
-function select_ready_for_agent_issue
-    gh ready-for-agent | fzf | awk '{print $1}' | sed 's/^#//'
-end
-
-function select_authored_issue
-    gh issue list --author '@me' | fzf | awk '{print $1}' | sed 's/^#//'
+function select_issue
+    gh issue list $argv \
+        --json number,title,author,updatedAt \
+        --template '{{range .}}{{tablerow (printf "#%v" .number | color "green") .title .author.login (timeago .updatedAt)}}{{end}}{{tablerender}}' \
+        | fzf --ansi \
+        | awk '{print $1}' \
+        | sed 's/^#//'
 end
 
 function is_number
@@ -102,9 +108,8 @@ end
 
 function run_issue_agent
     set -l command_name $argv[1]
-    set -l picker_function $argv[2]
-    set -l default_prompt $argv[3]
-    set -e argv[1..3]
+    set -l default_prompt $argv[2]
+    set -e argv[1..2]
 
     set -l custom_prompt ''
     set -l branch ''
@@ -154,11 +159,7 @@ function run_issue_agent
             exit 2
         end
     else
-        if test (count $issue_args) -gt 0
-            echo "gh ai $command_name: expected an issue number or no arguments" >&2
-            exit 2
-        end
-        set issue ($picker_function)
+        set issue (select_issue $issue_args)
         or exit 0
         test -n "$issue"; or exit 0
     end
@@ -203,11 +204,11 @@ function run_issue_agent
 end
 
 function work
-    run_issue_agent work select_ready_for_agent_issue 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change. When you open the PR, include a Closes #{issue} line in the PR body.' $argv
+    run_issue_agent work 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change. When you open the PR, include a Closes #{issue} line in the PR body.' $argv
 end
 
 function triage
-    run_issue_agent triage select_authored_issue '/triage {issue}' $argv
+    run_issue_agent triage '/triage {issue}' $argv
 end
 
 function import_url
