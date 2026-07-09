@@ -108,11 +108,11 @@ in
     package = pkgs-unstable.gh-dash;
     settings.prSections = [
       {
-        title = "My Pull Requests";
+        title = "My pull requests";
         filters = "is:open author:@me";
       }
       {
-        title = "Needs My Review";
+        title = "Needs my review";
         filters = "is:open review-requested:@me";
       }
       {
@@ -122,11 +122,11 @@ in
     ];
     settings.issuesSections = [
       {
-        title = "My Issues";
+        title = "My issues";
         filters = "is:open author:@me";
       }
       {
-        title = "Triaged";
+        title = "Ready for agent";
         filters = "is:open assignee:@me label:ready-for-agent";
       }
       {
