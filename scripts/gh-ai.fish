@@ -10,10 +10,12 @@ function usage
         COMMANDS \
         '  import <url>' \
         '      Inspect a URL and create a GitHub issue' \
-        '  review [pr-number | gh pr list filters...]' \
-        '      Review a PR by number, or select one with fzf' \
+        '  open [pr-number | gh pr list filters...]' \
+        '      Open a PR worktree by number, or select one with fzf' \
         '  resume [pr-number | gh pr list filters...]' \
         '      Continue work on a PR by number, or select one with fzf' \
+        '  review [pr-number | gh pr list filters...]' \
+        '      Review a PR by number, or select one with fzf' \
         '  triage [issue-number | gh issue list filters...]' \
         '      Triage an issue by number, or select one with fzf' \
         '  work [issue-number | gh issue list filters...]' \
@@ -40,6 +42,7 @@ function usage
         "  gh ai work 123 --prompt 'Work issue {issue}'" \
         "  gh ai triage 123 --prompt '/triage {issue}'" \
         '  gh ai import https://example.com/ticket/123' \
+        '  gh ai open 456' \
         "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'" \
         "  gh ai resume --author octocat --prompt 'Continue PR {pr}'"
 end
@@ -306,6 +309,31 @@ function run_pr_agent
     open_tmux_window "$command"
 end
 
+function open
+    set -l pr ''
+    set -l pr_args
+
+    while test (count $argv) -gt 0
+        set -a pr_args $argv[1]
+        set -e argv[1]
+    end
+
+    if test (count $pr_args) -gt 0; and is_number $pr_args[1]
+        set pr $pr_args[1]
+        if test (count $pr_args) -gt 1
+            echo 'gh ai: unexpected filters after direct PR number' >&2
+            exit 2
+        end
+    else
+        set pr (select_pr $pr_args)
+        or exit 0
+        test -n "$pr"; or exit 0
+    end
+
+    set -l command "wt switch "(fish_quote "pr:$pr")" -x cx"
+    open_tmux_window "$command"
+end
+
 function review
     run_pr_agent '/review {pr}' $argv
 end
@@ -318,6 +346,9 @@ switch $argv[1]
     case import
         set -e argv[1]
         import_url $argv
+    case open
+        set -e argv[1]
+        open $argv
     case review
         set -e argv[1]
         review $argv

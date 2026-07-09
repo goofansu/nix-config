@@ -180,6 +180,11 @@ in
           name = "resume";
           command = "gh ai resume {{.PrNumber}}";
         }
+        {
+          key = "ctrl+o";
+          name = "open";
+          command = "gh ai open {{.PrNumber}}";
+        }
       ];
     };
   };

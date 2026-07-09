@@ -20,6 +20,15 @@ assert_not_contains() {
 	[[ "$haystack" != *"$needle"* ]] || fail "expected output not to contain '$needle', got: $haystack"
 }
 
+assert_before() {
+	local haystack="$1"
+	local earlier="$2"
+	local later="$3"
+	local rest="${haystack#*"$earlier"}"
+	[[ "$rest" != "$haystack" ]] || fail "expected output to contain '$earlier', got: $haystack"
+	[[ "$rest" == *"$later"* ]] || fail "expected '$earlier' to appear before '$later', got: $haystack"
+}
+
 assert_file_missing() {
 	local path="$1"
 	[[ ! -e "$path" ]] || fail "expected $path to be absent"
@@ -41,6 +50,11 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '  resume [pr-number | gh pr list filters...]'
 	assert_contains "$output" '  triage [issue-number | gh issue list filters...]'
 	assert_contains "$output" '  work [issue-number | gh issue list filters...]'
+	assert_before "$output" '  import <url>' '  open [pr-number | gh pr list filters...]'
+	assert_before "$output" '  open [pr-number | gh pr list filters...]' '  resume [pr-number | gh pr list filters...]'
+	assert_before "$output" '  resume [pr-number | gh pr list filters...]' '  review [pr-number | gh pr list filters...]'
+	assert_before "$output" '  review [pr-number | gh pr list filters...]' '  triage [issue-number | gh issue list filters...]'
+	assert_before "$output" '  triage [issue-number | gh issue list filters...]' '  work [issue-number | gh issue list filters...]'
 	assert_contains "$output" 'GLOBAL FLAGS'
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
@@ -309,6 +323,19 @@ test_resume_passes_pr_title_as_name_with_remote_control() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
 }
 
+test_open_direct_number_opens_pr_worktree_without_agent_prompt() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" open 456
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" "Improve PR Flow!"
+}
+
 test_import_default_cx_gets_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -333,6 +360,7 @@ for test_name in \
 	test_work_issue_filter_uses_issue_picker_with_filters \
 	test_review_passes_pr_title_as_name_with_remote_control \
 	test_resume_passes_pr_title_as_name_with_remote_control \
+	test_open_direct_number_opens_pr_worktree_without_agent_prompt \
 	test_import_default_cx_gets_remote_control \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_resume_direct_number_skips_pr_picker; do
