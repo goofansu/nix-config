@@ -203,6 +203,23 @@ test_plan_rejects_branch_options() {
 	assert_file_missing "$tmp/tmux-calls"
 }
 
+test_plan_rejects_base_and_equals_branch_options() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	if run_gh_ai "$tmp" plan 123 --base main 2>"$tmp/stderr-base"; then
+		fail 'expected plan --base to fail'
+	fi
+	if run_gh_ai "$tmp" plan 123 --branch=issue-123 2>"$tmp/stderr-branch"; then
+		fail 'expected plan --branch= to fail'
+	fi
+
+	assert_contains "$(cat "$tmp/stderr-base")" 'gh ai plan: --base is not supported'
+	assert_contains "$(cat "$tmp/stderr-branch")" 'gh ai plan: --branch is not supported'
+	assert_file_missing "$tmp/tmux-calls"
+}
+
 test_plan_passes_issue_title_as_name_with_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -372,16 +389,36 @@ test_implement_pr_filter_uses_pr_picker_with_flag_at_end() {
 	assert_contains "$(cat "$tmp/tmux-calls")" 'wt switch pr:888'
 }
 
+test_implement_pr_filter_uses_pr_picker_with_flag_first() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" implement --pr --author @me
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "pr list --author @me --json number,title,author,updatedAt --template"
+	assert_contains "$(cat "$tmp/tmux-calls")" 'wt switch pr:888'
+}
+
 test_implement_pr_rejects_branch_options() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	if run_gh_ai "$tmp" implement --pr 456 --base main 2>"$tmp/stderr"; then
+	if run_gh_ai "$tmp" implement --pr 456 --base main 2>"$tmp/stderr-base"; then
 		fail 'expected implement --pr --base to fail'
 	fi
+	if run_gh_ai "$tmp" implement --pr 456 --branch=issue-456 2>"$tmp/stderr-branch"; then
+		fail 'expected implement --pr --branch= to fail'
+	fi
+	if run_gh_ai "$tmp" implement --pr 456 --base=main 2>"$tmp/stderr-base-equals"; then
+		fail 'expected implement --pr --base= to fail'
+	fi
 
-	assert_contains "$(cat "$tmp/stderr")" 'gh ai implement --pr: --base is not supported'
+	assert_contains "$(cat "$tmp/stderr-base")" 'gh ai implement --pr: --base is not supported'
+	assert_contains "$(cat "$tmp/stderr-branch")" 'gh ai implement --pr: --branch is not supported'
+	assert_contains "$(cat "$tmp/stderr-base-equals")" 'gh ai implement --pr: --base is not supported'
 	assert_file_missing "$tmp/tmux-calls"
 }
 
@@ -414,6 +451,7 @@ for test_name in \
 	test_plan_direct_number_skips_issue_picker_and_does_not_switch \
 	test_plan_without_number_uses_issue_picker_without_switching \
 	test_plan_rejects_branch_options \
+	test_plan_rejects_base_and_equals_branch_options \
 	test_plan_passes_issue_title_as_name_with_remote_control \
 	test_plan_issue_filter_uses_issue_picker_with_filters \
 	test_implement_issue_direct_number_skips_issue_picker \
@@ -427,6 +465,7 @@ for test_name in \
 	test_implement_pr_flag_after_number_skips_pr_picker \
 	test_implement_pr_without_number_uses_pr_picker \
 	test_implement_pr_filter_uses_pr_picker_with_flag_at_end \
+	test_implement_pr_filter_uses_pr_picker_with_flag_first \
 	test_implement_pr_rejects_branch_options \
 	test_old_commands_are_unknown \
 	test_import_default_cx_gets_remote_control; do
