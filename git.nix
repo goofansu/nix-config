@@ -180,11 +180,6 @@ in
           name = "implement";
           command = "gh ai implement --pr {{.PrNumber}}";
         }
-        {
-          key = "ctrl+o";
-          name = "open";
-          command = "wt switch pr:{{.PrNumber}}";
-        }
       ];
     };
   };
