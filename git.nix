@@ -142,6 +142,20 @@ in
         filters = "is:open involves:@me -author:@me";
       }
     ];
+    settings.notificationsSections = [
+      {
+        title = "All";
+        filters = "";
+      }
+      {
+        title = "Participating";
+        filters = "reason:participating";
+      }
+      {
+        title = "Subscribed";
+        filters = "reason:subscribed";
+      }
+    ];
     settings.keybindings = {
       issues = [
         {
