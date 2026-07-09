@@ -287,6 +287,17 @@ test_implement_issue_base_option_adds_base_flag() {
 	assert_contains "$(cat "$tmp/tmux-calls")" 'Implement 123'
 }
 
+test_implement_issue_prompt_renders_issue_branch_and_base() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" implement 123 --base main --prompt 'Issue {issue} branch {branch} base {base}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "'Issue 123 branch issue-123-fix-fancy-bug base main'"
+}
+
 test_implement_issue_existing_branch_switches_without_create() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -457,6 +468,7 @@ for test_name in \
 	test_implement_issue_direct_number_skips_issue_picker \
 	test_implement_issue_without_number_uses_issue_picker \
 	test_implement_issue_base_option_adds_base_flag \
+	test_implement_issue_prompt_renders_issue_branch_and_base \
 	test_implement_issue_existing_branch_switches_without_create \
 	test_implement_issue_filter_uses_issue_picker_with_filters \
 	test_review_passes_pr_title_as_name_with_remote_control \
