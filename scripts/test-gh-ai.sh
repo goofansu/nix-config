@@ -46,26 +46,30 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" 'USAGE'
 	assert_contains "$output" '  gh ai <command> [flags]'
 	assert_contains "$output" '  import <url>'
+	assert_contains "$output" '  plan [issue-number | gh issue list filters...]'
+	assert_contains "$output" '  implement [issue-number | gh issue list filters...]'
+	assert_contains "$output" '  implement --pr [pr-number | gh pr list filters...]'
 	assert_contains "$output" '  review [pr-number | gh pr list filters...]'
-	assert_contains "$output" '  resume [pr-number | gh pr list filters...]'
-	assert_contains "$output" '  triage [issue-number | gh issue list filters...]'
-	assert_contains "$output" '  work [issue-number | gh issue list filters...]'
-	assert_before "$output" '  import <url>' '  open [pr-number | gh pr list filters...]'
-	assert_before "$output" '  open [pr-number | gh pr list filters...]' '  resume [pr-number | gh pr list filters...]'
-	assert_before "$output" '  resume [pr-number | gh pr list filters...]' '  review [pr-number | gh pr list filters...]'
-	assert_before "$output" '  review [pr-number | gh pr list filters...]' '  triage [issue-number | gh issue list filters...]'
-	assert_before "$output" '  triage [issue-number | gh issue list filters...]' '  work [issue-number | gh issue list filters...]'
+	assert_before "$output" '  import <url>' '  plan [issue-number | gh issue list filters...]'
+	assert_before "$output" '  plan [issue-number | gh issue list filters...]' '  implement [issue-number | gh issue list filters...]'
+	assert_before "$output" '  implement [issue-number | gh issue list filters...]' '  implement --pr [pr-number | gh pr list filters...]'
+	assert_before "$output" '  implement --pr [pr-number | gh pr list filters...]' '  review [pr-number | gh pr list filters...]'
 	assert_contains "$output" 'GLOBAL FLAGS'
 	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
-	assert_contains "$output" '  work, triage:'
-	assert_contains "$output" '    --base BASE      Branch to start the work from. Omit to use the default branch.'
-	assert_contains "$output" '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>-<title-slug>.'
-	assert_contains "$output" '  open:   {pr}'
-	assert_contains "$output" '  triage: {issue}'
-	assert_contains "$output" '  work:   {issue}'
-	assert_not_contains "$output" '  work:   {issue}, {branch}, {base}'
-	assert_not_contains "$output" "Work issue {issue} on {branch} from {base}"
+	assert_contains "$output" '  implement:'
+	assert_contains "$output" '    --base BASE      Branch to start issue implementation from. Omit to use the default branch.'
+	assert_contains "$output" '    --branch BRANCH  Branch to create for issue implementation. Defaults to issue-<number>-<title-slug>.'
+	assert_contains "$output" '    --pr            Continue implementation from a pull request instead of an issue.'
+	assert_contains "$output" '  import:        {url}'
+	assert_contains "$output" '  plan:          {issue}'
+	assert_contains "$output" '  implement:     {issue}, {branch}, {base}'
+	assert_contains "$output" '  implement --pr:{pr}'
+	assert_contains "$output" '  review:        {pr}'
+	assert_not_contains "$output" '  work '
+	assert_not_contains "$output" '  triage '
+	assert_not_contains "$output" '  resume '
+	assert_not_contains "$output" '  open '
 }
 
 with_stubs() {
@@ -158,31 +162,139 @@ run_gh_ai() {
 		fish "$repo_root/scripts/gh-ai.fish" "$@"
 }
 
-test_work_direct_number_skips_issue_picker() {
+test_plan_direct_number_skips_issue_picker_and_does_not_switch() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" work 123
+	run_gh_ai "$tmp" plan 123 --prompt 'Plan {issue}'
+
+	assert_file_missing "$tmp/fzf-called"
+	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
+	assert_fish_parses_tmux_command "$tmp"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" 'wt switch'
+	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control --name 'Fix Fancy Bug!' -- 'Plan 123'"
+}
+
+test_plan_without_number_uses_issue_picker_without_switching() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" plan
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "issue list --json number,title,author,updatedAt --template"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" 'wt switch'
+	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control --name 'Fix Fancy Bug!'"
+	assert_contains "$(cat "$tmp/tmux-calls")" '#999'
+}
+
+test_plan_rejects_branch_options() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	if run_gh_ai "$tmp" plan 123 --branch issue-123 2>"$tmp/stderr"; then
+		fail 'expected plan --branch to fail'
+	fi
+
+	assert_contains "$(cat "$tmp/stderr")" 'gh ai plan: --branch is not supported'
+	assert_file_missing "$tmp/tmux-calls"
+}
+
+test_plan_passes_issue_title_as_name_with_remote_control() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" plan 123
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" 'wt switch'
+	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control --name 'Fix Fancy Bug!'"
+	assert_contains "$(cat "$tmp/tmux-calls")" '#123'
+	assert_contains "$(cat "$tmp/tmux-calls")" 'Implementation Plan'
+}
+
+test_plan_issue_filter_uses_issue_picker_with_filters() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" plan --author @me
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "issue list --author @me --json number,title,author,updatedAt --template"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" 'wt switch'
+	assert_contains "$(cat "$tmp/tmux-calls")" '#777'
+}
+
+test_implement_issue_direct_number_skips_issue_picker() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" implement 123
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "#123"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Closes #123"
+	assert_contains "$(cat "$tmp/tmux-calls")" '#123'
+	assert_contains "$(cat "$tmp/tmux-calls")" 'implementation plan'
+	assert_contains "$(cat "$tmp/tmux-calls")" 'Closes #123'
 }
 
-test_work_without_number_uses_issue_picker() {
+test_implement_issue_without_number_uses_issue_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" work
+	run_gh_ai "$tmp" implement
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
 	assert_contains "$(cat "$tmp/gh-calls")" "issue list --json number,title,author,updatedAt --template"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-999-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "#999"
+	assert_contains "$(cat "$tmp/tmux-calls")" '#999'
+}
+
+test_implement_issue_base_option_adds_base_flag() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" implement 123 --base main --prompt 'Implement {issue}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x cx -- --remote-control --name 'Fix Fancy Bug!'"
+	assert_contains "$(cat "$tmp/tmux-calls")" 'Implement 123'
+}
+
+test_implement_issue_existing_branch_switches_without_create() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	EXISTING_BRANCH=issue-123-fix-fancy-bug run_gh_ai "$tmp" implement 123 --prompt 'Implement {issue}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/git-calls")" 'show-ref --verify --quiet refs/heads/issue-123-fix-fancy-bug'
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" 'wt switch -c issue-123-fix-fancy-bug'
+	assert_contains "$(cat "$tmp/tmux-calls")" 'Implement 123'
+}
+
+test_implement_issue_filter_uses_issue_picker_with_filters() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" implement --label ready-for-agent
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "issue list --label ready-for-agent --json number,title,author,updatedAt --template"
+	assert_contains "$(cat "$tmp/tmux-calls")" 'issue-999'
+	assert_contains "$(cat "$tmp/tmux-calls")" '#999'
 }
 
 test_review_numeric_filter_still_uses_picker_when_not_first_arg() {
@@ -197,109 +309,6 @@ test_review_numeric_filter_still_uses_picker_when_not_first_arg() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:888 -x cx -- --remote-control --name 'Improve PR Flow!'"
 }
 
-test_resume_direct_number_skips_pr_picker() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" resume 456 --prompt 'Resume {pr}'
-
-	assert_file_missing "$tmp/fzf-called"
-	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^pr list' "$tmp/gh-calls" || fail "did not expect gh pr list for direct PR number"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- --remote-control --name 'Improve PR Flow!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
-}
-
-test_triage_passes_issue_title_as_name_with_remote_control() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage 123
-
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
-}
-
-test_work_base_option_adds_base_flag() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" work 123 --base main --prompt 'Work {issue}'
-
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x cx -- --remote-control --name 'Fix Fancy Bug!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
-}
-
-test_work_existing_issue_branch_switches_without_create() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	EXISTING_BRANCH=issue-123-fix-fancy-bug run_gh_ai "$tmp" work 123 --prompt 'Work {issue}'
-
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/git-calls")" "show-ref --verify --quiet refs/heads/issue-123-fix-fancy-bug"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Work 123"
-}
-
-test_triage_direct_number_uses_triage_prompt_and_work_options() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage 123 --base main
-
-	assert_file_missing "$tmp/fzf-called"
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -b main -x cx -- --remote-control --name 'Fix Fancy Bug!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 123"
-}
-
-test_triage_without_number_uses_issue_picker() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage
-
-	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
-	assert_contains "$(cat "$tmp/gh-calls")" "issue list --json number,title,author,updatedAt --template"
-	assert_contains "$(cat "$tmp/tmux-calls")" "issue-999"
-	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 999"
-}
-
-test_triage_issue_filter_uses_issue_picker_with_filters() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" triage --author @me
-
-	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
-	assert_contains "$(cat "$tmp/gh-calls")" "issue list --author @me --json number,title,author,updatedAt --template"
-	assert_contains "$(cat "$tmp/tmux-calls")" "issue-777"
-	assert_contains "$(cat "$tmp/tmux-calls")" "/triage 777"
-}
-
-test_work_issue_filter_uses_issue_picker_with_filters() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" work --label ready-for-agent
-
-	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
-	assert_contains "$(cat "$tmp/gh-calls")" "issue list --label ready-for-agent --json number,title,author,updatedAt --template"
-	assert_contains "$(cat "$tmp/tmux-calls")" "issue-999"
-	assert_contains "$(cat "$tmp/tmux-calls")" "#999"
-}
-
 test_review_passes_pr_title_as_name_with_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -309,45 +318,84 @@ test_review_passes_pr_title_as_name_with_remote_control() {
 
 	assert_fish_parses_tmux_command "$tmp"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- --remote-control --name 'Improve PR Flow!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Review 456"
+	assert_contains "$(cat "$tmp/tmux-calls")" 'Review 456'
 }
 
-test_resume_passes_pr_title_as_name_with_remote_control() {
+test_implement_pr_direct_number_skips_pr_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" resume 456 --prompt 'Resume {pr}'
+	run_gh_ai "$tmp" implement --pr 456 --prompt 'Continue {pr}'
 
-	assert_fish_parses_tmux_command "$tmp"
+	assert_file_missing "$tmp/fzf-called"
+	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^pr list' "$tmp/gh-calls" || fail "did not expect gh pr list for direct PR number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- --remote-control --name 'Improve PR Flow!'"
-	assert_contains "$(cat "$tmp/tmux-calls")" "Resume 456"
+	assert_contains "$(cat "$tmp/tmux-calls")" 'Continue 456'
 }
 
-test_open_direct_number_opens_pr_worktree_without_agent_prompt() {
+test_implement_pr_flag_after_number_skips_pr_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" open 456
+	run_gh_ai "$tmp" implement 456 --pr --prompt 'Continue {pr}'
 
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "Improve PR Flow!"
+	assert_file_missing "$tmp/fzf-called"
+	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^pr list' "$tmp/gh-calls" || fail "did not expect gh pr list for direct PR number"
+	assert_contains "$(cat "$tmp/tmux-calls")" 'wt switch pr:456 -x cx -- --remote-control --name'
+	assert_contains "$(cat "$tmp/tmux-calls")" 'Continue 456'
 }
 
-test_open_prompt_passes_rendered_prompt_without_agent_options() {
+test_implement_pr_without_number_uses_pr_picker() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" open 456 --prompt 'Open PR {pr}'
+	run_gh_ai "$tmp" implement --pr
 
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- 'Open PR 456'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" "Improve PR Flow!"
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "pr list --json number,title,author,updatedAt --template"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:888 -x cx -- --remote-control --name 'Improve PR Flow!'"
+	assert_contains "$(cat "$tmp/tmux-calls")" '#888'
+}
+
+test_implement_pr_filter_uses_pr_picker_with_flag_at_end() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" implement --author @me --pr
+
+	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
+	assert_contains "$(cat "$tmp/gh-calls")" "pr list --author @me --json number,title,author,updatedAt --template"
+	assert_contains "$(cat "$tmp/tmux-calls")" 'wt switch pr:888'
+}
+
+test_implement_pr_rejects_branch_options() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	if run_gh_ai "$tmp" implement --pr 456 --base main 2>"$tmp/stderr"; then
+		fail 'expected implement --pr --base to fail'
+	fi
+
+	assert_contains "$(cat "$tmp/stderr")" 'gh ai implement --pr: --base is not supported'
+	assert_file_missing "$tmp/tmux-calls"
+}
+
+test_old_commands_are_unknown() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	for command in work triage resume open; do
+		if run_gh_ai "$tmp" "$command" 123 >"$tmp/stdout-$command" 2>"$tmp/stderr-$command"; then
+			fail "expected old command $command to fail"
+		fi
+		assert_contains "$(cat "$tmp/stderr-$command")" "gh ai: unknown command '$command'"
+	done
 }
 
 test_import_default_cx_gets_remote_control() {
@@ -363,22 +411,25 @@ test_import_default_cx_gets_remote_control() {
 
 for test_name in \
 	test_help_uses_gh_style_usage_and_flags \
-	test_work_direct_number_skips_issue_picker \
-	test_work_without_number_uses_issue_picker \
-	test_triage_passes_issue_title_as_name_with_remote_control \
-	test_work_base_option_adds_base_flag \
-	test_work_existing_issue_branch_switches_without_create \
-	test_triage_direct_number_uses_triage_prompt_and_work_options \
-	test_triage_without_number_uses_issue_picker \
-	test_triage_issue_filter_uses_issue_picker_with_filters \
-	test_work_issue_filter_uses_issue_picker_with_filters \
+	test_plan_direct_number_skips_issue_picker_and_does_not_switch \
+	test_plan_without_number_uses_issue_picker_without_switching \
+	test_plan_rejects_branch_options \
+	test_plan_passes_issue_title_as_name_with_remote_control \
+	test_plan_issue_filter_uses_issue_picker_with_filters \
+	test_implement_issue_direct_number_skips_issue_picker \
+	test_implement_issue_without_number_uses_issue_picker \
+	test_implement_issue_base_option_adds_base_flag \
+	test_implement_issue_existing_branch_switches_without_create \
+	test_implement_issue_filter_uses_issue_picker_with_filters \
 	test_review_passes_pr_title_as_name_with_remote_control \
-	test_resume_passes_pr_title_as_name_with_remote_control \
-	test_open_direct_number_opens_pr_worktree_without_agent_prompt \
-	test_open_prompt_passes_rendered_prompt_without_agent_options \
-	test_import_default_cx_gets_remote_control \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
-	test_resume_direct_number_skips_pr_picker; do
+	test_implement_pr_direct_number_skips_pr_picker \
+	test_implement_pr_flag_after_number_skips_pr_picker \
+	test_implement_pr_without_number_uses_pr_picker \
+	test_implement_pr_filter_uses_pr_picker_with_flag_at_end \
+	test_implement_pr_rejects_branch_options \
+	test_old_commands_are_unknown \
+	test_import_default_cx_gets_remote_control; do
 	"$test_name"
 	echo "ok - $test_name"
 done

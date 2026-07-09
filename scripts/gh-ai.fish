@@ -2,7 +2,7 @@
 
 function usage
     printf '%s\n' \
-        'gh ai - Agent helpers for GitHub issues and pull requests' \
+        'gh ai - Agent workflow helpers for GitHub issues and pull requests' \
         '' \
         USAGE \
         '  gh ai <command> [flags]' \
@@ -10,16 +10,14 @@ function usage
         COMMANDS \
         '  import <url>' \
         '      Inspect a URL and create a GitHub issue' \
-        '  open [pr-number | gh pr list filters...]' \
-        '      Open a PR worktree by number, or select one with fzf' \
-        '  resume [pr-number | gh pr list filters...]' \
-        '      Continue work on a PR by number, or select one with fzf' \
+        '  plan [issue-number | gh issue list filters...]' \
+        '      Analyze an issue and create or update its implementation plan' \
+        '  implement [issue-number | gh issue list filters...]' \
+        '      Implement an issue plan by number, or select an issue with fzf' \
+        '  implement --pr [pr-number | gh pr list filters...]' \
+        '      Continue implementation on a PR by number, or select one with fzf' \
         '  review [pr-number | gh pr list filters...]' \
         '      Review a PR by number, or select one with fzf' \
-        '  triage [issue-number | gh issue list filters...]' \
-        '      Triage an issue by number, or select one with fzf' \
-        '  work [issue-number | gh issue list filters...]' \
-        '      Work on an issue by number, or select one with fzf' \
         '  help' \
         '      Show this help' \
         '' \
@@ -27,25 +25,24 @@ function usage
         '  --prompt PROMPT  Custom prompt template for the agent.' \
         '' \
         'COMMAND FLAGS' \
-        '  work, triage:' \
-        '    --base BASE      Branch to start the work from. Omit to use the default branch.' \
-        '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>-<title-slug>.' \
+        '  implement:' \
+        '    --base BASE      Branch to start issue implementation from. Omit to use the default branch.' \
+        '    --branch BRANCH  Branch to create for issue implementation. Defaults to issue-<number>-<title-slug>.' \
+        '    --pr            Continue implementation from a pull request instead of an issue.' \
         '' \
         'PROMPT VARIABLES' \
-        '  import: {url}' \
-        '  open:   {pr}' \
-        '  review: {pr}' \
-        '  resume: {pr}' \
-        '  triage: {issue}' \
-        '  work:   {issue}' \
+        '  import:        {url}' \
+        '  plan:          {issue}' \
+        '  implement:     {issue}, {branch}, {base}' \
+        '  implement --pr:{pr}' \
+        '  review:        {pr}' \
         '' \
         EXAMPLES \
-        "  gh ai work 123 --prompt 'Work issue {issue}'" \
-        "  gh ai triage 123 --prompt '/triage {issue}'" \
         '  gh ai import https://example.com/ticket/123' \
-        '  gh ai open 456' \
-        "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'" \
-        "  gh ai resume --author octocat --prompt 'Continue PR {pr}'"
+        "  gh ai plan 123 --prompt 'Plan issue {issue}'" \
+        "  gh ai implement 123 --prompt 'Implement issue {issue}'" \
+        "  gh ai implement --pr 456 --prompt 'Continue PR {pr}'" \
+        "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'"
 end
 
 function select_pr
@@ -68,6 +65,18 @@ end
 
 function is_number
     test (count $argv) -gt 0; and string match -rq '^[0-9]+$' -- $argv[1]
+end
+
+function argv_contains_branch_options
+    for arg in $argv
+        switch $arg
+            case --branch '--branch=*'
+                return 0
+            case --base '--base=*'
+                return 0
+        end
+    end
+    return 1
 end
 
 function render_template
@@ -207,12 +216,100 @@ function run_issue_agent
     open_tmux_window "$command"
 end
 
-function work
-    run_issue_agent work 'Read the Agent Brief in GitHub issue #{issue}, then implement the requested change. When you open the PR, include a Closes #{issue} line in the PR body.' $argv
+function run_current_repo_issue_agent
+    set -l command_name $argv[1]
+    set -l default_prompt $argv[2]
+    set -e argv[1..2]
+
+    set -l custom_prompt ''
+    set -l issue ''
+    set -l issue_args
+
+    while test (count $argv) -gt 0
+        switch $argv[1]
+            case --prompt
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo "gh ai $command_name: --prompt requires a value" >&2
+                    exit 2
+                end
+                set custom_prompt $argv[1]
+            case '--prompt=*'
+                set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --branch '--branch=*'
+                echo "gh ai $command_name: --branch is not supported" >&2
+                exit 2
+            case --base '--base=*'
+                echo "gh ai $command_name: --base is not supported" >&2
+                exit 2
+            case '*'
+                set -a issue_args $argv[1]
+        end
+        set -e argv[1]
+    end
+
+    if test (count $issue_args) -gt 0; and is_number $issue_args[1]
+        set issue $issue_args[1]
+        if test (count $issue_args) -gt 1
+            echo "gh ai $command_name: unexpected arguments after direct issue number" >&2
+            exit 2
+        end
+    else
+        set issue (select_issue $issue_args)
+        or exit 0
+        test -n "$issue"; or exit 0
+    end
+
+    set -l issue_title (gh issue view $issue --json title -q .title 2>/dev/null)
+
+    set -l prompt
+    if test -n "$custom_prompt"
+        set prompt $custom_prompt
+    else
+        set prompt $default_prompt
+    end
+
+    set prompt (render_template "$prompt" issue "$issue")
+    set -l agent_options (agent_options "$issue_title")
+    set -l command "cx $agent_options-- "(fish_quote "$prompt")
+    open_tmux_window "$command"
 end
 
-function triage
-    run_issue_agent triage '/triage {issue}' $argv
+function plan
+    run_current_repo_issue_agent plan 'Analyze GitHub issue #{issue} and create or update its implementation plan in the issue. Use this structure: ## Summary, ## Root Cause, ## Implementation Plan, ## Risks, ## Acceptance Criteria.' $argv
+end
+
+function implement
+    set -l pr_mode 0
+    set -l remaining_args
+
+    for arg in $argv
+        switch $arg
+            case --pr
+                set pr_mode 1
+            case '*'
+                set -a remaining_args $arg
+        end
+    end
+
+    if test $pr_mode -eq 1
+        if argv_contains_branch_options $remaining_args
+            for arg in $remaining_args
+                switch $arg
+                    case --branch '--branch=*'
+                        echo 'gh ai implement --pr: --branch is not supported' >&2
+                        exit 2
+                    case --base '--base=*'
+                        echo 'gh ai implement --pr: --base is not supported' >&2
+                        exit 2
+                end
+            end
+        end
+
+        run_pr_agent 'Continue implementation on PR #{pr}. Start by reading the PR, review feedback, and current branch state. Address requested changes, run relevant tests, and update the existing PR.' $remaining_args
+    else
+        run_issue_agent implement 'Read the implementation plan in GitHub issue #{issue}, then implement the requested change. If the plan needs correction, update the issue with the improved plan. When you open or update the PR, include a Closes #{issue} line in the PR body for new PRs.' $argv
+    end
 end
 
 function import_url
@@ -310,76 +407,23 @@ function run_pr_agent
     open_tmux_window "$command"
 end
 
-function open
-    set -l custom_prompt ''
-    set -l pr ''
-    set -l pr_args
-
-    while test (count $argv) -gt 0
-        switch $argv[1]
-            case --prompt
-                set -e argv[1]
-                if test (count $argv) -eq 0
-                    echo 'gh ai: --prompt requires a value' >&2
-                    exit 2
-                end
-                set custom_prompt $argv[1]
-            case '--prompt=*'
-                set custom_prompt (string replace -- '--prompt=' '' $argv[1])
-            case '*'
-                set -a pr_args $argv[1]
-        end
-        set -e argv[1]
-    end
-
-    if test (count $pr_args) -gt 0; and is_number $pr_args[1]
-        set pr $pr_args[1]
-        if test (count $pr_args) -gt 1
-            echo 'gh ai: unexpected filters after direct PR number' >&2
-            exit 2
-        end
-    else
-        set pr (select_pr $pr_args)
-        or exit 0
-        test -n "$pr"; or exit 0
-    end
-
-    set -l command "wt switch "(fish_quote "pr:$pr")" -x cx"
-    if test -n "$custom_prompt"
-        set -l prompt (render_template "$custom_prompt" pr "$pr")
-        set command "$command -- "(fish_quote "$prompt")
-    end
-
-    open_tmux_window "$command"
-end
-
 function review
-    run_pr_agent '/review {pr}' $argv
-end
-
-function resume
-    run_pr_agent 'Resume work on PR #{pr}. Start by reading the PR and checking the current branch state before making changes.' $argv
+    run_pr_agent 'Review PR #{pr} for correctness, regressions, maintainability, tests, and edge cases.' $argv
 end
 
 switch $argv[1]
     case import
         set -e argv[1]
         import_url $argv
-    case open
+    case plan
         set -e argv[1]
-        open $argv
+        plan $argv
+    case implement
+        set -e argv[1]
+        implement $argv
     case review
         set -e argv[1]
         review $argv
-    case resume
-        set -e argv[1]
-        resume $argv
-    case triage
-        set -e argv[1]
-        triage $argv
-    case work
-        set -e argv[1]
-        work $argv
     case help --help -h
         usage
     case ''
