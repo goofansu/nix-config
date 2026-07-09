@@ -61,6 +61,7 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '  work, triage:'
 	assert_contains "$output" '    --base BASE      Branch to start the work from. Omit to use the default branch.'
 	assert_contains "$output" '    --branch BRANCH  Branch to create for the work. Defaults to issue-<number>-<title-slug>.'
+	assert_contains "$output" '  open:   {pr}'
 	assert_contains "$output" '  triage: {issue}'
 	assert_contains "$output" '  work:   {issue}'
 	assert_not_contains "$output" '  work:   {issue}, {branch}, {base}'
@@ -336,6 +337,19 @@ test_open_direct_number_opens_pr_worktree_without_agent_prompt() {
 	assert_not_contains "$(cat "$tmp/tmux-calls")" "Improve PR Flow!"
 }
 
+test_open_prompt_passes_rendered_prompt_without_agent_options() {
+	local tmp
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	run_gh_ai "$tmp" open 456 --prompt 'Open PR {pr}'
+
+	assert_fish_parses_tmux_command "$tmp"
+	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch pr:456 -x cx -- 'Open PR 456'"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" "--remote-control"
+	assert_not_contains "$(cat "$tmp/tmux-calls")" "Improve PR Flow!"
+}
+
 test_import_default_cx_gets_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
@@ -361,6 +375,7 @@ for test_name in \
 	test_review_passes_pr_title_as_name_with_remote_control \
 	test_resume_passes_pr_title_as_name_with_remote_control \
 	test_open_direct_number_opens_pr_worktree_without_agent_prompt \
+	test_open_prompt_passes_rendered_prompt_without_agent_options \
 	test_import_default_cx_gets_remote_control \
 	test_review_numeric_filter_still_uses_picker_when_not_first_arg \
 	test_resume_direct_number_skips_pr_picker; do

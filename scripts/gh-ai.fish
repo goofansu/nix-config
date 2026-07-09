@@ -33,6 +33,7 @@ function usage
         '' \
         'PROMPT VARIABLES' \
         '  import: {url}' \
+        '  open:   {pr}' \
         '  review: {pr}' \
         '  resume: {pr}' \
         '  triage: {issue}' \
@@ -310,11 +311,24 @@ function run_pr_agent
 end
 
 function open
+    set -l custom_prompt ''
     set -l pr ''
     set -l pr_args
 
     while test (count $argv) -gt 0
-        set -a pr_args $argv[1]
+        switch $argv[1]
+            case --prompt
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo 'gh ai: --prompt requires a value' >&2
+                    exit 2
+                end
+                set custom_prompt $argv[1]
+            case '--prompt=*'
+                set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case '*'
+                set -a pr_args $argv[1]
+        end
         set -e argv[1]
     end
 
@@ -331,6 +345,11 @@ function open
     end
 
     set -l command "wt switch "(fish_quote "pr:$pr")" -x cx"
+    if test -n "$custom_prompt"
+        set -l prompt (render_template "$custom_prompt" pr "$pr")
+        set command "$command -- "(fish_quote "$prompt")
+    end
+
     open_tmux_window "$command"
 end
 
