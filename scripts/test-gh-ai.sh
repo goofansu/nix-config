@@ -60,7 +60,7 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '  implement:'
 	assert_contains "$output" '    --base BASE      Branch to start issue implementation from. Omit to use the default branch.'
 	assert_contains "$output" '    --branch BRANCH  Branch to create for issue implementation. Defaults to issue-<number>-<title-slug>.'
-	assert_contains "$output" '    --pr            Continue implementation from a pull request instead of an issue.'
+	assert_contains "$output" '    --pr             Continue implementation from a pull request instead of an issue.'
 	assert_contains "$output" '  import:        {url}'
 	assert_contains "$output" '  plan:          {issue}'
 	assert_contains "$output" '  implement:     {issue}, {branch}, {base}'

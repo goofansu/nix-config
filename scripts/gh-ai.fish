@@ -28,7 +28,7 @@ function usage
         '  implement:' \
         '    --base BASE      Branch to start issue implementation from. Omit to use the default branch.' \
         '    --branch BRANCH  Branch to create for issue implementation. Defaults to issue-<number>-<title-slug>.' \
-        '    --pr            Continue implementation from a pull request instead of an issue.' \
+        '    --pr             Continue implementation from a pull request instead of an issue.' \
         '' \
         'PROMPT VARIABLES' \
         '  import:        {url}' \
