@@ -160,13 +160,13 @@ in
       issues = [
         {
           key = "ctrl+r";
-          name = "triage";
-          command = "gh ai triage {{.IssueNumber}}";
+          name = "plan";
+          command = "gh ai plan {{.IssueNumber}}";
         }
         {
           key = "ctrl+w";
-          name = "work";
-          command = "gh ai work {{.IssueNumber}}";
+          name = "implement";
+          command = "gh ai implement {{.IssueNumber}}";
         }
       ];
       prs = [
@@ -177,13 +177,13 @@ in
         }
         {
           key = "ctrl+w";
-          name = "resume";
-          command = "gh ai resume {{.PrNumber}}";
+          name = "implement";
+          command = "gh ai implement --pr {{.PrNumber}}";
         }
         {
           key = "ctrl+o";
           name = "open";
-          command = "gh ai open {{.PrNumber}}";
+          command = "wt switch pr:{{.PrNumber}}";
         }
       ];
     };
