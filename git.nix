@@ -116,6 +116,10 @@ in
         filters = "is:open review-requested:@me";
       }
       {
+        title = "Assigned";
+        filters = "is:open assignee:@me";
+      }
+      {
         title = "Involved";
         filters = "is:open involves:@me -author:@me";
       }
