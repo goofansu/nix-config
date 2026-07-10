@@ -276,7 +276,7 @@ function run_current_repo_issue_agent
 end
 
 function plan
-    run_current_repo_issue_agent plan 'Analyze GitHub issue #{issue} and create or update its implementation plan in the issue. Use this structure: ## Summary, ## Root Cause, ## Implementation Plan, ## Risks, ## Acceptance Criteria.' $argv
+    run_current_repo_issue_agent plan '/triage #{issue}' $argv
 end
 
 function implement
@@ -414,7 +414,7 @@ function run_pr_agent
 end
 
 function review
-    run_pr_agent 'Review PR #{pr} for correctness, regressions, maintainability, tests, and edge cases.' $argv
+    run_pr_agent '/review #{pr}' $argv
 end
 
 switch $argv[1]

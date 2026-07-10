@@ -231,7 +231,6 @@ test_plan_passes_issue_title_as_name_with_remote_control() {
 	assert_not_contains "$(cat "$tmp/tmux-calls")" 'wt switch'
 	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" '#123'
-	assert_contains "$(cat "$tmp/tmux-calls")" 'Implementation Plan'
 }
 
 test_plan_issue_filter_uses_issue_picker_with_filters() {
