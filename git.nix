@@ -132,11 +132,6 @@ in
           name = "implement";
           command = "gh ai implement --pr {{.PrNumber}}";
         }
-        {
-          key = "ctrl+o";
-          name = "open";
-          command = "tmux new-window 'wt switch pr:{{.PrNumber}} -x cx'";
-        }
       ];
     };
   };
