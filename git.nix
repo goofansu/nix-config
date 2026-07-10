@@ -116,11 +116,6 @@ in
         {
           key = "ctrl+w";
           name = "implement";
-          command = "gh ai implement {{.IssueNumber}}";
-        }
-        {
-          key = "ctrl+b";
-          name = "implement from base";
           command = ''
             set base (git branch --format="%(refname:short)" | fzf --prompt="Base branch: "); or exit 0; test -n "$base"; or exit 0; gh ai implement {{.IssueNumber}} --base "$base"
           '';
