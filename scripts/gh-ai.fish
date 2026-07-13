@@ -10,7 +10,7 @@ function usage
         COMMANDS \
         '  import <url>' \
         '      Inspect a URL and create a GitHub issue' \
-        '  plan [issue-number | gh issue list filters...]' \
+        '  triage [issue-number | gh issue list filters...]' \
         '      Analyze an issue and create or update its implementation plan' \
         '  implement [issue-number | gh issue list filters...]' \
         '      Implement an issue plan by number, or select an issue with fzf' \
@@ -32,14 +32,14 @@ function usage
         '' \
         'PROMPT VARIABLES' \
         '  import:        {url}' \
-        '  plan:          {issue}' \
+        '  triage:        {issue}' \
         '  implement:     {issue}, {branch}, {base}' \
         '  implement --pr:{pr}' \
         '  review:        {pr}' \
         '' \
         EXAMPLES \
         '  gh ai import https://example.com/ticket/123' \
-        "  gh ai plan 123 --prompt 'Plan issue {issue}'" \
+        "  gh ai triage 123 --prompt 'Triage issue {issue}'" \
         "  gh ai implement 123 --prompt 'Implement issue {issue}'" \
         "  gh ai implement --pr 456 --prompt 'Continue PR {pr}'" \
         "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'"
@@ -275,8 +275,8 @@ function run_current_repo_issue_agent
     open_tmux_window "$command"
 end
 
-function plan
-    run_current_repo_issue_agent plan '/triage #{issue}' $argv
+function triage
+    run_current_repo_issue_agent triage '/triage #{issue}' $argv
 end
 
 function implement
@@ -421,9 +421,9 @@ switch $argv[1]
     case import
         set -e argv[1]
         import_url $argv
-    case plan
+    case triage
         set -e argv[1]
-        plan $argv
+        triage $argv
     case implement
         set -e argv[1]
         implement $argv

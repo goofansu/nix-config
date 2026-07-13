@@ -46,12 +46,12 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" 'USAGE'
 	assert_contains "$output" '  gh ai <command> [flags]'
 	assert_contains "$output" '  import <url>'
-	assert_contains "$output" '  plan [issue-number | gh issue list filters...]'
+	assert_contains "$output" '  triage [issue-number | gh issue list filters...]'
 	assert_contains "$output" '  implement [issue-number | gh issue list filters...]'
 	assert_contains "$output" '  implement --pr [pr-number | gh pr list filters...]'
 	assert_contains "$output" '  review [pr-number | gh pr list filters...]'
-	assert_before "$output" '  import <url>' '  plan [issue-number | gh issue list filters...]'
-	assert_before "$output" '  plan [issue-number | gh issue list filters...]' '  implement [issue-number | gh issue list filters...]'
+	assert_before "$output" '  import <url>' '  triage [issue-number | gh issue list filters...]'
+	assert_before "$output" '  triage [issue-number | gh issue list filters...]' '  implement [issue-number | gh issue list filters...]'
 	assert_before "$output" '  implement [issue-number | gh issue list filters...]' '  implement --pr [pr-number | gh pr list filters...]'
 	assert_before "$output" '  implement --pr [pr-number | gh pr list filters...]' '  review [pr-number | gh pr list filters...]'
 	assert_contains "$output" 'COMMON FLAGS'
@@ -62,12 +62,12 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_contains "$output" '    --branch BRANCH  Branch to create for issue implementation. Defaults to issue-<number>-<title-slug>.'
 	assert_contains "$output" '    --pr             Continue implementation from a pull request instead of an issue.'
 	assert_contains "$output" '  import:        {url}'
-	assert_contains "$output" '  plan:          {issue}'
+	assert_contains "$output" '  triage:        {issue}'
 	assert_contains "$output" '  implement:     {issue}, {branch}, {base}'
 	assert_contains "$output" '  implement --pr:{pr}'
 	assert_contains "$output" '  review:        {pr}'
 	assert_not_contains "$output" '  work '
-	assert_not_contains "$output" '  triage '
+	assert_not_contains "$output" '  plan '
 	assert_not_contains "$output" '  resume '
 	assert_not_contains "$output" '  open '
 }
@@ -162,12 +162,12 @@ run_gh_ai() {
 		fish "$repo_root/scripts/gh-ai.fish" "$@"
 }
 
-test_plan_direct_number_skips_issue_picker_and_does_not_switch() {
+test_triage_direct_number_skips_issue_picker_and_does_not_switch() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" plan 123 --prompt 'Plan {issue}'
+	run_gh_ai "$tmp" triage 123 --prompt 'Plan {issue}'
 
 	assert_file_missing "$tmp/fzf-called"
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
@@ -176,12 +176,12 @@ test_plan_direct_number_skips_issue_picker_and_does_not_switch() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control --name 'Fix Fancy Bug!' -- 'Plan 123'"
 }
 
-test_plan_without_number_uses_issue_picker_without_switching() {
+test_triage_without_number_uses_issue_picker_without_switching() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" plan
+	run_gh_ai "$tmp" triage
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
 	assert_contains "$(cat "$tmp/gh-calls")" "issue list --json number,title,author,updatedAt --template"
@@ -190,42 +190,42 @@ test_plan_without_number_uses_issue_picker_without_switching() {
 	assert_contains "$(cat "$tmp/tmux-calls")" '#999'
 }
 
-test_plan_rejects_branch_options() {
+test_triage_rejects_branch_options() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	if run_gh_ai "$tmp" plan 123 --branch issue-123 2>"$tmp/stderr"; then
-		fail 'expected plan --branch to fail'
+	if run_gh_ai "$tmp" triage 123 --branch issue-123 2>"$tmp/stderr"; then
+		fail 'expected triage --branch to fail'
 	fi
 
-	assert_contains "$(cat "$tmp/stderr")" 'gh ai plan: --branch is not supported'
+	assert_contains "$(cat "$tmp/stderr")" 'gh ai triage: --branch is not supported'
 	assert_file_missing "$tmp/tmux-calls"
 }
 
-test_plan_rejects_base_and_equals_branch_options() {
+test_triage_rejects_base_and_equals_branch_options() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	if run_gh_ai "$tmp" plan 123 --base main 2>"$tmp/stderr-base"; then
-		fail 'expected plan --base to fail'
+	if run_gh_ai "$tmp" triage 123 --base main 2>"$tmp/stderr-base"; then
+		fail 'expected triage --base to fail'
 	fi
-	if run_gh_ai "$tmp" plan 123 --branch=issue-123 2>"$tmp/stderr-branch"; then
-		fail 'expected plan --branch= to fail'
+	if run_gh_ai "$tmp" triage 123 --branch=issue-123 2>"$tmp/stderr-branch"; then
+		fail 'expected triage --branch= to fail'
 	fi
 
-	assert_contains "$(cat "$tmp/stderr-base")" 'gh ai plan: --base is not supported'
-	assert_contains "$(cat "$tmp/stderr-branch")" 'gh ai plan: --branch is not supported'
+	assert_contains "$(cat "$tmp/stderr-base")" 'gh ai triage: --base is not supported'
+	assert_contains "$(cat "$tmp/stderr-branch")" 'gh ai triage: --branch is not supported'
 	assert_file_missing "$tmp/tmux-calls"
 }
 
-test_plan_passes_issue_title_as_name_with_remote_control() {
+test_triage_passes_issue_title_as_name_with_remote_control() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" plan 123
+	run_gh_ai "$tmp" triage 123
 
 	assert_fish_parses_tmux_command "$tmp"
 	assert_not_contains "$(cat "$tmp/tmux-calls")" 'wt switch'
@@ -233,12 +233,12 @@ test_plan_passes_issue_title_as_name_with_remote_control() {
 	assert_contains "$(cat "$tmp/tmux-calls")" '#123'
 }
 
-test_plan_issue_filter_uses_issue_picker_with_filters() {
+test_triage_issue_filter_uses_issue_picker_with_filters() {
 	local tmp
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	run_gh_ai "$tmp" plan --author @me
+	run_gh_ai "$tmp" triage --author @me
 
 	[[ -e "$tmp/fzf-called" ]] || fail "expected fzf picker"
 	assert_contains "$(cat "$tmp/gh-calls")" "issue list --author @me --json number,title,author,updatedAt --template"
@@ -454,7 +454,7 @@ test_old_commands_are_unknown() {
 	tmp=$(mktemp -d)
 	with_stubs "$tmp"
 
-	for command in work triage resume open; do
+	for command in work plan resume open; do
 		if run_gh_ai "$tmp" "$command" 123 >"$tmp/stdout-$command" 2>"$tmp/stderr-$command"; then
 			fail "expected old command $command to fail"
 		fi
@@ -475,12 +475,12 @@ test_import_default_cx_gets_remote_control() {
 
 for test_name in \
 	test_help_uses_gh_style_usage_and_flags \
-	test_plan_direct_number_skips_issue_picker_and_does_not_switch \
-	test_plan_without_number_uses_issue_picker_without_switching \
-	test_plan_rejects_branch_options \
-	test_plan_rejects_base_and_equals_branch_options \
-	test_plan_passes_issue_title_as_name_with_remote_control \
-	test_plan_issue_filter_uses_issue_picker_with_filters \
+	test_triage_direct_number_skips_issue_picker_and_does_not_switch \
+	test_triage_without_number_uses_issue_picker_without_switching \
+	test_triage_rejects_branch_options \
+	test_triage_rejects_base_and_equals_branch_options \
+	test_triage_passes_issue_title_as_name_with_remote_control \
+	test_triage_issue_filter_uses_issue_picker_with_filters \
 	test_implement_issue_direct_number_skips_issue_picker \
 	test_implement_issue_without_number_uses_issue_picker \
 	test_implement_issue_base_option_adds_base_flag \

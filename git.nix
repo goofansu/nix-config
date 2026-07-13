@@ -109,9 +109,9 @@ in
     settings.keybindings = {
       issues = [
         {
-          key = "ctrl+p";
-          name = "plan";
-          command = "gh ai plan {{.IssueNumber}}";
+          key = "ctrl+t";
+          name = "triage";
+          command = "gh ai triage {{.IssueNumber}}";
         }
         {
           key = "ctrl+w";
