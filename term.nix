@@ -409,19 +409,20 @@ in
 
       # Popups
       bind s display-popup -w 90% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
-      bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
       bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
       bind C-g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "gh dash"
       bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
       bind C-a display-popup -d "~/.pi/agent" -E "vi AGENTS.md"
+      bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
       bind M display-popup -E "${tmux-move-to-session}/bin/tmux-move-to-session"
 
       # Fire and forget commands
       bind b run-shell -b "cd #{q:pane_current_path} && wt browse-local"
-      bind C-b run-shell -b "cd #{q:pane_current_path} && wt browse-remote"
-      bind B run-shell -b "cd #{q:pane_current_path} && wt br | /usr/bin/pbcopy && tmux display-message 'Branch copied'"
+      bind B run-shell -b "cd #{q:pane_current_path} && wt browse-remote"
+      bind C-b run-shell -b "cd #{q:pane_current_path} && wt br"
+      bind C-p run-shell -b "cd #{q:pane_current_path} && wt pr"
     '';
   };
 }
