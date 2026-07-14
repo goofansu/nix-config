@@ -45,22 +45,24 @@ function usage
         "  gh ai review 456 --prompt '/review {pr}. Focus on regression risk'"
 end
 
-function select_pr
-    gh pr list $argv \
+function select_number
+    set -l kind $argv[1]
+    set -e argv[1]
+    set -l candidates (gh $kind list $argv \
         --json number,title,author,updatedAt \
-        --template '{{range .}}{{tablerow (printf "#%v" .number | color "green") .title .author.login (timeago .updatedAt)}}{{end}}{{tablerender}}' \
-        | fzf --ansi \
-        | awk '{print $1}' \
-        | sed 's/^#//'
-end
+        --template '{{range .}}{{tablerow (printf "#%v" .number | color "green") .title .author.login (timeago .updatedAt)}}{{end}}{{tablerender}}')
+    or return $status
 
-function select_issue
-    gh issue list $argv \
-        --json number,title,author,updatedAt \
-        --template '{{range .}}{{tablerow (printf "#%v" .number | color "green") .title .author.login (timeago .updatedAt)}}{{end}}{{tablerender}}' \
-        | fzf --ansi \
-        | awk '{print $1}' \
-        | sed 's/^#//'
+    set -l selection (string join \n $candidates | fzf --ansi)
+    set -l picker_status $status
+    switch $picker_status
+        case 0
+            string match -rg '^#?([0-9]+)' -- "$selection"
+        case 1 130
+            return 0
+        case '*'
+            return $picker_status
+    end
 end
 
 function is_number
@@ -103,7 +105,12 @@ function open_tmux_window
         exit 1
     end
 
-    tmux new-window $argv[1]
+    set -l tmux_window (tmux new-window -P -F '#{session_name}:#{window_index}' $argv[1])
+    or begin
+        echo 'gh ai: failed to launch agent in a new tmux window' >&2
+        return 1
+    end
+    echo "Launched agent in tmux window $tmux_window."
 end
 
 function local_branch_exists
@@ -172,9 +179,15 @@ function run_issue_agent
             exit 2
         end
     else
-        set issue (select_issue $issue_args)
-        or exit 0
-        test -n "$issue"; or exit 0
+        set issue (select_number issue $issue_args)
+        or begin
+            echo "gh ai $command_name: failed to select an issue" >&2
+            return 1
+        end
+        if test -z "$issue"
+            echo 'No issue selected; nothing was started.'
+            return 0
+        end
     end
 
     set -l issue_title (gh issue view $issue --json title -q .title 2>/dev/null)
@@ -255,9 +268,15 @@ function run_current_repo_issue_agent
             exit 2
         end
     else
-        set issue (select_issue $issue_args)
-        or exit 0
-        test -n "$issue"; or exit 0
+        set issue (select_number issue $issue_args)
+        or begin
+            echo "gh ai $command_name: failed to select an issue" >&2
+            return 1
+        end
+        if test -z "$issue"
+            echo 'No issue selected; nothing was started.'
+            return 0
+        end
     end
 
     set -l issue_title (gh issue view $issue --json title -q .title 2>/dev/null)
@@ -392,9 +411,15 @@ function run_pr_agent
             exit 2
         end
     else
-        set pr (select_pr $pr_args)
-        or exit 0
-        test -n "$pr"; or exit 0
+        set pr (select_number pr $pr_args)
+        or begin
+            echo 'gh ai: failed to select a PR' >&2
+            return 1
+        end
+        if test -z "$pr"
+            echo 'No PR selected; nothing was started.'
+            return 0
+        end
     end
 
     set -l pr_title (gh pr view $pr --json title -q .title 2>/dev/null)

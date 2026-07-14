@@ -22,9 +22,7 @@ let
               coreutils
               fish
               fzf
-              gawk
               git
-              gnused
               tmux
               pkgs-unstable.gh
             ]

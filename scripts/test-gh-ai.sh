@@ -14,6 +14,12 @@ assert_contains() {
 	[[ "$haystack" == *"$needle"* ]] || fail "expected output to contain '$needle', got: $haystack"
 }
 
+assert_equals() {
+	local actual="$1"
+	local expected="$2"
+	[[ "$actual" == "$expected" ]] || fail "expected output '$expected', got: $actual"
+}
+
 assert_not_contains() {
 	local haystack="$1"
 	local needle="$2"
@@ -124,6 +130,9 @@ STUB
 #!/usr/bin/env bash
 set -euo pipefail
 printf '%s\n' "$*" >>"$TMUX_CALLS"
+if [[ "$*" == new-window\ -P\ -F* ]]; then
+	printf '%s\n' 'test-session:1'
+fi
 STUB
 	chmod +x "$tmp/bin/tmux"
 
@@ -160,6 +169,15 @@ run_gh_ai() {
 		EXISTING_BRANCH="${EXISTING_BRANCH:-}" \
 		TMUX=1 \
 		fish "$repo_root/scripts/gh-ai.fish" "$@"
+}
+
+assert_gh_ai_output() {
+	local tmp="$1"
+	local expected="$2"
+	shift 2
+	local output
+	output=$(run_gh_ai "$tmp" "$@")
+	assert_equals "$output" "$expected"
 }
 
 test_triage_direct_number_skips_issue_picker_and_does_not_switch() {
@@ -473,6 +491,101 @@ test_import_default_cx_gets_remote_control() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control -- 'Import https://example.com/ticket/123'"
 }
 
+test_commands_report_tmux_window() {
+	local tmp
+	local expected='Launched agent in tmux window test-session:1.'
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	assert_gh_ai_output "$tmp" "$expected" triage 123
+	assert_gh_ai_output "$tmp" "$expected" implement 123
+	assert_gh_ai_output "$tmp" "$expected" review 456
+	assert_gh_ai_output "$tmp" "$expected" implement --pr 456
+	assert_gh_ai_output "$tmp" "$expected" import https://example.com/ticket/123
+
+	assert_contains "$(cat "$tmp/tmux-calls")" 'new-window -P -F #{session_name}:#{window_index}'
+}
+
+test_cancelled_picker_announces_no_op() {
+	local tmp picker_status
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+
+	for picker_status in 1 130; do
+		printf '#!/usr/bin/env bash\nexit %s\n' "$picker_status" >"$tmp/bin/fzf"
+		chmod +x "$tmp/bin/fzf"
+
+		assert_gh_ai_output "$tmp" 'No issue selected; nothing was started.' triage
+		assert_gh_ai_output "$tmp" 'No issue selected; nothing was started.' implement
+		assert_gh_ai_output "$tmp" 'No PR selected; nothing was started.' review
+		assert_gh_ai_output "$tmp" 'No PR selected; nothing was started.' implement --pr
+	done
+
+	assert_file_missing "$tmp/tmux-calls"
+}
+
+test_issue_picker_failure_is_an_error() {
+	local tmp output
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+	cat >"$tmp/bin/gh" <<'STUB'
+#!/usr/bin/env bash
+echo 'gh: failed to list issues' >&2
+exit 1
+STUB
+	chmod +x "$tmp/bin/gh"
+
+	if output=$(run_gh_ai "$tmp" triage 2>"$tmp/stderr"); then
+		fail 'expected issue picker failure'
+	fi
+
+	assert_equals "$output" ''
+	assert_contains "$(cat "$tmp/stderr")" 'gh: failed to list issues'
+	assert_contains "$(cat "$tmp/stderr")" 'gh ai triage: failed to select an issue'
+	assert_not_contains "$(cat "$tmp/stderr")" 'No issue selected'
+	assert_file_missing "$tmp/tmux-calls"
+}
+
+test_pr_picker_failure_is_an_error() {
+	local tmp output
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+	cat >"$tmp/bin/gh" <<'STUB'
+#!/usr/bin/env bash
+echo 'gh: failed to list PRs' >&2
+exit 1
+STUB
+	chmod +x "$tmp/bin/gh"
+
+	if output=$(run_gh_ai "$tmp" review 2>"$tmp/stderr"); then
+		fail 'expected PR picker failure'
+	fi
+
+	assert_equals "$output" ''
+	assert_contains "$(cat "$tmp/stderr")" 'gh: failed to list PRs'
+	assert_contains "$(cat "$tmp/stderr")" 'gh ai: failed to select a PR'
+	assert_not_contains "$(cat "$tmp/stderr")" 'No PR selected'
+	assert_file_missing "$tmp/tmux-calls"
+}
+
+test_tmux_failure_reports_error_without_launch_announcement() {
+	local tmp output
+	tmp=$(mktemp -d)
+	with_stubs "$tmp"
+	cat >"$tmp/bin/tmux" <<'STUB'
+#!/usr/bin/env bash
+exit 1
+STUB
+	chmod +x "$tmp/bin/tmux"
+
+	if output=$(run_gh_ai "$tmp" review 456 2>"$tmp/stderr"); then
+		fail 'expected tmux launch failure'
+	fi
+
+	assert_equals "$output" ''
+	assert_contains "$(cat "$tmp/stderr")" 'gh ai: failed to launch agent in a new tmux window'
+}
+
 for test_name in \
 	test_help_uses_gh_style_usage_and_flags \
 	test_triage_direct_number_skips_issue_picker_and_does_not_switch \
@@ -497,7 +610,12 @@ for test_name in \
 	test_implement_pr_filter_uses_pr_picker_with_flag_first \
 	test_implement_pr_rejects_branch_options \
 	test_old_commands_are_unknown \
-	test_import_default_cx_gets_remote_control; do
+	test_import_default_cx_gets_remote_control \
+	test_commands_report_tmux_window \
+	test_cancelled_picker_announces_no_op \
+	test_issue_picker_failure_is_an_error \
+	test_pr_picker_failure_is_an_error \
+	test_tmux_failure_reports_error_without_launch_announcement; do
 	"$test_name"
 	echo "ok - $test_name"
 done
