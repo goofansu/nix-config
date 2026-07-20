@@ -325,9 +325,9 @@ function implement
             end
         end
 
-        run_pr_agent 'Continue implementation on PR #{pr}. Start by reading the PR, review feedback, and current branch state. Address requested changes, run relevant tests, and update the existing PR.' $remaining_args
+        run_pr_agent '/implement the outstanding review feedback on PR #{pr}. Start by reading the PR, its review comments, and the current branch state, then address the requested changes and update the existing PR.' $remaining_args
     else
-        run_issue_agent implement 'Read the implementation plan in GitHub issue #{issue}, then implement the requested change. If the plan needs correction, update the issue with the improved plan. When you open or update the PR, include a Closes #{issue} line in the PR body for new PRs.' $argv
+        run_issue_agent implement '/implement the work in GitHub issue #{issue}. If the plan needs correction, update the issue with the improved plan first. When you open or update the PR, include a Closes #{issue} line in the PR body for new PRs.' $argv
     end
 end
 
