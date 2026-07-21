@@ -22,10 +22,15 @@ let
     runtimeInputs = with pkgs; [
       fzf
       tmux
-      jq
+      git
+      gawk
     ];
     text = ''
-      branch=$(wt list --format json | jq -r '.[] | .branch' | fzf --prompt='New window: ') || exit 0
+      branch=$(
+        git worktree list --porcelain \
+          | awk '$1 == "branch" { sub(/^refs\/heads\//, "", $2); print $2 }' \
+          | fzf --prompt='New window: '
+      ) || exit 0
       tmux new-window "wt switch $branch; exec fish"
     '';
   };
