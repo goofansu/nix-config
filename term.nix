@@ -419,7 +419,7 @@ in
       bind C-g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "gh dash"
       bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
-      bind C-a display-popup -d "~/.pi/agent" -E "vi AGENTS.md"
+      bind C-a display-popup -d "~/.config/agents" -E "vi AGENTS.md"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
       bind M display-popup -E "${tmux-move-to-session}/bin/tmux-move-to-session"
 
