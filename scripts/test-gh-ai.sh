@@ -61,8 +61,7 @@ test_help_uses_gh_style_usage_and_flags() {
 	assert_before "$output" '  implement [issue-number | gh issue list filters...]' '  implement --pr [pr-number | gh pr list filters...]'
 	assert_before "$output" '  implement --pr [pr-number | gh pr list filters...]' '  review [pr-number | gh pr list filters...]'
 	assert_contains "$output" 'COMMON FLAGS'
-	assert_contains "$output" '  --harness HARNESS  Agent harness to launch: cx or pi. Defaults to cx.'
-	assert_contains "$output" '  --prompt PROMPT    Custom prompt template for the agent.'
+	assert_contains "$output" '  --prompt PROMPT  Custom prompt template for the agent.'
 	assert_contains "$output" 'COMMAND FLAGS'
 	assert_contains "$output" '  implement:'
 	assert_contains "$output" '    --base BASE      Branch to start issue implementation from. Omit to use the default branch.'
@@ -276,18 +275,8 @@ test_implement_issue_direct_number_skips_issue_picker() {
 	[[ ! -e "$tmp/gh-calls" ]] || ! grep -q '^issue list' "$tmp/gh-calls" || fail "did not expect gh issue list for direct issue number"
 	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x cx -- --remote-control --name 'Fix Fancy Bug!'"
 	assert_contains "$(cat "$tmp/tmux-calls")" '#123'
-	assert_contains "$(cat "$tmp/tmux-calls")" 'plan needs correction'
+	assert_contains "$(cat "$tmp/tmux-calls")" 'implementation plan'
 	assert_contains "$(cat "$tmp/tmux-calls")" 'Closes #123'
-}
-
-test_implement_issue_explicit_pi_keeps_wt_separator() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" implement 123 --harness pi --prompt 'Implement {issue}'
-
-	assert_contains "$(cat "$tmp/tmux-calls")" "wt switch -c issue-123-fix-fancy-bug -x pi -- --name 'Fix Fancy Bug!' 'Implement 123'"
 }
 
 test_implement_issue_without_number_uses_issue_picker() {
@@ -502,18 +491,6 @@ test_import_default_cx_gets_remote_control() {
 	assert_contains "$(cat "$tmp/tmux-calls")" "cx --remote-control -- 'Import https://example.com/ticket/123'"
 }
 
-test_import_explicit_pi_omits_remote_control() {
-	local tmp
-	tmp=$(mktemp -d)
-	with_stubs "$tmp"
-
-	run_gh_ai "$tmp" import https://example.com/ticket/123 --harness pi --prompt 'Import {url}'
-
-	assert_fish_parses_tmux_command "$tmp"
-	assert_contains "$(cat "$tmp/tmux-calls")" "pi 'Import https://example.com/ticket/123'"
-	assert_not_contains "$(cat "$tmp/tmux-calls")" '--remote-control'
-}
-
 test_commands_report_tmux_window() {
 	local tmp
 	local expected='Launched agent in tmux window test-session:1.'
@@ -618,7 +595,6 @@ for test_name in \
 	test_triage_passes_issue_title_as_name_with_remote_control \
 	test_triage_issue_filter_uses_issue_picker_with_filters \
 	test_implement_issue_direct_number_skips_issue_picker \
-	test_implement_issue_explicit_pi_keeps_wt_separator \
 	test_implement_issue_without_number_uses_issue_picker \
 	test_implement_issue_base_option_adds_base_flag \
 	test_implement_issue_prompt_renders_issue_branch_and_base \
@@ -635,7 +611,6 @@ for test_name in \
 	test_implement_pr_rejects_branch_options \
 	test_old_commands_are_unknown \
 	test_import_default_cx_gets_remote_control \
-	test_import_explicit_pi_omits_remote_control \
 	test_commands_report_tmux_window \
 	test_cancelled_picker_announces_no_op \
 	test_issue_picker_failure_is_an_error \
