@@ -22,7 +22,8 @@ function usage
         '      Show this help' \
         '' \
         'COMMON FLAGS' \
-        '  --prompt PROMPT  Custom prompt template for the agent.' \
+        '  --harness HARNESS  Agent harness to launch: cx or pi. Defaults to cx.' \
+        '  --prompt PROMPT    Custom prompt template for the agent.' \
         '' \
         'COMMAND FLAGS' \
         '  implement:' \
@@ -117,12 +118,36 @@ function local_branch_exists
     git show-ref --verify --quiet refs/heads/$argv[1] 2>/dev/null
 end
 
-function agent_options
-    set -l name $argv[1]
+function validate_harness
+    set -l context $argv[1]
+    set -l harness $argv[2]
 
-    printf '%s ' --remote-control
+    if test -z "$harness"
+        echo "$context: --harness requires a value" >&2
+        exit 2
+    end
+
+    if not contains -- "$harness" cx pi
+        echo "$context: unsupported harness '$harness' (expected cx or pi)" >&2
+        exit 2
+    end
+end
+
+function agent_options
+    set -l harness $argv[1]
+    set -l name $argv[2]
+
+    if test "$harness" = cx
+        printf '%s ' --remote-control
+    end
     if test -n "$name"
         printf '%s %s ' --name (fish_quote "$name")
+    end
+end
+
+function agent_end_options
+    if test "$argv[1]" = cx
+        printf '%s ' --
     end
 end
 
@@ -132,6 +157,7 @@ function run_issue_agent
     set -e argv[1..2]
 
     set -l custom_prompt ''
+    set -l harness cx
     set -l branch ''
     set -l base ''
     set -l issue ''
@@ -148,6 +174,17 @@ function run_issue_agent
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --harness
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo "gh ai $command_name: --harness requires a value" >&2
+                    exit 2
+                end
+                set harness $argv[1]
+                validate_harness "gh ai $command_name" "$harness"
+            case '--harness=*'
+                set harness (string replace -- '--harness=' '' $argv[1])
+                validate_harness "gh ai $command_name" "$harness"
             case --branch
                 set -e argv[1]
                 if test (count $argv) -eq 0
@@ -223,9 +260,9 @@ function run_issue_agent
             set command "$command -b "(fish_quote "$base")
         end
     end
-    set -l agent_options (agent_options "$issue_title")
+    set -l agent_options (agent_options "$harness" "$issue_title")
 
-    set command "$command -x cx -- $agent_options"(fish_quote "$prompt")
+    set command "$command -x $harness -- $agent_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -235,6 +272,7 @@ function run_current_repo_issue_agent
     set -e argv[1..2]
 
     set -l custom_prompt ''
+    set -l harness cx
     set -l issue ''
     set -l issue_args
 
@@ -249,6 +287,17 @@ function run_current_repo_issue_agent
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --harness
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo "gh ai $command_name: --harness requires a value" >&2
+                    exit 2
+                end
+                set harness $argv[1]
+                validate_harness "gh ai $command_name" "$harness"
+            case '--harness=*'
+                set harness (string replace -- '--harness=' '' $argv[1])
+                validate_harness "gh ai $command_name" "$harness"
             case --branch '--branch=*'
                 echo "gh ai $command_name: --branch is not supported" >&2
                 exit 2
@@ -289,8 +338,9 @@ function run_current_repo_issue_agent
     end
 
     set prompt (render_template "$prompt" issue "$issue")
-    set -l agent_options (agent_options "$issue_title")
-    set -l command "cx $agent_options-- "(fish_quote "$prompt")
+    set -l agent_options (agent_options "$harness" "$issue_title")
+    set -l end_options (agent_end_options "$harness")
+    set -l command "$harness $agent_options$end_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -333,6 +383,7 @@ end
 
 function import_url
     set -l custom_prompt ''
+    set -l harness cx
     set -l url ''
 
     while test (count $argv) -gt 0
@@ -346,6 +397,17 @@ function import_url
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --harness
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo 'gh ai import: --harness requires a value' >&2
+                    exit 2
+                end
+                set harness $argv[1]
+                validate_harness 'gh ai import' "$harness"
+            case '--harness=*'
+                set harness (string replace -- '--harness=' '' $argv[1])
+                validate_harness 'gh ai import' "$harness"
             case '*'
                 if test -n "$url"
                     echo 'gh ai import: expected exactly one URL' >&2
@@ -357,7 +419,7 @@ function import_url
     end
 
     if test -z "$url"
-        echo 'Usage: gh ai import <url> [--prompt PROMPT]' >&2
+        echo 'Usage: gh ai import <url> [--harness HARNESS] [--prompt PROMPT]' >&2
         exit 2
     end
 
@@ -369,8 +431,9 @@ function import_url
     end
 
     set prompt (render_template "$prompt" url "$url")
-    set -l agent_options (agent_options '')
-    set -l command "cx $agent_options-- "(fish_quote "$prompt")
+    set -l agent_options (agent_options "$harness" '')
+    set -l end_options (agent_end_options "$harness")
+    set -l command "$harness $agent_options$end_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
@@ -378,6 +441,7 @@ function run_pr_agent
     set -l default_prompt $argv[1]
     set -e argv[1]
     set -l custom_prompt ''
+    set -l harness cx
     set -l pr ''
     set -l pr_args
 
@@ -392,6 +456,17 @@ function run_pr_agent
                 set custom_prompt $argv[1]
             case '--prompt=*'
                 set custom_prompt (string replace -- '--prompt=' '' $argv[1])
+            case --harness
+                set -e argv[1]
+                if test (count $argv) -eq 0
+                    echo 'gh ai: --harness requires a value' >&2
+                    exit 2
+                end
+                set harness $argv[1]
+                validate_harness 'gh ai' "$harness"
+            case '--harness=*'
+                set harness (string replace -- '--harness=' '' $argv[1])
+                validate_harness 'gh ai' "$harness"
             case --branch '--branch=*'
                 echo 'gh ai: --branch is not supported' >&2
                 exit 2
@@ -432,9 +507,9 @@ function run_pr_agent
     end
 
     set prompt (render_template "$prompt" pr "$pr")
-    set -l agent_options (agent_options "$pr_title")
+    set -l agent_options (agent_options "$harness" "$pr_title")
 
-    set -l command "wt switch "(fish_quote "pr:$pr")" -x cx -- $agent_options"(fish_quote "$prompt")
+    set -l command "wt switch "(fish_quote "pr:$pr")" -x $harness -- $agent_options"(fish_quote "$prompt")
     open_tmux_window "$command"
 end
 
