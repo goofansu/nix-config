@@ -95,7 +95,10 @@ in
   programs.gh = {
     enable = true;
     package = pkgs-unstable.gh;
-    extensions = [ gh-ai ];
+    extensions = [
+      gh-ai
+      pkgs-unstable.gh-stack
+    ];
     settings = {
       git_protocol = "ssh";
     };
