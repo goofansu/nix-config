@@ -1,37 +1,5 @@
 { pkgs, pkgs-unstable, ... }:
 
-let
-  gh-ai = pkgs.stdenvNoCC.mkDerivation {
-    pname = "gh-ai";
-    version = "0-unstable";
-    src = ./scripts/gh-ai.fish;
-    nativeBuildInputs = [
-      pkgs.fish
-      pkgs.makeWrapper
-    ];
-    dontUnpack = true;
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/gh-ai
-      patchShebangs $out/bin/gh-ai
-      wrapProgram $out/bin/gh-ai \
-        --prefix PATH : ${
-          pkgs.lib.makeBinPath (
-            with pkgs;
-            [
-              coreutils
-              fish
-              fzf
-              git
-              tmux
-              pkgs-unstable.gh
-            ]
-          )
-        }
-      runHook postInstall
-    '';
-  };
-in
 {
   programs.git = {
     enable = true;
@@ -95,10 +63,7 @@ in
   programs.gh = {
     enable = true;
     package = pkgs-unstable.gh;
-    extensions = [
-      gh-ai
-      pkgs-unstable.gh-stack
-    ];
+    extensions = [ pkgs-unstable.gh-stack ];
     settings = {
       git_protocol = "ssh";
     };
@@ -107,39 +72,6 @@ in
   programs.gh-dash = {
     enable = true;
     package = pkgs-unstable.gh-dash;
-    settings.keybindings = {
-      issues = [
-        {
-          key = "ctrl+t";
-          name = "triage";
-          command = "gh ai triage {{.IssueNumber}}";
-        }
-        {
-          key = "ctrl+w";
-          name = "implement";
-          command = ''
-            set base (git branch --format="%(refname:short)" | fzf --prompt="Base branch: "); or exit 0; test -n "$base"; or exit 0; gh ai implement {{.IssueNumber}} --base "$base"
-          '';
-        }
-      ];
-      prs = [
-        {
-          key = "ctrl+r";
-          name = "review";
-          command = "gh ai review {{.PrNumber}}";
-        }
-        {
-          key = "ctrl+w";
-          name = "implement";
-          command = "gh ai implement --pr {{.PrNumber}}";
-        }
-        {
-          key = "ctrl+o";
-          name = "open";
-          command = "tmux new-window 'wt switch pr:{{.PrNumber}} -x cx'";
-        }
-      ];
-    };
   };
 
   programs.delta.enable = true;
