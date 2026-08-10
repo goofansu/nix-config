@@ -138,19 +138,6 @@ in
         description = "Edit file using Emacs GUI";
         body = "emacsclient -nc -s gui $argv";
       };
-      gv = {
-        description = "Select uncommitted Git files with fzf and choose whether to view in vi or open";
-        body = ''
-          begin
-            git diff --name-only
-            git diff --cached --name-only
-            git ls-files --others --exclude-standard
-          end | sort -u | fzf -m \
-            --header='Enter: vi | Ctrl-O: open | Esc: quit' \
-            --bind='enter:execute(vi {+})' \
-            --bind='ctrl-o:execute(open {+})'
-        '';
-      };
       cx = {
         description = "Claude Code in Tmux";
         body = "printf \"\\033[2J\\033[3J\\033[H\" && claude --dangerously-skip-permissions $argv";
