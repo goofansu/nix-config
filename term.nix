@@ -310,8 +310,6 @@ in
       # Fire and forget commands
       bind b run-shell -b "cd #{q:pane_current_path} && wt browse-local"
       bind B run-shell -b "cd #{q:pane_current_path} && wt browse-remote"
-      bind C-b run-shell -b "cd #{q:pane_current_path} && wt br"
-      bind C-p run-shell -b "cd #{q:pane_current_path} && wt pr"
     '';
   };
 }
