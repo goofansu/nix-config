@@ -295,7 +295,7 @@ function run_current_repo_issue_agent
 end
 
 function triage
-    run_current_repo_issue_agent triage '/triage #{issue}' $argv
+    run_current_repo_issue_agent triage '/mattpocock-skills:triage #{issue}' $argv
 end
 
 function implement
@@ -325,9 +325,9 @@ function implement
             end
         end
 
-        run_pr_agent '/implement the outstanding review feedback on PR #{pr}. Start by reading the PR, its review comments, and the current branch state, then address the requested changes and update the existing PR.' $remaining_args
+        run_pr_agent '/mattpocock-skills:implement the outstanding review feedback on PR #{pr}. Start by reading the PR, its review comments, and the current branch state, then address the requested changes and update the existing PR.' $remaining_args
     else
-        run_issue_agent implement '/implement the work in GitHub issue #{issue}. If the plan needs correction, update the issue with the improved plan first. When you open or update the PR, include a Closes #{issue} line in the PR body for new PRs.' $argv
+        run_issue_agent implement '/mattpocock-skills:implement the work in GitHub issue #{issue}. If the plan needs correction, update the issue with the improved plan first. When you open or update the PR, include a Closes #{issue} line in the PR body for new PRs.' $argv
     end
 end
 
