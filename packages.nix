@@ -57,7 +57,6 @@ let
 
   unstable-packages = with pkgs-unstable; [
     # Agent utilities
-    acli
     fabric-ai
 
     # Development utilities
