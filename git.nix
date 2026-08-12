@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 let
   gh-ai = pkgs.stdenvNoCC.mkDerivation {
@@ -24,7 +24,7 @@ let
               fzf
               git
               tmux
-              pkgs-unstable.gh
+              gh
             ]
           )
         }
@@ -94,11 +94,8 @@ in
 
   programs.gh = {
     enable = true;
-    package = pkgs-unstable.gh;
-    extensions = [
-      gh-ai
-      pkgs-unstable.gh-stack
-    ];
+    package = pkgs.gh;
+    extensions = [ gh-ai ];
     settings = {
       git_protocol = "ssh";
     };
@@ -106,7 +103,7 @@ in
 
   programs.gh-dash = {
     enable = true;
-    package = pkgs-unstable.gh-dash;
+    package = pkgs.gh-dash;
     settings.keybindings = {
       issues = [
         {

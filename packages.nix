@@ -2,6 +2,9 @@
 
 let
   stable-packages = with pkgs; [
+    # Agent utilities
+    fabric-ai
+
     # GNU utilities
     coreutils
     findutils
@@ -56,9 +59,6 @@ let
   ];
 
   unstable-packages = with pkgs-unstable; [
-    # Agent utilities
-    fabric-ai
-
     # Development utilities
     devenv
     kamal
