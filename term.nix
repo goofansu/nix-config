@@ -146,6 +146,14 @@ in
         description = "Attach to Tmux, or start a new session if none is running";
         body = "tmux attach; or tmux new -s Work";
       };
+      hunk-show-commit = {
+        description = "Select a commit to show in Hunk";
+        body = "git log --oneline | fzf | read -l commit rest; and hunk show $commit $argv";
+      };
+      hunk-diff-branch = {
+        description = "Select a branch to compare with the current branch in Hunk";
+        body = "git branch --format='%(refname:short)' | fzf | read -l branch; and hunk diff $branch $argv";
+      };
     };
   };
 
