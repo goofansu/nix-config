@@ -154,6 +154,18 @@ in
         description = "Select a branch to compare with the current branch in Hunk";
         body = "git branch --format='%(refname:short)' | fzf | read -l branch; and hunk diff $branch $argv";
       };
+      gpg-export-armor = {
+        description = "Select and export an ASCII-armored GPG public key";
+        body = ''
+          gpg --list-secret-keys --with-colons \
+            | awk -F: '$1 == "sec" { key = $5 } $1 == "uid" && key != "" { print key "\t" $10; key = "" }' \
+            | fzf --prompt="GPG key: " \
+            | read -l key uid
+          or return 0
+
+          gpg --armor --export-options export-minimal --export $key
+        '';
+      };
     };
   };
 
