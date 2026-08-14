@@ -6,8 +6,12 @@
     package = pkgs.gnupg;
     publicKeys = [
       {
-        source = ./pubkey.asc;
+        source = ./gpg/pubkey.asc;
         trust = "ultimate";
+      }
+      {
+        source = ./gpg/sr.ht_pubkey.asc;
+        trust = "full";
       }
     ];
   };
