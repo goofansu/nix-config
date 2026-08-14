@@ -317,12 +317,12 @@ in
       setw -g clock-mode-colour blue
 
       # Popups
-      bind s display-popup -w 90% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
+      bind s display-popup -w 80% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
-      bind g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "lazygit"
-      bind C-g display-popup -d "#{pane_current_path}" -w 90% -h 80% -E "gh dash"
+      bind M-g display-popup -d "#{pane_current_path}" -w 80% -h 80% -E "lazygit"
+      bind C-g display-popup -d "#{pane_current_path}" -w 80% -h 80% -E "gh dash"
       bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
-      bind a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
+      bind M-a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
       bind C-a display-popup -d "~/.config/agents" -E "vi AGENTS.md"
       bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
       bind M display-popup -E "${tmux-move-to-session}/bin/tmux-move-to-session"
