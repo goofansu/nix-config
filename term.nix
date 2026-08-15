@@ -329,7 +329,7 @@ in
 
       # Fire and forget commands
       bind C-b run-shell -b "cd #{q:pane_current_path} && wt browse-local"
-      bind B run-shell -b "cd #{q:pane_current_path} && wt browse-remote"
+      bind M-b run-shell -b "cd #{q:pane_current_path} && wt browse-remote"
       bind C-p run-shell -b "cd #{q:pane_current_path} && gh pr view -w"
     '';
   };
