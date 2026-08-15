@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 let
   gh-ai = pkgs.stdenvNoCC.mkDerivation {
@@ -103,7 +103,7 @@ in
 
   programs.gh-dash = {
     enable = true;
-    package = pkgs.gh-dash;
+    package = pkgs-unstable.gh-dash;
     settings.keybindings = {
       issues = [
         {

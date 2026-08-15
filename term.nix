@@ -64,9 +64,9 @@ let
     text = ''
       target=$(
         tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index} [#{window_name}] #{pane_current_command} #{b:pane_current_path} #{pane_title}' \
-        | fzf --reverse \
+        | fzf --layout=default --ansi \
             --preview 'tmux capture-pane -pt {1} -e 2>/dev/null || echo "no preview"' \
-            --preview-window 'right:50%' \
+            --preview-window 'up:90%' \
         | cut -d' ' -f1
       ) || exit 0
       tmux switch-client -t "$target"
