@@ -319,7 +319,6 @@ in
       # Popups
       bind s display-popup -w 80% -h 80% -E "${tmux-pick-pane}/bin/tmux-pick-pane"
       bind C-c display-popup -d "#{pane_current_path}" -E "${tmux-pick-worktree}/bin/tmux-pick-worktree"
-      bind M-g display-popup -d "#{pane_current_path}" -w 80% -h 80% -E "lazygit"
       bind C-g display-popup -d "#{pane_current_path}" -w 80% -h 80% -E "gh dash"
       bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind M-a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
