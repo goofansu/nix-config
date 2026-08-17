@@ -1,4 +1,9 @@
-{ pkgs, pkgs-unstable, ... }:
+{
+  config,
+  pkgs,
+  pkgs-unstable,
+  ...
+}:
 
 let
   gh-ai = pkgs.stdenvNoCC.mkDerivation {
@@ -104,6 +109,10 @@ in
   programs.gh-dash = {
     enable = true;
     package = pkgs-unstable.gh-dash;
+    settings.repoPaths = {
+      "eduvo/*" = "${config.home.homeDirectory}/work/*";
+      "goofansu/*" = "${config.home.homeDirectory}/code/*";
+    };
     settings.keybindings = {
       issues = [
         {
@@ -133,7 +142,9 @@ in
         {
           key = "ctrl+o";
           name = "open";
-          command = "tmux new-window 'wt switch pr:{{.PrNumber}} -x cx'";
+          command = ''
+            set -l repo "{{.RepoPath}}"; string match -q "*{{.RepoName}}*" (git -C "$repo" remote get-url origin 2>/dev/null); or begin; echo "No local clone of {{.RepoName}} at $repo"; read -P "Press enter to continue"; exit 1; end; set -l pane (herdr workspace create --cwd "$repo" --label "#{{.PrNumber}} {{.HeadRefName}}" --focus | jq -r '.result.root_pane.pane_id'); test -n "$pane"; or exit 1; herdr pane run "$pane" "wt switch pr:{{.PrNumber}} -x cx"
+          '';
         }
       ];
     };
