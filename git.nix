@@ -5,38 +5,6 @@
   ...
 }:
 
-let
-  gh-ai = pkgs.stdenvNoCC.mkDerivation {
-    pname = "gh-ai";
-    version = "0-unstable";
-    src = ./scripts/gh-ai.fish;
-    nativeBuildInputs = [
-      pkgs.fish
-      pkgs.makeWrapper
-    ];
-    dontUnpack = true;
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/gh-ai
-      patchShebangs $out/bin/gh-ai
-      wrapProgram $out/bin/gh-ai \
-        --prefix PATH : ${
-          pkgs.lib.makeBinPath (
-            with pkgs;
-            [
-              coreutils
-              fish
-              fzf
-              git
-              tmux
-              gh
-            ]
-          )
-        }
-      runHook postInstall
-    '';
-  };
-in
 {
   programs.git = {
     enable = true;
@@ -100,7 +68,6 @@ in
   programs.gh = {
     enable = true;
     package = pkgs.gh;
-    extensions = [ gh-ai ];
     settings = {
       git_protocol = "ssh";
     };
