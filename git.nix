@@ -114,31 +114,7 @@ in
       "goofansu/*" = "${config.home.homeDirectory}/code/*";
     };
     settings.keybindings = {
-      issues = [
-        {
-          key = "ctrl+t";
-          name = "triage";
-          command = "gh ai triage {{.IssueNumber}}";
-        }
-        {
-          key = "ctrl+w";
-          name = "implement";
-          command = ''
-            set base (git branch --format="%(refname:short)" | fzf --prompt="Base branch: "); or exit 0; test -n "$base"; or exit 0; gh ai implement {{.IssueNumber}} --base "$base"
-          '';
-        }
-      ];
       prs = [
-        {
-          key = "ctrl+r";
-          name = "review";
-          command = "gh ai review {{.PrNumber}}";
-        }
-        {
-          key = "ctrl+w";
-          name = "implement";
-          command = "gh ai implement --pr {{.PrNumber}}";
-        }
         {
           key = "ctrl+o";
           name = "open";
