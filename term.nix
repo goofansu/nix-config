@@ -118,6 +118,7 @@ in
     shellInit = ''
       set -U hydro_multiline true;
       set -x RUBYOPT "-W0";
+      set -gx BASH_COMPAT 50;
     '';
     plugins = with pkgs.fishPlugins; [
       {
