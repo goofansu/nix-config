@@ -51,6 +51,7 @@
     brews = [
       "herdr"
       "newrelic-cli"
+      "secretspec"
       "worktrunk"
     ];
     casks = [
