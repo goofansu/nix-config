@@ -104,6 +104,36 @@
           '';
         }
       ];
+      issues = [
+        {
+          key = "ctrl+o";
+          name = "open";
+          command = ''
+            # Require a local clone of the issue's repo
+            set -l repo "{{.RepoPath}}"
+            set -l origin (git -C "$repo" remote get-url origin 2>/dev/null)
+            if not string match -q "*{{.RepoName}}*" "$origin"
+                echo "No local clone of {{.RepoName}} at $repo"
+                read -P "Press enter to continue"
+                exit 1
+            end
+
+            # Open a Herdr workspace for the issue
+            set -l name (path basename "{{.RepoName}}")
+            set -l pane (herdr workspace create --cwd "$repo" --label "#{{.IssueNumber}} $name" --focus | jq -r '.result.root_pane.pane_id')
+            test -n "$pane"; or exit 1
+
+            # Start Claude Code in the main clone, on the default branch,
+            # naming the session after the issue title when it is available
+            set -l title (gh issue view {{.IssueNumber}} --repo "{{.RepoName}}" --json title --jq .title 2>/dev/null)
+            if test -n "$title"
+                herdr pane run "$pane" "cx --name "(string escape -- $title)
+            else
+                herdr pane run "$pane" cx
+            end
+          '';
+        }
+      ];
     };
   };
 
