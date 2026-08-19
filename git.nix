@@ -99,8 +99,14 @@
             set -l pane (herdr workspace create --cwd "$repo" --label "#{{.PrNumber}} {{.HeadRefName}}" --focus | jq -r '.result.root_pane.pane_id')
             test -n "$pane"; or exit 1
 
-            # Check out the PR worktree and start Claude Code in it
-            herdr pane run "$pane" "wt switch pr:{{.PrNumber}} -x cx"
+            # Check out the PR worktree and start Claude Code in it,
+            # naming the session after the PR title when it is available
+            set -l title (gh pr view {{.PrNumber}} --repo "{{.RepoName}}" --json title --jq .title 2>/dev/null)
+            if test -n "$title"
+                herdr pane run "$pane" "wt switch pr:{{.PrNumber}} -x cx -- --name "(string escape -- $title)
+            else
+                herdr pane run "$pane" "wt switch pr:{{.PrNumber}} -x cx"
+            end
           '';
         }
       ];
