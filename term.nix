@@ -274,9 +274,11 @@ in
 
       bind -n S-Left previous-window
       bind -n S-Right next-window
+      bind -n C-M-[ previous-window
+      bind -n C-M-] next-window
 
-      bind -n M-S-Left  swap-window -t -1 \; select-window -t -1
-      bind -n M-S-Right swap-window -t +1 \; select-window -t +1
+      bind -n C-M-S-[ swap-window -t -1 \; select-window -t -1
+      bind -n C-M-S-] swap-window -t +1 \; select-window -t +1
 
       # Session controls
       bind R command-prompt -I "#S" "rename-session -- '%%'"
@@ -325,7 +327,7 @@ in
       bind C-w display-popup -d "~/.config/worktrunk" -E "vi config.toml"
       bind M-a display-popup -d "#{pane_current_path}" -E "vi AGENTS.md"
       bind C-a display-popup -d "~/.config/agents" -E "vi AGENTS.md"
-      bind C display-popup -E "${tmux-pick-session}/bin/tmux-pick-session"
+      bind M-c display-popup -E "${tmux-pick-session}/bin/tmux-pick-session" # new session - empty (herdr: prefix+alt+c)
       bind M display-popup -E "${tmux-move-to-session}/bin/tmux-move-to-session"
 
       # Fire and forget commands
