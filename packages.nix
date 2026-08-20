@@ -42,6 +42,7 @@ let
     # Node.js
     nodejs
     pnpm
+    bun
 
     # Python
     python3
