@@ -236,7 +236,7 @@ in
       bind C-Space send-prefix
 
       # Reload config
-      bind C-r source-file ~/.config/tmux/tmux.conf \; display "Configuration reloaded"
+      bind R source-file ~/.config/tmux/tmux.conf \; display "Configuration reloaded"
 
       # Vi mode for copy
       bind -T copy-mode-vi v send -X begin-selection
@@ -258,7 +258,7 @@ in
       bind -n C-M-S-Right resize-pane -R 5
 
       # Window navigation
-      bind r command-prompt -I "#W" "rename-window -- '%%'"
+      bind T command-prompt -I "#W" "rename-window -- '%%'" # rename tab (herdr: prefix+shift+t)
       bind c new-window -c "#{pane_current_path}"
       bind k confirm-before -p "Kill window #W? (y/n)" kill-window
 
@@ -281,7 +281,7 @@ in
       bind -n C-M-S-] swap-window -t +1 \; select-window -t +1
 
       # Session controls
-      bind R command-prompt -I "#S" "rename-session -- '%%'"
+      bind W command-prompt -I "#S" "rename-session -- '%%'" # rename workspace (herdr: prefix+shift+w)
       bind S run-shell "${tmux-promote-window}/bin/tmux-promote-window #{window_id} #{q:window_name} #{q:pane_current_path}"
       bind K confirm-before -p "Kill session #S? (y/n)" kill-session
       bind P switch-client -p
