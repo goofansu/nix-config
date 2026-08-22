@@ -175,7 +175,6 @@ in
   programs.ghostty = {
     enable = true;
     package = null;
-    enableFishIntegration = true;
     settings = {
       theme = "modus-vivendi";
       font-size = 16;
