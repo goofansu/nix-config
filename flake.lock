@@ -90,11 +90,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787404151,
-        "narHash": "sha256-TIai0/LPiDuIOcOAcK5noEWPpqd4lkntpagjKflXC40=",
+        "lastModified": 1787409831,
+        "narHash": "sha256-9ysOHGpbwJW7NZn89GiXGUKTedMZP/Nhmcc7lZ+fKlQ=",
         "owner": "goofansu",
         "repo": "try",
-        "rev": "b65ebd3a57e1a9df2447ae7169fa1baaaac31909",
+        "rev": "96b2393ae9864897643f4fe2b244a079a92f550a",
         "type": "github"
       },
       "original": {
