@@ -79,7 +79,28 @@
         "darwin": "darwin",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "try": "try"
+      }
+    },
+    "try": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787400940,
+        "narHash": "sha256-wjUk8SEy3h989Jsb55V6p2dEc9xSFMSN5SohZgxCwc8=",
+        "owner": "goofansu",
+        "repo": "try",
+        "rev": "7fba9567b979702480a2f74726765ec8097aee59",
+        "type": "github"
+      },
+      "original": {
+        "owner": "goofansu",
+        "repo": "try",
+        "type": "github"
       }
     }
   },

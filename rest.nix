@@ -9,6 +9,7 @@
   programs.mpv.enable = true;
   programs.pandoc.enable = true;
   programs.ripgrep.enable = true;
+  programs.try.enable = true;
   programs.zoxide.enable = true;
 
   programs.direnv = {

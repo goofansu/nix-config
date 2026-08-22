@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, try, ... }:
 {
   home.username = lib.mkForce "james";
   home.homeDirectory = lib.mkForce "/Users/james";
@@ -6,6 +6,8 @@
   programs.home-manager.enable = true;
 
   imports = [
+    try.homeModules.default
+
     ./packages.nix
     ./fonts.nix
     ./files.nix

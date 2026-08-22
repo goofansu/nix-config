@@ -14,6 +14,11 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    try = {
+      url = "github:goofansu/try";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -21,6 +26,7 @@
       nixpkgs-unstable,
       darwin,
       home-manager,
+      try,
       ...
     }:
     let
@@ -42,7 +48,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.james = import ./home.nix;
               home-manager.extraSpecialArgs = {
-                inherit pkgs-unstable;
+                inherit pkgs-unstable try;
               };
               home-manager.backupFileExtension = "backup";
             }
