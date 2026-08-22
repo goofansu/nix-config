@@ -78,7 +78,7 @@ in
       ".pi"
       ".codex"
       ".claude"
-      ".superpowers"
+      ".obsidian"
     ];
     includes = [
       {
