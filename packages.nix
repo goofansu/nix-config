@@ -57,6 +57,10 @@ let
     zig
     lz4
     e2fsprogs
+
+    # Rust
+    rustup
+    just
   ];
 
   unstable-packages = with pkgs-unstable; [
