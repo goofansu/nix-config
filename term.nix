@@ -117,8 +117,9 @@ in
     enable = true;
     shellInit = ''
       set -U hydro_multiline true;
-      set -x RUBYOPT "-W0";
+      set -gx RUBYOPT "-W0";
       set -gx BASH_COMPAT 50;
+      set -gx NODE_NO_WARNINGS 1;
       set -gx TRY_PATH "~/scratch";
     '';
     plugins = with pkgs.fishPlugins; [
