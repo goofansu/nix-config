@@ -75,10 +75,11 @@ in
       ".DS_Store"
       "*.log*"
       "node_modules"
-      ".pi"
-      ".codex"
-      ".claude"
-      ".obsidian"
+      ".pi/"
+      ".codex/"
+      ".claude/"
+      ".obsidian/"
+      ".scratch/"
     ];
     includes = [
       {
