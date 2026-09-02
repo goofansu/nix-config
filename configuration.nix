@@ -70,7 +70,6 @@
       "slack"
       "tableplus"
       "tailscale-app"
-      "tldraw"
       "zed"
       "zen"
       "zoom"
