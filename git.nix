@@ -46,6 +46,9 @@ in
         ci = "commit";
         co = "checkout";
       };
+      commit = {
+        gpgSign = true;
+      };
       github = {
         user = "goofansu";
       };
@@ -68,7 +71,6 @@ in
     };
     signing = {
       key = "AD03A563F321CA44";
-      signByDefault = true;
       signer = "${pkgs.gnupg}/bin/gpg";
     };
     ignores = [
