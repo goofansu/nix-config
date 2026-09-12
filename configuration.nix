@@ -61,6 +61,7 @@
       "chatgpt"
       "claude"
       "cleanshot"
+      "discord"
       "ghostty"
       "google-chrome"
       "ngrok"
