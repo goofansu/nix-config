@@ -49,6 +49,7 @@
   homebrew = {
     enable = true;
     brews = [
+      "hunk"
       "newrelic-cli"
       "secretspec"
       "worktrunk"
