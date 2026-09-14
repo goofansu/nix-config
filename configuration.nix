@@ -65,7 +65,6 @@
       "discord"
       "ghostty"
       "google-chrome"
-      "ngrok"
       "obsidian"
       "orbstack"
       "prince"
