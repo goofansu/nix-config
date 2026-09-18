@@ -53,6 +53,7 @@
       ".claude/"
       ".obsidian/"
       ".scratch/"
+      ".humanlayer/"
     ];
     includes = [
       {
