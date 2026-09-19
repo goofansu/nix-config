@@ -72,7 +72,6 @@
   programs.gh = {
     enable = true;
     package = pkgs.gh;
-    extensions = [ pkgs-unstable.gh-stack ];
     settings = {
       git_protocol = "ssh";
     };
