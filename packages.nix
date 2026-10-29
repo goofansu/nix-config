@@ -67,7 +67,6 @@ let
     # Development utilities
     devenv
     secretspec
-    kamal
   ];
 in
 {
