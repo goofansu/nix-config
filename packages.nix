@@ -2,9 +2,6 @@
 
 let
   stable-packages = with pkgs; [
-    # Agent utilities
-    fabric-ai
-
     # GNU utilities
     coreutils
     findutils
