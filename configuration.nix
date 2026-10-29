@@ -49,9 +49,7 @@
   homebrew = {
     enable = true;
     brews = [
-      "hunk"
       "newrelic-cli"
-      "secretspec"
       "worktrunk"
     ];
     casks = [
@@ -63,6 +61,7 @@
       "discord"
       "ghostty"
       "google-chrome"
+      "grok-bot"
       "handy"
       "linear"
       "obsidian"

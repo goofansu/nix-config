@@ -66,6 +66,7 @@ let
   unstable-packages = with pkgs-unstable; [
     # Development utilities
     devenv
+    secretspec
     kamal
   ];
 in
