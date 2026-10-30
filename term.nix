@@ -122,6 +122,11 @@ in
       set -gx NODE_NO_WARNINGS 1;
       set -gx TRY_PATH "~/scratch";
     '';
+    interactiveShellInit = ''
+      if set -q REX_BIN_DIR
+          fish_add_path --path --prepend --move $REX_BIN_DIR
+      end
+    '';
     plugins = with pkgs.fishPlugins; [
       {
         name = "hydro";
