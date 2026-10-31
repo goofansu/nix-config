@@ -59,7 +59,6 @@
       "claude"
       "cleanshot"
       "discord"
-      "ghostty"
       "google-chrome"
       "grok-bot"
       "handy"
