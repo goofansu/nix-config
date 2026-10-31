@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 
 {
   programs.git = {
@@ -72,38 +72,21 @@
     };
   };
 
-  programs.delta.enable = true;
+  programs.delta = {
+    enable = true;
+    package = pkgs-unstable.delta;
+  };
   programs.lazygit = {
     enable = true;
+    package = pkgs-unstable.lazygit;
     settings = {
       promptToReturnFromSubprocess = false;
-      gui = {
-        theme = {
-          activeBorderColor = [
-            "#2fafff"
-            "bold"
-          ];
-          inactiveBorderColor = [ "#646464" ];
-          searchingActiveBorderColor = [ "#d0bc00" ];
-          optionsTextColor = [ "#2fafff" ];
-          selectedLineBgColor = [ "#303030" ];
-          inactiveViewSelectedLineBgColor = [ "#1e1e1e" ];
-          cherryPickedCommitFgColor = [ "#2fafff" ];
-          cherryPickedCommitBgColor = [ "#1640b0" ];
-          markedBaseCommitFgColor = [ "#2fafff" ];
-          markedBaseCommitBgColor = [ "#7a6100" ];
-          unstagedChangesColor = [ "#ff5f59" ];
-          defaultFgColor = [ "#ffffff" ];
-        };
-        authorColors = {
-          "*" = "#c6daff";
-        };
-      };
+      gui.colorScheme = "auto";
       git = {
         autoFetch = false;
-        pagers = [
+        diffRenderers = [
           {
-            pager = "delta --dark --paging=never";
+            command = "delta --{{colorScheme}} --paging=never";
           }
         ];
       };

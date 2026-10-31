@@ -9,7 +9,6 @@
     plugins = with pkgs.vimPlugins; [
       telescope-nvim
       telescope-fzf-native-nvim
-      modus-themes-nvim
       lualine-nvim
     ];
     initLua = ''
@@ -112,7 +111,7 @@
       map("n", "<leader>fb", builtin.buffers, "Telescope buffers")
       map("n", "<leader>fh", builtin.help_tags, "Telescope help tags")
 
-      vim.cmd.colorscheme('modus_vivendi')
+      vim.cmd.colorscheme('default')
       require("lualine").setup()
     '';
   };
