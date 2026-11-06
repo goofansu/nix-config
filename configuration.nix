@@ -63,7 +63,6 @@
       "grok-bot"
       "handy"
       "linear"
-      "obsidian"
       "orbstack"
       "paper-design"
       "prince"
