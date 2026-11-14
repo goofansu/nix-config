@@ -62,6 +62,7 @@
       "google-chrome"
       "grok-bot"
       "handy"
+      "obsidian"
       "orbstack"
       "paper-design"
       "prince"
