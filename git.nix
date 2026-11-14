@@ -1,4 +1,9 @@
-{ config, pkgs, pkgs-unstable, ... }:
+{
+  config,
+  pkgs,
+  pkgs-unstable,
+  ...
+}:
 
 {
   programs.git = {
@@ -46,7 +51,6 @@
       ".pi/"
       ".codex/"
       ".claude/"
-      ".obsidian/"
       ".scratch/"
       ".humanlayer/"
     ];
